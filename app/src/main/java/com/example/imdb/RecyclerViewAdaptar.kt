@@ -7,10 +7,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.imdb.entity.NowPlaying.Result
 
 class RecyclerViewAdapter(
-    var informationMovies: MutableList<String>
+    var informationMovies: MutableList<Result>
 ) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+
+    private val urlImg = "https://image.tmdb.org/t/p/w200"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.information_movies, parent, false)
@@ -18,25 +21,17 @@ class RecyclerViewAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.name.text = informationMovies[position]
-//        Glide.with(holder.itemView).load(repositoryInformation[position].urlImg).into(holder.img)
+        val title = "Title: " + informationMovies[position].originalTitle
+        holder.name.text = title
+        Glide.with(holder.itemView).load(urlImg + informationMovies[position].posterPath).into(holder.img)
     }
 
     override fun getItemCount() = informationMovies.count()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val name: TextView
-        val img: ImageView
+        val name: TextView = itemView.findViewById(R.id.name)
+        val img: ImageView = itemView.findViewById(R.id.img)
 
-        init {
-            name = itemView.findViewById(R.id.name)
-            img = itemView.findViewById(R.id.img)
-        }
-    }
-
-    fun addRepositoryInformation(item: String) {
-        val i = itemCount
-        informationMovies.add(i, item)
     }
 }
