@@ -21,6 +21,12 @@ interface TheMovieDBAPI {
         @Query("language") language: String
     ): Call<Latest>
 
+    @GET("popular")
+    fun getPopular(
+        @Query("api_key") key: String,
+        @Query("language") language: String,
+        @Query("page") p : Int = 1
+    ): Call<NowPlaying>
 
 
 }

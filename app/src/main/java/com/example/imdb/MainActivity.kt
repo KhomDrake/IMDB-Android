@@ -17,6 +17,7 @@ class MainActivity : AppCompatActivity() {
     // recyclers
     private lateinit var nowPlayingRecyclerView: RecyclerView
     private lateinit var latestRecyclerView: RecyclerView
+    private lateinit var popularRecyclerView: RecyclerView
 
     // adapters
     private lateinit var recyclerViewAdapterNowPlaying: RecyclerViewAdapterNowPlaying
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         nowPlayingRecyclerView = findViewById(R.id.movies)
         latestRecyclerView = findViewById(R.id.latest)
+        popularRecyclerView = findViewById(R.id.popular)
 
         linearLayoutManagerNowPlaying = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         linearLayoutManagerLatest = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
@@ -50,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         val api = API().service()
         val latestRequest = api.getLatest(apiKey, "en-US")
         val nowPlayingRequest = api.getNowPlaying(apiKey, "en-US", 1)
+        val popularRequest = api.getPopular(apiKey, "en-US", 1)
 
         latestRequest.enqueue(object: Callback<Latest?> {
             override fun onFailure(call: Call<Latest?>, t: Throwable) {
@@ -77,6 +80,20 @@ class MainActivity : AppCompatActivity() {
                     recyclerViewAdapterNowPlaying = RecyclerViewAdapterNowPlaying(it.body()?.results!!.toMutableList())
                     nowPlayingRecyclerView.adapter = recyclerViewAdapterNowPlaying
                     nowPlayingRecyclerView.layoutManager = linearLayoutManagerNowPlaying
+                }
+            }
+        })
+
+        popularRequest.enqueue(object: Callback<NowPlaying?> {
+            override fun onFailure(call: Call<NowPlaying?>, t: Throwable) {
+                println(t)
+            }
+
+            override fun onResponse(call: Call<NowPlaying?>, response: Response<NowPlaying?>) {
+                response.let {
+                    recyclerViewAdapterPopular = RecyclerViewAdapterPopular(it.body()?.results!!.toMutableList())
+                    popularRecyclerView.adapter = recyclerViewAdapterPopular
+                    popularRecyclerView.layoutManager = linearLayoutManagerPopular
                 }
             }
         })
