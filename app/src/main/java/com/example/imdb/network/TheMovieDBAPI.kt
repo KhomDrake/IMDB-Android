@@ -1,5 +1,6 @@
 package com.example.imdb.network
 
+import com.example.imdb.entity.Latest.Latest
 import com.example.imdb.entity.NowPlaying.NowPlaying
 import retrofit2.Call
 import retrofit2.http.GET
@@ -13,5 +14,13 @@ interface TheMovieDBAPI {
         @Query("language") language: String,
         @Query("page") p : Int = 1
     ): Call<NowPlaying>
+
+    @GET("latest")
+    fun getLatest(
+        @Query("api_key") key: String,
+        @Query("language") language: String
+    ): Call<Latest>
+
+
 
 }

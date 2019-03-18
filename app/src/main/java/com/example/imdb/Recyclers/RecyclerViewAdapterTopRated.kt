@@ -1,4 +1,4 @@
-package com.example.imdb
+package com.example.imdb.Recyclers
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,11 +7,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.imdb.R
 import com.example.imdb.entity.NowPlaying.Result
 
-class RecyclerViewAdapter(
+class RecyclerViewAdapterTopRated(
     var informationMovies: MutableList<Result>
-) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerViewAdapterTopRated.ViewHolder>() {
 
     private val urlImg = "https://image.tmdb.org/t/p/w200"
 
@@ -23,7 +24,15 @@ class RecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val title = "Title: " + informationMovies[position].originalTitle
         holder.name.text = title
-        Glide.with(holder.itemView).load(urlImg + informationMovies[position].posterPath).into(holder.img)
+
+        var path = informationMovies[position].posterPath
+
+        if(path == "null" || path == "")
+            path = "https://uae.microless.com/cdn/no_image.jpg"
+        else
+            path = urlImg + path
+
+        Glide.with(holder.itemView).load(path).into(holder.img)
     }
 
     override fun getItemCount() = informationMovies.count()
