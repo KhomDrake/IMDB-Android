@@ -31,7 +31,7 @@ class RecyclerViewAdapterLatest(
 
     override fun getItemCount() = informationMovies.count()
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val name: TextView = itemView.findViewById(R.id.name)
         val img: ImageView = itemView.findViewById(R.id.img)

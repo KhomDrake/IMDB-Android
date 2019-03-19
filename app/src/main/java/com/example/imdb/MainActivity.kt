@@ -2,14 +2,18 @@ package com.example.imdb
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.imdb.Auxiliary.apiKey
 import com.example.imdb.recyclerview.*
 import com.example.imdb.entity.Latest
 import com.example.imdb.entity.MoviesList
+import com.example.imdb.entity.Result
 import com.example.imdb.network.API
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,57 +28,61 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val apiKey = "ed84e9c8c38d4d0a8f3adaa5ba324145"
-
         nowPlayingRecyclerView = findViewById(R.id.movies)
         latestRecyclerView = findViewById(R.id.latest)
         popularRecyclerView = findViewById(R.id.popular)
         topRatedRecyclerView = findViewById(R.id.toprated)
         upcomingRecyclerView = findViewById(R.id.upcoming)
 
-        val api = API().service()
-        val latestRequest = api.getLatest(apiKey, "en-US")
-        val nowPlayingRequest = api.getNowPlaying(apiKey, "en-US", 1)
-        val popularRequest = api.getPopular(apiKey, "en-US", 1)
-        val topRatedRequest = api.getTopRated(apiKey, "en-US", 1)
-        val upcomingRequest = api.getUpcoming(apiKey, "en-US", 1)
+        fetchData()
+    }
+
+    private fun fetchData() = with(API().service()){
+        val latestRequest = getLatest(apiKey, "en-US")
+        val nowPlayingRequest = getNowPlaying(apiKey, "en-US", 1)
+        val popularRequest = getPopular(apiKey, "en-US", 1)
+        val topRatedRequest = getTopRated(apiKey, "en-US", 1)
+        val upcomingRequest = getUpcoming(apiKey, Locale.getDefault()., 1)
 
         popularRequest.enqueue(requestResponse<MoviesList> {
-            setupRecyclerMovieList(RecyclerViewAdapterMovieList(it.results.toMutableList()), popularRecyclerView)
+            setupRecyclerMovieList(RecyclerViewAdapterMovieList(it.results), popularRecyclerView)
         })
 
         nowPlayingRequest.enqueue(requestResponse<MoviesList> {
-            setupRecyclerMovieList(RecyclerViewAdapterMovieList(it.results.toMutableList()), nowPlayingRecyclerView)
+            setupRecyclerMovieList(RecyclerViewAdapterMovieList(it.results), nowPlayingRecyclerView)
         })
 
-        latestRequest.enqueue(requestResponse<Latest> {
+        latestRequest.enqueue(requestResponse<Result> {
             val list = listOf(it)
-            latestRecyclerView.adapter = RecyclerViewAdapterLatest(list)
-            latestRecyclerView.layoutManager = Auxiliary.getVerticalLinearLayoutManager(this)
+            latestRecyclerView.adapter = RecyclerViewAdapterMovieList(list)
+            latestRecyclerView.layoutManager = Auxiliary.getVerticalLinearLayoutManager(latestRecyclerView.context)
         })
 
         topRatedRequest.enqueue(requestResponse<MoviesList> {
-            setupRecyclerMovieList(RecyclerViewAdapterMovieList(it.results.toMutableList()), topRatedRecyclerView)
+            setupRecyclerMovieList(RecyclerViewAdapterMovieList(it.results), topRatedRecyclerView)
         })
 
         upcomingRequest.enqueue(requestResponse<MoviesList> {
-            setupRecyclerMovieList(RecyclerViewAdapterMovieList(it.results.toMutableList()), upcomingRecyclerView)
+            upcomingRecyclerView.setupAdapter(RecyclerViewAdapterMovieList(it.results))
+            setupRecyclerMovieList(RecyclerViewAdapterMovieList(it.results), upcomingRecyclerView)
         })
     }
 
-    private fun setupRecyclerMovieList(adapter: RecyclerViewAdapterMovieList, recyclerView: RecyclerView)
-    {
+    private fun setupRecyclerMovieList(adapter: RecyclerViewAdapterMovieList, recyclerView: RecyclerView) {
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = Auxiliary.getVerticalLinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context, LinearLayoutManager.HORIZONTAL, false)
+    }
+
+    private fun RecyclerView.setupAdapter(adapter: RecyclerViewAdapterMovieList) {
+        this.adapter = adapter
+        this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
     private fun <T>requestResponse(funResponse: (body: T) -> Unit) = object: Callback<T> {
-        override fun onFailure(call: Call<T?>, t: Throwable) {
-
-        }
+        override fun onFailure(call: Call<T?>, t: Throwable) = Unit
 
         override fun onResponse(call: Call<T?>, response: Response<T?>) {
-            funResponse(response.body()!!)
+            response.body()?.apply(funResponse)
         }
     }
 }

@@ -12,7 +12,7 @@ import com.example.imdb.R
 import com.example.imdb.entity.Result
 
 class RecyclerViewAdapterMovieList(
-    private val informationMovies: MutableList<Result>
+    private val informationMovies: List<Result>
 ) : RecyclerView.Adapter<RecyclerViewAdapterMovieList.ViewHolder>() {
 
 
@@ -22,19 +22,24 @@ class RecyclerViewAdapterMovieList(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val title = "Title: " + informationMovies[position].originalTitle
-        holder.name.text = title
-
-        val path = Auxiliary.getPath(informationMovies[position].posterPath)
-        Glide.with(holder.itemView).load(path).into(holder.img)
+        holder.bind(informationMovies[position])
     }
 
     override fun getItemCount() = informationMovies.count()
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val name: TextView = itemView.findViewById(R.id.name)
-        val img: ImageView = itemView.findViewById(R.id.img)
+        private val name: TextView = itemView.findViewById(R.id.name)
+        private val img: ImageView = itemView.findViewById(R.id.img)
+
+        fun bind(result: Result){
+            val title = "Title: " + result.originalTitle
+            name.text = title
+
+            val path = Auxiliary.getPath(result.posterPath)
+            Glide.with(itemView).load(path).into(img)
+
+        }
 
     }
 }

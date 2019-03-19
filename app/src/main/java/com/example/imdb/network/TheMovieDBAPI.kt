@@ -2,6 +2,7 @@ package com.example.imdb.network
 
 import com.example.imdb.entity.Latest
 import com.example.imdb.entity.MoviesList
+import com.example.imdb.entity.Result
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -19,7 +20,7 @@ interface TheMovieDBAPI {
     fun getLatest(
         @Query("api_key") key: String,
         @Query("language") language: String
-    ): Call<Latest>
+    ): Call<Result>
 
     @GET("popular")
     fun getPopular(
