@@ -1,7 +1,7 @@
 package com.example.imdb.network
 
 import com.example.imdb.entity.Latest
-import com.example.imdb.entity.NowPlaying
+import com.example.imdb.entity.MoviesList
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -13,7 +13,7 @@ interface TheMovieDBAPI {
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p : Int = 1
-    ): Call<NowPlaying>
+    ): Call<MoviesList>
 
     @GET("latest")
     fun getLatest(
@@ -26,21 +26,21 @@ interface TheMovieDBAPI {
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p : Int = 1
-    ): Call<NowPlaying>
+    ): Call<MoviesList>
 
     @GET("top_rated")
     fun getTopRated(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p : Int = 1
-    ): Call<NowPlaying>
+    ): Call<MoviesList>
 
     @GET("upcoming")
     fun getUpcoming(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p : Int = 1
-    ): Call<NowPlaying>
+    ): Call<MoviesList>
 
 
 }
