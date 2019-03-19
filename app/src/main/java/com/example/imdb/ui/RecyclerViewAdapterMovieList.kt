@@ -1,4 +1,4 @@
-package com.example.imdb.recyclerview
+package com.example.imdb.ui
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,14 +7,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.imdb.Auxiliary
 import com.example.imdb.R
 import com.example.imdb.entity.Result
 
 class RecyclerViewAdapterMovieList(
     private val informationMovies: List<Result>
 ) : RecyclerView.Adapter<RecyclerViewAdapterMovieList.ViewHolder>() {
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.information_movies, parent, false)
@@ -28,18 +26,20 @@ class RecyclerViewAdapterMovieList(
     override fun getItemCount() = informationMovies.count()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+        private val urlImg = "https://image.tmdb.org/t/p/w200"
+        private val imgNotFound = "https://uae.microless.com/cdn/no_image.jpg"
         private val name: TextView = itemView.findViewById(R.id.name)
         private val img: ImageView = itemView.findViewById(R.id.img)
 
-        fun bind(result: Result){
+        fun bind(result: Result) {
             val title = "Title: " + result.originalTitle
             name.text = title
 
-            val path = Auxiliary.getPath(result.posterPath)
+            val path = getPath(result.posterPath)
             Glide.with(itemView).load(path).into(img)
-
         }
 
+        private fun getPath(path: String?) = if (path == "null" || path == "" || path == null) imgNotFound
+                else urlImg + path
     }
 }

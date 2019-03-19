@@ -10,6 +10,14 @@ class API {
        .addConverterFactory(GsonConverterFactory.create())
        .build()
 
-    fun service() = retrofit.create(TheMovieDBAPI::class.java)
+    private var default: TheMovieDBAPI? = null
+
+    fun service(): TheMovieDBAPI {
+        if (default == null) {
+            default = retrofit.create(TheMovieDBAPI::class.java)
+        }
+
+        return default!!
+    }
 
 }
