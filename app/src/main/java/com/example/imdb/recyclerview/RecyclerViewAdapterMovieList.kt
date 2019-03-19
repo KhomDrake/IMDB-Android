@@ -11,9 +11,10 @@ import com.example.imdb.Auxiliary
 import com.example.imdb.R
 import com.example.imdb.entity.Result
 
-class RecyclerViewAdapterPopular(
+class RecyclerViewAdapterMovieList(
     private val informationMovies: MutableList<Result>
-) : RecyclerView.Adapter<RecyclerViewAdapterPopular.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerViewAdapterMovieList.ViewHolder>() {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.information_movies, parent, false)
