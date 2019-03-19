@@ -5,40 +5,59 @@
               xmlns:android="http://schemas.android.com/apk/res/android">
 
 
+
+
     <TextView  android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="Latest"/>
-
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
             android:id="@+id/latest"
             android:layout_height="wrap_content">
-
-
     </androidx.recyclerview.widget.RecyclerView>
+
+
 
     <TextView  android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="Now Playing"/>
-
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
             android:id="@+id/movies"
             android:layout_height="wrap_content">
-
-
     </androidx.recyclerview.widget.RecyclerView>
+
+
 
     <TextView  android:layout_width="wrap_content"
                android:layout_height="wrap_content"
                android:text="Popular"/>
-
     <androidx.recyclerview.widget.RecyclerView
             android:layout_width="wrap_content"
             android:id="@+id/popular"
             android:layout_height="wrap_content">
+    </androidx.recyclerview.widget.RecyclerView>
 
 
+
+    <TextView  android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Top Rated"/>
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:id="@+id/toprated"
+            android:layout_height="wrap_content">
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+
+    <TextView  android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Upcoming"/>
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:id="@+id/upcoming"
+            android:layout_height="wrap_content">
     </androidx.recyclerview.widget.RecyclerView>
 
 

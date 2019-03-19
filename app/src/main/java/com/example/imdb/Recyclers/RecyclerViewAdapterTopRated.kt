@@ -8,13 +8,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.R
-import com.example.imdb.entity.NowPlaying.Result
+import com.example.imdb.entity.Result
 
 class RecyclerViewAdapterTopRated(
     var informationMovies: MutableList<Result>
 ) : RecyclerView.Adapter<RecyclerViewAdapterTopRated.ViewHolder>() {
 
     private val urlImg = "https://image.tmdb.org/t/p/w200"
+    private val imgNotFound = "https://uae.microless.com/cdn/no_image.jpg"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.information_movies, parent, false)
@@ -28,7 +29,7 @@ class RecyclerViewAdapterTopRated(
         var path = informationMovies[position].posterPath
 
         if(path == "null" || path == "")
-            path = "https://uae.microless.com/cdn/no_image.jpg"
+            path = imgNotFound
         else
             path = urlImg + path
 
@@ -38,9 +39,7 @@ class RecyclerViewAdapterTopRated(
     override fun getItemCount() = informationMovies.count()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         val name: TextView = itemView.findViewById(R.id.name)
         val img: ImageView = itemView.findViewById(R.id.img)
-
     }
 }

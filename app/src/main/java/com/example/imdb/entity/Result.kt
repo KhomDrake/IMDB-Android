@@ -1,4 +1,4 @@
-package com.example.imdb.entity.NowPlaying
+package com.example.imdb.entity
 
 import com.google.gson.annotations.SerializedName
 

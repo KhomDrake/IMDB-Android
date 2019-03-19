@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.R
-import com.example.imdb.entity.Latest.Latest
+import com.example.imdb.entity.Latest
 
 class RecyclerViewAdapterLatest(
     var informationMovies: List<Latest>

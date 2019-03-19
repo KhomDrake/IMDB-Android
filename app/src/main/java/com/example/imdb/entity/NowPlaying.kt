@@ -1,5 +1,6 @@
-package com.example.imdb.entity.NowPlaying
+package com.example.imdb.entity
 
+import com.example.imdb.entity.Result
 import com.google.gson.annotations.SerializedName
 
 data class NowPlaying(
