@@ -2,7 +2,7 @@ package com.example.imdb.entity
 
 import com.google.gson.annotations.SerializedName
 
-data class Result(
+data class Movie(
     @SerializedName("original_title")
     val originalTitle: String,
     @SerializedName("poster_path")

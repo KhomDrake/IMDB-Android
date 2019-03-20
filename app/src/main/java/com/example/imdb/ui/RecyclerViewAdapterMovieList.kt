@@ -8,10 +8,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.R
-import com.example.imdb.entity.Result
+import com.example.imdb.entity.Movie
 
 class RecyclerViewAdapterMovieList(
-    private val informationMovies: MutableList<Result>
+    private val informationMovies: MutableList<Movie>
 ) : RecyclerView.Adapter<RecyclerViewAdapterMovieList.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -21,6 +21,11 @@ class RecyclerViewAdapterMovieList(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(informationMovies[position])
+    }
+
+    fun addMovie(movie: Movie) {
+        informationMovies.add(informationMovies.count(), movie)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = informationMovies.count()
@@ -33,7 +38,7 @@ class RecyclerViewAdapterMovieList(
         private val name: TextView = itemView.findViewById(R.id.name)
         private val img: ImageView = itemView.findViewById(R.id.img)
 
-        fun bind(result: Result) {
+        fun bind(result: Movie) {
             if (result.loading) {
                 Glide.with(itemView).load(urlLoading).into(img)
                 return

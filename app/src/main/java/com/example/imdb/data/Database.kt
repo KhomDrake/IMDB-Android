@@ -1,14 +1,14 @@
 package com.example.imdb.data
 
-import com.example.imdb.entity.Result
+import com.example.imdb.entity.Movie
 
 object Database {
 
-    private val latest: MutableList<Result> = mutableListOf()
-    private val nowPlaying: MutableList<Result> = mutableListOf()
-    private val popular: MutableList<Result> = mutableListOf()
-    private val topRated: MutableList<Result> = mutableListOf()
-    private val upcoming: MutableList<Result> = mutableListOf()
+    private val latest: MutableList<Movie> = mutableListOf()
+    private val nowPlaying: MutableList<Movie> = mutableListOf()
+    private val popular: MutableList<Movie> = mutableListOf()
+    private val topRated: MutableList<Movie> = mutableListOf()
+    private val upcoming: MutableList<Movie> = mutableListOf()
 
     fun getLatest() = latest
 
@@ -20,7 +20,7 @@ object Database {
 
     fun getUpcoming() = upcoming
 
-    fun addLoadingAll(loading: Result) {
+    fun addLoadingAll(loading: Movie) {
         latest.add(0, loading)
         nowPlaying.add(0, loading)
         popular.add(0, loading)
@@ -28,43 +28,61 @@ object Database {
         upcoming.add(0, loading)
     }
 
-    fun addLatest(movie: Result) {
-        removeAt(0, latest)
+
+    fun addLatest(movie: Movie) {
+        removeLoading(latest)
         latest.add(0, movie)
     }
 
-    fun addNowPlaying(movies: List<Result>) {
-        removeAt(0, nowPlaying)
+    fun addNowPlaying(movies: List<Movie>) {
+        removeLoading(nowPlaying)
         for (movie in movies) {
             nowPlaying.add(nowPlaying.count(), movie)
         }
     }
 
-    fun addPopular(movies: List<Result>) {
-        removeAt(0, popular)
+    fun addPopular(movies: List<Movie>) {
+        removeLoading(popular)
         for (movie in movies) {
             popular.add(popular.count(), movie)
         }
     }
 
-    fun addTopRated(movies: List<Result>) {
-        removeAt(0, topRated)
+    fun addTopRated(movies: List<Movie>) {
+        removeLoading(topRated)
         for (movie in movies) {
             topRated.add(topRated.count(), movie)
         }
     }
 
-    fun addUpcoming(movies: List<Result>) {
-        removeAt(0, upcoming)
+    fun addUpcoming(movies: List<Movie>) {
+        removeLoading(upcoming)
         for (movie in movies) {
             upcoming.add(upcoming.count(), movie)
         }
     }
 
-    private fun removeAt(i: Int, list: MutableList<Result>) {
-        if (list.isEmpty())
-            return
+    fun addLoadingNowPlaying() {
+        nowPlaying.add(nowPlaying.count(), Movie("", "", "", true))
+    }
 
-        list.removeAt(i)
+    fun addLoadingTopRated() {
+        topRated.add(topRated.count(), Movie("", "", "", true))
+    }
+
+    fun addLoadingPopular() {
+        popular.add(popular.count(), Movie("", "", "", true))
+    }
+
+    fun addLoadingUpcoming() {
+        upcoming.add(upcoming.count(), Movie("", "", "", true))
+    }
+
+    private fun removeLoading(list: MutableList<Movie>) {
+        for (item in list) {
+            if (item.loading) {
+                list.remove(item)
+            }
+        }
     }
 }
