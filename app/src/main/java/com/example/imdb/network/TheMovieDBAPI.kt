@@ -12,7 +12,7 @@ interface TheMovieDBAPI {
     fun getNowPlaying(
         @Query("api_key") key: String,
         @Query("language") language: String,
-        @Query("page") p : Int = 1
+        @Query("page") p: Int = 1
     ): Call<MoviesList>
 
     @GET("latest")
@@ -25,21 +25,21 @@ interface TheMovieDBAPI {
     fun getPopular(
         @Query("api_key") key: String,
         @Query("language") language: String,
-        @Query("page") p : Int = 1
+        @Query("page") p: Int = 1
     ): Call<MoviesList>
 
     @GET("top_rated")
     fun getTopRated(
         @Query("api_key") key: String,
         @Query("language") language: String,
-        @Query("page") p : Int = 1
+        @Query("page") p: Int = 1
     ): Call<MoviesList>
 
     @GET("upcoming")
     fun getUpcoming(
         @Query("api_key") key: String,
         @Query("language") language: String,
-        @Query("page") p : Int = 1
+        @Query("page") p: Int = 1
     ): Call<MoviesList>
 
 

@@ -11,7 +11,7 @@ import com.example.imdb.R
 import com.example.imdb.entity.Result
 
 class RecyclerViewAdapterMovieList(
-    private val informationMovies: List<Result>
+    private val informationMovies: MutableList<Result>
 ) : RecyclerView.Adapter<RecyclerViewAdapterMovieList.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,11 +27,18 @@ class RecyclerViewAdapterMovieList(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val urlImg = "https://image.tmdb.org/t/p/w200"
+        private val urlLoading = "https://upload.wikimedia.org/wikipedia/commons/3/3a/Gray_circles_rotate.gif"
         private val imgNotFound = "https://uae.microless.com/cdn/no_image.jpg"
+
         private val name: TextView = itemView.findViewById(R.id.name)
         private val img: ImageView = itemView.findViewById(R.id.img)
 
         fun bind(result: Result) {
+            if (result.loading) {
+                Glide.with(itemView).load(urlLoading).into(img)
+                return
+            }
+
             val title = "Title: " + result.originalTitle
             name.text = title
 
@@ -40,6 +47,6 @@ class RecyclerViewAdapterMovieList(
         }
 
         private fun getPath(path: String?) = if (path == "null" || path == "" || path == null) imgNotFound
-                else urlImg + path
+        else urlImg + path
     }
 }
