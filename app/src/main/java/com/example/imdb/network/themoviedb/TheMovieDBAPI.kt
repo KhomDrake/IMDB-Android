@@ -1,7 +1,7 @@
-package com.example.imdb.network
+package com.example.imdb.network.themoviedb
 
-import com.example.imdb.entity.MoviesList
-import com.example.imdb.entity.Movie
+import com.example.imdb.data.entity.MoviesList
+import com.example.imdb.data.entity.Movie
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query

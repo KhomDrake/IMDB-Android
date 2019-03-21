@@ -1,4 +1,4 @@
-package com.example.imdb.entity
+package com.example.imdb.data.entity
 
 import com.google.gson.annotations.SerializedName
 

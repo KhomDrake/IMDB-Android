@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.R
-import com.example.imdb.entity.Movie
+import com.example.imdb.data.entity.Movie
 
 class RecyclerViewAdapterMovieList(
     private val informationMovies: MutableList<Movie>
@@ -21,11 +21,6 @@ class RecyclerViewAdapterMovieList(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(informationMovies[position])
-    }
-
-    fun addMovie(movie: Movie) {
-        informationMovies.add(informationMovies.count(), movie)
-        notifyDataSetChanged()
     }
 
     override fun getItemCount() = informationMovies.count()

@@ -1,8 +1,8 @@
-package com.example.imdb.data
+package com.example.imdb.data.database
 
-import com.example.imdb.entity.Movie
+import com.example.imdb.data.entity.Movie
 
-object Database {
+object DatabaseMovies {
 
     private val latest: MutableList<Movie> = mutableListOf()
     private val nowPlaying: MutableList<Movie> = mutableListOf()
@@ -20,14 +20,19 @@ object Database {
 
     fun getUpcoming() = upcoming
 
-    fun addLoadingAll(loading: Movie) {
-        latest.add(0, loading)
-        nowPlaying.add(0, loading)
-        popular.add(0, loading)
-        topRated.add(0, loading)
-        upcoming.add(0, loading)
+    fun drop() {
+        clean(latest)
+        clean(nowPlaying)
+        clean(popular)
+        clean(topRated)
+        clean(upcoming)
     }
 
+    private fun clean(list: MutableList<Movie>) {
+        list.apply {
+            removeAll(this)
+        }
+    }
 
     fun addLatest(movie: Movie) {
         removeLoading(latest)
@@ -76,6 +81,10 @@ object Database {
 
     fun addLoadingUpcoming() {
         upcoming.add(upcoming.count(), Movie("", "", "", true))
+    }
+
+    fun addLoadingLatest() {
+        latest.add(latest.count(), Movie("", "", "", true))
     }
 
     private fun removeLoading(list: MutableList<Movie>) {

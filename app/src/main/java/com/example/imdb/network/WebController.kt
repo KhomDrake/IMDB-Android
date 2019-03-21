@@ -1,18 +1,16 @@
 package com.example.imdb.network
 
 import com.example.imdb.data.DataController
-import com.example.imdb.entity.MoviesList
-import com.example.imdb.entity.Movie
+import com.example.imdb.data.entity.MoviesList
+import com.example.imdb.data.entity.Movie
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-object WebControllerTheMovieDB {
+object WebController {
 
     private val api = API().service()
-    private lateinit var language: String
     private const val apiKey = "ed84e9c8c38d4d0a8f3adaa5ba324145"
-
 
     fun loadLatest(funResponse: (body: Movie) -> Unit) {
         api.getLatest(apiKey, DataController.getLanguage()).enqueue(requestResponse<Movie>(funResponse))

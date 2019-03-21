@@ -1,5 +1,6 @@
 package com.example.imdb.network
 
+import com.example.imdb.network.themoviedb.TheMovieDBAPI
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
