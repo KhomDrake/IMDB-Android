@@ -1,6 +1,5 @@
 package com.example.imdb.ui
 
-import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.Movie
@@ -12,13 +11,9 @@ class MainActivityViewController {
         DataController.setupDatabase(Locale.getDefault().toLanguageTag())
     }
 
-    fun firstLoadCategory(recycler: RecyclerView, category: MovieCategory) = firstLoadMovies(recycler.movieAdapter, category) {
-        recycler.movieAdapter.addMovies(it)
-    }
-
-    private fun firstLoadMovies(adapterMovieList: RecyclerViewAdapterMovieList,
-                                category: MovieCategory,
-                                funResponse: (movies: List<Movie>) -> Unit) = when (category) {
+    fun loadMovies(adapterMovieList: RecyclerViewAdapterMovieList,
+                   category: MovieCategory,
+                   funResponse: (movies: List<Movie>) -> Unit) = when (category) {
         MovieCategory.Latest -> {
             DataController.loadLatest(funResponse)
             adapterMovieList.addMovies(mutableListOf(Movie( 0,"", "", "", true)))
@@ -40,8 +35,5 @@ class MainActivityViewController {
             adapterMovieList.addMovies(mutableListOf(Movie( 0,"", "", "", true)))
         }
     }
-
-    private val RecyclerView.movieAdapter: RecyclerViewAdapterMovieList
-        get() = adapter as RecyclerViewAdapterMovieList
 
 }

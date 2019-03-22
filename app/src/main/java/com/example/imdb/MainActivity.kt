@@ -31,6 +31,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         ctx = this
 
+        println("alkdalskjdaslkdjasl")
+
         mainActivityViewController = MainActivityViewController()
 
         nowPlaying = findViewById(R.id.movies)
@@ -46,11 +48,11 @@ class MainActivity : AppCompatActivity() {
         upcoming.setupAdapter()
 
         mainActivityViewController.run {
-            firstLoadCategory(latest, MovieCategory.Latest)
-            firstLoadCategory(nowPlaying, MovieCategory.NowPlaying)
-            firstLoadCategory(popular, MovieCategory.Popular)
-            firstLoadCategory(topRated, MovieCategory.TopRated)
-            firstLoadCategory(upcoming, MovieCategory.Upcoming)
+            latest.loadCategory(MovieCategory.Latest)
+            nowPlaying.loadCategory(MovieCategory.NowPlaying)
+            popular.loadCategory(MovieCategory.Popular)
+            topRated.loadCategory(MovieCategory.TopRated)
+            upcoming.loadCategory(MovieCategory.Upcoming)
         }
     }
 
@@ -64,7 +66,16 @@ class MainActivity : AppCompatActivity() {
         this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
-    fun createAdapter() = RecyclerViewAdapterMovieList(mutableListOf())
+    private fun createAdapter() = RecyclerViewAdapterMovieList(mutableListOf())
+
+    private fun RecyclerView.loadCategory(category: MovieCategory) {
+        mainActivityViewController.loadMovies(this.movieAdapter, category) {
+            this.movieAdapter.addMovies(it)
+        }
+    }
+
+    private val RecyclerView.movieAdapter: RecyclerViewAdapterMovieList
+        get() = adapter as RecyclerViewAdapterMovieList
 }
 
 lateinit var ctx: Context

@@ -18,39 +18,51 @@ object DataController {
 
     fun getLanguage() = language
 
-    fun loadLatest(funResponse: (movies: MutableList<Movie>) -> Unit) {
-        if (getLatest().isEmptyOrInLoading()) {
+    fun loadLatest(funResponse: (movies: List<Movie>) -> Unit) {
+        val latest = getLatest()
+        if (latest.isEmptyOrInLoading()) {
             WebController.loadLatest {
                 addLatest(it)
-                funResponse(getLatest())
+                funResponse(listOf(it))
             }
+        } else {
+            funResponse(latest)
         }
     }
 
-    fun loadNowPlaying(funResponse: (movies: MutableList<Movie>) -> Unit) {
-        if (getNowPlaying().isEmptyOrInLoading()) {
+    fun loadNowPlaying(funResponse: (movies: List<Movie>) -> Unit) {
+        val nowPlaying = getNowPlaying()
+        if (nowPlaying.isEmptyOrInLoading()) {
             WebController.loadNowPlaying {
                 addNowPlaying(it.results)
-                funResponse(getNowPlaying())
+                funResponse(it.results)
             }
+        } else {
+            funResponse(nowPlaying)
         }
     }
 
-    fun loadPopular(funResponse: (movies: MutableList<Movie>) -> Unit) {
-        if (getPopular().isEmptyOrInLoading()) {
+    fun loadPopular(funResponse: (movies: List<Movie>) -> Unit) {
+        val popular = getPopular()
+        if (popular.isEmptyOrInLoading()) {
             WebController.loadPopular {
                 addPopular(it.results)
-                funResponse(getPopular())
+                funResponse(it.results)
             }
+        } else {
+            funResponse(popular)
         }
     }
 
-    fun loadTopRated(funResponse: (movies: MutableList<Movie>) -> Unit) {
-        if (getTopRated().isEmptyOrInLoading()) {
+    fun loadTopRated(funResponse: (movies: List<Movie>) -> Unit) {
+        val topRated = getTopRated()
+        if (topRated.isEmptyOrInLoading()) {
             WebController.loadTopRated {
                 addTopRated(it.results)
-                funResponse(getTopRated())
+                funResponse(it.results)
             }
+        } else {
+            funResponse(topRated)
         }
     }
 
@@ -66,15 +78,15 @@ object DataController {
         }
     }
 
-    fun getLatest() = DatabaseMovies.getLatest()
+    private fun getLatest() = DatabaseMovies.getLatest()
 
-    fun getNowPlaying() = DatabaseMovies.getNowPlaying()
+    private fun getNowPlaying() = DatabaseMovies.getNowPlaying()
 
-    fun getPopular() = DatabaseMovies.getPopular()
+    private fun getPopular() = DatabaseMovies.getPopular()
 
-    fun getTopRated() = DatabaseMovies.getTopRated()
+    private fun getTopRated() = DatabaseMovies.getTopRated()
 
-    fun getUpcoming() = DatabaseMovies.getUpcoming()
+    private fun getUpcoming() = DatabaseMovies.getUpcoming()
 
     private fun addLatest(movie: Movie) = DatabaseMovies.addLatest(movie)
 
