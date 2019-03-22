@@ -45,6 +45,6 @@ dependencies {
 
     // tests
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.requestResponse.espresso:espresso-core:3.1.1'
-    androidTestImplementation 'androidx.requestResponse.espresso:espresso-intents:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.1'
 }

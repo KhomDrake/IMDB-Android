@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        ctx = this
 
         mainActivityViewController = MainActivityViewController()
 
@@ -38,17 +39,19 @@ class MainActivity : AppCompatActivity() {
         topRated = findViewById(R.id.toprated)
         upcoming = findViewById(R.id.upcoming)
 
-        latest.setupAdapter(MovieCategory.Latest)
-        nowPlaying.setupAdapter(MovieCategory.NowPlaying)
-        popular.setupAdapter(MovieCategory.Popular)
-        topRated.setupAdapter(MovieCategory.TopRated)
-        upcoming.setupAdapter(MovieCategory.Upcoming)
+        latest.setupAdapter()
+        nowPlaying.setupAdapter()
+        popular.setupAdapter()
+        topRated.setupAdapter()
+        upcoming.setupAdapter()
 
-        mainActivityViewController.firstLoadCategory(latest, MovieCategory.Latest)
-        mainActivityViewController.firstLoadCategory(nowPlaying, MovieCategory.NowPlaying)
-        mainActivityViewController.firstLoadCategory(popular, MovieCategory.Popular)
-        mainActivityViewController.firstLoadCategory(topRated, MovieCategory.TopRated)
-        mainActivityViewController.firstLoadCategory(upcoming, MovieCategory.Upcoming)
+        mainActivityViewController.run {
+            firstLoadCategory(latest, MovieCategory.Latest)
+            firstLoadCategory(nowPlaying, MovieCategory.NowPlaying)
+            firstLoadCategory(popular, MovieCategory.Popular)
+            firstLoadCategory(topRated, MovieCategory.TopRated)
+            firstLoadCategory(upcoming, MovieCategory.Upcoming)
+        }
     }
 
     override fun onDestroy() {
@@ -56,8 +59,12 @@ class MainActivity : AppCompatActivity() {
         DataController.restartDatabase()
     }
 
-    private fun RecyclerView.setupAdapter(category: MovieCategory) {
-        this.adapter = mainActivityViewController.createAdapter(category)
+    private fun RecyclerView.setupAdapter() {
+        this.adapter = createAdapter()
         this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
+
+    fun createAdapter() = RecyclerViewAdapterMovieList(mutableListOf())
 }
+
+lateinit var ctx: Context

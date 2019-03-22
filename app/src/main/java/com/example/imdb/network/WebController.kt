@@ -32,23 +32,6 @@ object WebController {
         api.getUpcoming(apiKey, DataController.getLanguage(), 1).enqueue(requestResponse<MoviesList>(funResponse))
     }
 
-    fun loadNowPlaying(pag: Int, funResponse: (body: MoviesList) -> Unit) {
-        api.getNowPlaying(apiKey, DataController.getLanguage(), pag).enqueue(requestResponse<MoviesList>(funResponse))
-    }
-
-    fun loadPopular(pag: Int, funResponse: (body: MoviesList) -> Unit) {
-        api.getPopular(apiKey, DataController.getLanguage(), pag).enqueue(requestResponse<MoviesList>(funResponse))
-    }
-
-    fun loadTopRated(pag: Int, funResponse: (body: MoviesList) -> Unit) {
-        api.getTopRated(apiKey, DataController.getLanguage(), pag).enqueue(requestResponse<MoviesList>(funResponse))
-    }
-
-    fun loadUpcoming(pag: Int, funResponse: (body: MoviesList) -> Unit) {
-        api.getUpcoming(apiKey, DataController.getLanguage(), pag).enqueue(requestResponse<MoviesList>(funResponse))
-    }
-
-
     private fun <T> requestResponse(funResponse: (body: T) -> Unit) = object : Callback<T> {
         override fun onFailure(call: Call<T?>, t: Throwable) = Unit
 

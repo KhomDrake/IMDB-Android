@@ -18,54 +18,51 @@ object DataController {
 
     fun getLanguage() = language
 
-    fun loadLatest(funResponse: () -> Unit) {
+    fun loadLatest(funResponse: (movies: MutableList<Movie>) -> Unit) {
         if (getLatest().isEmptyOrInLoading()) {
-            addLoadingLatest()
             WebController.loadLatest {
                 addLatest(it)
-                funResponse()
+                funResponse(getLatest())
             }
         }
     }
 
-    fun loadNowPlaying(funResponse: () -> Unit) {
+    fun loadNowPlaying(funResponse: (movies: MutableList<Movie>) -> Unit) {
         if (getNowPlaying().isEmptyOrInLoading()) {
-            addLoadingNowPlaying()
             WebController.loadNowPlaying {
                 addNowPlaying(it.results)
-                funResponse()
+                funResponse(getNowPlaying())
             }
         }
     }
 
-    fun loadPopular(funResponse: () -> Unit) {
+    fun loadPopular(funResponse: (movies: MutableList<Movie>) -> Unit) {
         if (getPopular().isEmptyOrInLoading()) {
-            addLoadingPopular()
             WebController.loadPopular {
                 addPopular(it.results)
-                funResponse()
+                funResponse(getPopular())
             }
         }
     }
 
-    fun loadTopRated(funResponse: () -> Unit) {
+    fun loadTopRated(funResponse: (movies: MutableList<Movie>) -> Unit) {
         if (getTopRated().isEmptyOrInLoading()) {
-            addLoadingTopRated()
             WebController.loadTopRated {
-                println(it.results)
                 addTopRated(it.results)
-                funResponse()
+                funResponse(getTopRated())
             }
         }
     }
 
-    fun loadUpcoming(funResponse: () -> Unit) {
-        if (getUpcoming().isEmptyOrInLoading()) {
-            addLoadingUpcoming()
+    fun loadUpcoming(funResponse: (movies: List<Movie>) -> Unit) {
+        val upcoming = getUpcoming()
+        if (upcoming.isEmptyOrInLoading()) {
             WebController.loadUpcoming {
                 addUpcoming(it.results)
-                funResponse()
+                funResponse(it.results)
             }
+        } else {
+            funResponse(upcoming)
         }
     }
 
@@ -88,16 +85,6 @@ object DataController {
     private fun addTopRated(movies: List<Movie>) = DatabaseMovies.addTopRated(movies)
 
     private fun addUpcoming(movies: List<Movie>) = DatabaseMovies.addUpcoming(movies)
-
-    private fun addLoadingLatest() = DatabaseMovies.addLoadingLatest()
-
-    private fun addLoadingNowPlaying() = DatabaseMovies.addLoadingNowPlaying()
-
-    private fun addLoadingTopRated() = DatabaseMovies.addLoadingTopRated()
-
-    private fun addLoadingPopular() = DatabaseMovies.addLoadingPopular()
-
-    private fun addLoadingUpcoming() = DatabaseMovies.addLoadingUpcoming()
 
     private fun MutableList<Movie>.isEmptyOrInLoading(): Boolean {
 
