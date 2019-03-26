@@ -1,11 +1,11 @@
 package com.example.imdb
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.imdb.data.DataController
 import com.example.imdb.ui.*
 
 enum class MovieCategory {
@@ -31,8 +31,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         ctx = this
 
-        println("alkdalskjdaslkdjasl")
-
         mainActivityViewController = MainActivityViewController()
 
         nowPlaying = findViewById(R.id.movies)
@@ -47,18 +45,11 @@ class MainActivity : AppCompatActivity() {
         topRated.setupAdapter()
         upcoming.setupAdapter()
 
-        mainActivityViewController.run {
-            latest.loadCategory(MovieCategory.Latest)
-            nowPlaying.loadCategory(MovieCategory.NowPlaying)
-            popular.loadCategory(MovieCategory.Popular)
-            topRated.loadCategory(MovieCategory.TopRated)
-            upcoming.loadCategory(MovieCategory.Upcoming)
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        DataController.restartDatabase()
+        latest.loadCategory(MovieCategory.Latest)
+        nowPlaying.loadCategory(MovieCategory.NowPlaying)
+        popular.loadCategory(MovieCategory.Popular)
+        topRated.loadCategory(MovieCategory.TopRated)
+        upcoming.loadCategory(MovieCategory.Upcoming)
     }
 
     private fun RecyclerView.setupAdapter() {
@@ -66,11 +57,11 @@ class MainActivity : AppCompatActivity() {
         this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
-    private fun createAdapter() = RecyclerViewAdapterMovieList(mutableListOf())
+    private fun createAdapter() : RecyclerViewAdapterMovieList = RecyclerViewAdapterMovieList(mutableListOf())
 
     private fun RecyclerView.loadCategory(category: MovieCategory) {
         mainActivityViewController.loadMovies(this.movieAdapter, category) {
-            this.movieAdapter.addMovies(it)
+            this.movieAdapter.setMovies(it)
         }
     }
 
@@ -78,4 +69,5 @@ class MainActivity : AppCompatActivity() {
         get() = adapter as RecyclerViewAdapterMovieList
 }
 
+@SuppressLint("StaticFieldLeak")
 lateinit var ctx: Context

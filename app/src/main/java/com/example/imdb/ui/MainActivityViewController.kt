@@ -16,23 +16,23 @@ class MainActivityViewController {
                    funResponse: (movies: List<Movie>) -> Unit) = when (category) {
         MovieCategory.Latest -> {
             DataController.loadLatest(funResponse)
-            adapterMovieList.addMovies(mutableListOf(Movie( 0,"", "", "", true)))
+            adapterMovieList.setMovies(mutableListOf(Movie( 0,"", "", "", true)))
         }
         MovieCategory.NowPlaying -> {
             DataController.loadNowPlaying(funResponse)
-            adapterMovieList.addMovies(mutableListOf(Movie( 0,"", "", "", true)))
+            adapterMovieList.setMovies(mutableListOf(Movie( 0,"", "", "", true)))
         }
         MovieCategory.Popular -> {
             DataController.loadPopular(funResponse)
-            adapterMovieList.addMovies(mutableListOf(Movie( 0,"", "", "", true)))
+            adapterMovieList.setMovies(mutableListOf(Movie( 0,"", "", "", true)))
         }
         MovieCategory.TopRated -> {
             DataController.loadTopRated(funResponse)
-            adapterMovieList.addMovies(mutableListOf(Movie( 0,"", "", "", true)))
+            adapterMovieList.setMovies(mutableListOf(Movie( 0,"", "", "", true)))
         }
         MovieCategory.Upcoming -> {
             DataController.loadUpcoming(funResponse)
-            adapterMovieList.addMovies(mutableListOf(Movie( 0,"", "", "", true)))
+            adapterMovieList.setMovies(mutableListOf(Movie( 0,"", "", "", true)))
         }
     }
 

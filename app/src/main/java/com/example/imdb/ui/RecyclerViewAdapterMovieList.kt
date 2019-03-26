@@ -27,15 +27,13 @@ class RecyclerViewAdapterMovieList(
         holder.bind(informationMovies[position], urlImg, urlLoading, imgNotFound)
     }
 
-    fun addMovies(movies: List<Movie>) {
+    fun setMovies(movies: List<Movie>) {
+        if(movies.isEmpty())
+            return
+
+        informationMovies.removeAll(informationMovies)
         for (movie in movies) {
             informationMovies.add(informationMovies.count(), movie)
-        }
-
-        for (movie in informationMovies) {
-            if (movie.loading) {
-                informationMovies.remove(movie)
-            }
         }
         notifyDataSetChanged()
     }

@@ -10,34 +10,23 @@ object DatabaseMovies {
     private val sharedPreferences
         get() = ctx.getSharedPreferences("test", MODE_PRIVATE)
 
-    private val latest = "latest"
-    private val nowPlaying = "nowPlaying"
-    private val popular = "popular"
-    private val topRated = "topRated"
-    private val upcoming = "upcoming"
+    private const val latest = "latest"
+    private const val nowPlaying = "nowPlaying"
+    private const val popular = "popular"
+    private const val topRated = "topRated"
+    private const val upcoming = "upcoming"
 
+    fun getLatest() : MutableList<Movie> = getListMovies(latest)
 
-    fun getLatest() = makeListMovies(latest)
+    fun getNowPlaying() : MutableList<Movie> = getListMovies(nowPlaying)
 
-    fun getNowPlaying() = makeListMovies(nowPlaying)
+    fun getPopular() : MutableList<Movie> = getListMovies(popular)
 
-    fun getPopular() = makeListMovies(popular)
+    fun getTopRated() : MutableList<Movie> = getListMovies(topRated)
 
-    fun getTopRated() = makeListMovies(topRated)
+    fun getUpcoming() : MutableList<Movie> = getListMovies(upcoming)
 
-    fun getUpcoming() = makeListMovies(upcoming)
-
-    fun drop() {
-
-    }
-
-    private fun clean(list: MutableList<Movie>) {
-        list.apply {
-            removeAll(this)
-        }
-    }
-
-    private fun makeListMovies(type: String): MutableList<Movie> {
+    private fun getListMovies(type: String): MutableList<Movie> {
         val movies = mutableListOf<Movie>()
 
         if (sharedPreferences.all[type] == null) return movies
@@ -53,7 +42,7 @@ object DatabaseMovies {
         return movies
     }
 
-    private fun addList(type: String, movies: List<Movie>) {
+    private fun setList(type: String, movies: List<Movie>) {
         val editor: SharedPreferences.Editor = sharedPreferences.edit()
         var ids = ""
         for (movie in movies) {
@@ -65,8 +54,8 @@ object DatabaseMovies {
     }
 
     private fun createMovie(editor: SharedPreferences.Editor, type: String, movie: Movie) {
-        val keyOriginalTitle = "${type}${movie.id}originalTitle"
-        val keyPosterPath = "${type}${movie.id}posterPath"
+        val keyOriginalTitle = "$type${movie.id}originalTitle"
+        val keyPosterPath = "$type${movie.id}posterPath"
 
         var value = movie.posterPath
 
@@ -81,29 +70,29 @@ object DatabaseMovies {
     }
 
     private fun getMovie(type: String, id: String): Movie {
-        val originalTitle = sharedPreferences.all["${type}${id}originalTitle"].toString()
-        val posterPath = sharedPreferences.all["${type}${id}posterPath"].toString()
+        val originalTitle = sharedPreferences.all["$type${id}originalTitle"].toString()
+        val posterPath = sharedPreferences.all["$type${id}posterPath"].toString()
 
         return Movie(id.toInt(), originalTitle, posterPath, "", false)
     }
 
-    fun addLatest(movie: Movie) {
-        addList(latest, listOf(movie))
+    fun setLatest(movie: Movie) {
+        setList(latest, listOf(movie))
     }
 
-    fun addNowPlaying(movies: List<Movie>) {
-        addList(nowPlaying, movies)
+    fun setNowPlaying(movies: List<Movie>) {
+        setList(nowPlaying, movies)
     }
 
-    fun addPopular(movies: List<Movie>) {
-        addList(popular, movies)
+    fun setPopular(movies: List<Movie>) {
+        setList(popular, movies)
     }
 
-    fun addTopRated(movies: List<Movie>) {
-        addList(topRated, movies)
+    fun setTopRated(movies: List<Movie>) {
+        setList(topRated, movies)
     }
 
-    fun addUpcoming(movies: List<Movie>) {
-        addList(upcoming, movies)
+    fun setUpcoming(movies: List<Movie>) {
+        setList(upcoming, movies)
     }
 }
