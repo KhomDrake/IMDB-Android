@@ -73,11 +73,14 @@ object DatabaseMovies {
         val originalTitle = sharedPreferences.all["$type${id}originalTitle"].toString()
         val posterPath = sharedPreferences.all["$type${id}posterPath"].toString()
 
-        return Movie(id.toInt(), originalTitle, posterPath, "", false)
+        return Movie(id.toInt(), originalTitle, posterPath, "", false, false)
     }
 
     fun setLatest(movie: Movie) {
-        setList(latest, listOf(movie))
+        if(movie.error)
+            setList(latest, listOf())
+        else
+            setList(latest, listOf(movie))
     }
 
     fun setNowPlaying(movies: List<Movie>) {

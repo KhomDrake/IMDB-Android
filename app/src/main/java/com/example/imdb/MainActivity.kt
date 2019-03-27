@@ -16,7 +16,7 @@ enum class MovieCategory {
     Upcoming
 }
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), RequestCategory {
 
     private lateinit var latest: RecyclerView
     private lateinit var nowPlaying: RecyclerView
@@ -39,25 +39,36 @@ class MainActivity : AppCompatActivity() {
         topRated = findViewById(R.id.toprated)
         upcoming = findViewById(R.id.upcoming)
 
-        latest.setupAdapter()
-        nowPlaying.setupAdapter()
-        popular.setupAdapter()
-        topRated.setupAdapter()
-        upcoming.setupAdapter()
+        latest.setupAdapter(this, MovieCategory.Latest)
+        nowPlaying.setupAdapter(this, MovieCategory.NowPlaying)
+        popular.setupAdapter(this, MovieCategory.Popular)
+        topRated.setupAdapter(this, MovieCategory.TopRated)
+        upcoming.setupAdapter(this, MovieCategory.Upcoming)
 
-        latest.loadCategory(MovieCategory.Latest)
-        nowPlaying.loadCategory(MovieCategory.NowPlaying)
-        popular.loadCategory(MovieCategory.Popular)
-        topRated.loadCategory(MovieCategory.TopRated)
-        upcoming.loadCategory(MovieCategory.Upcoming)
+        loadCategory(MovieCategory.Latest)
+        loadCategory(MovieCategory.NowPlaying)
+        loadCategory(MovieCategory.Popular)
+        loadCategory(MovieCategory.TopRated)
+        loadCategory(MovieCategory.Upcoming)
     }
 
-    private fun RecyclerView.setupAdapter() {
-        this.adapter = createAdapter()
+    override fun loadCategory(type: MovieCategory) {
+        when(type) {
+            MovieCategory.Upcoming -> upcoming.loadCategory(type)
+            MovieCategory.NowPlaying -> nowPlaying.loadCategory(type)
+            MovieCategory.Popular -> popular.loadCategory(type)
+            MovieCategory.TopRated -> topRated.loadCategory(type)
+            MovieCategory.Latest -> latest.loadCategory(type)
+        }
+    }
+
+    private fun RecyclerView.setupAdapter(requestCategory: RequestCategory, movieCategory: MovieCategory) {
+        this.adapter = createAdapter(requestCategory, movieCategory)
         this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
-    private fun createAdapter() : RecyclerViewAdapterMovieList = RecyclerViewAdapterMovieList(mutableListOf())
+    private fun createAdapter(requestCategory: RequestCategory, movieCategory: MovieCategory) :
+            RecyclerViewAdapterMovieList = RecyclerViewAdapterMovieList(mutableListOf(), requestCategory, movieCategory)
 
     private fun RecyclerView.loadCategory(category: MovieCategory) {
         mainActivityViewController.loadMovies(this.movieAdapter, category) {

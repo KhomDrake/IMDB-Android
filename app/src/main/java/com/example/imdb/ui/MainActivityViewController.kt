@@ -7,6 +7,8 @@ import java.util.Locale
 
 class MainActivityViewController {
 
+    private val loading: Movie = Movie( 0,"", "", "", loading = true, error = false)
+
     init {
         DataController.setupDatabase(Locale.getDefault().toLanguageTag())
     }
@@ -15,24 +17,24 @@ class MainActivityViewController {
                    category: MovieCategory,
                    funResponse: (movies: List<Movie>) -> Unit) = when (category) {
         MovieCategory.Latest -> {
+            adapterMovieList.setMovies(mutableListOf(loading))
             DataController.loadLatest(funResponse)
-            adapterMovieList.setMovies(mutableListOf(Movie( 0,"", "", "", true)))
         }
         MovieCategory.NowPlaying -> {
+            adapterMovieList.setMovies(mutableListOf(loading))
             DataController.loadNowPlaying(funResponse)
-            adapterMovieList.setMovies(mutableListOf(Movie( 0,"", "", "", true)))
         }
         MovieCategory.Popular -> {
+            adapterMovieList.setMovies(mutableListOf(loading))
             DataController.loadPopular(funResponse)
-            adapterMovieList.setMovies(mutableListOf(Movie( 0,"", "", "", true)))
         }
         MovieCategory.TopRated -> {
+            adapterMovieList.setMovies(mutableListOf(loading))
             DataController.loadTopRated(funResponse)
-            adapterMovieList.setMovies(mutableListOf(Movie( 0,"", "", "", true)))
         }
         MovieCategory.Upcoming -> {
+            adapterMovieList.setMovies(mutableListOf(loading))
             DataController.loadUpcoming(funResponse)
-            adapterMovieList.setMovies(mutableListOf(Movie( 0,"", "", "", true)))
         }
     }
 

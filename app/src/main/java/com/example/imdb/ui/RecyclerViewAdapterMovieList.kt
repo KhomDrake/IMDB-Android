@@ -3,15 +3,19 @@ package com.example.imdb.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.data.entity.Movie
 
 class RecyclerViewAdapterMovieList(
-    private val informationMovies: MutableList<Movie>
+    private val informationMovies: MutableList<Movie>,
+    private val requestCategory: RequestCategory,
+    private val movieCategory: MovieCategory
 ) : RecyclerView.Adapter<RecyclerViewAdapterMovieList.ViewHolder>() {
 
     private val urlImg = "https://image.tmdb.org/t/p/w200"
@@ -24,7 +28,7 @@ class RecyclerViewAdapterMovieList(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(informationMovies[position], urlImg, urlLoading, imgNotFound)
+        holder.bind(informationMovies[position], urlImg, urlLoading, imgNotFound, requestCategory, movieCategory)
     }
 
     fun setMovies(movies: List<Movie>) {
@@ -32,9 +36,8 @@ class RecyclerViewAdapterMovieList(
             return
 
         informationMovies.removeAll(informationMovies)
-        for (movie in movies) {
-            informationMovies.add(informationMovies.count(), movie)
-        }
+
+        informationMovies.addAll(movies)
         notifyDataSetChanged()
     }
 
@@ -44,8 +47,25 @@ class RecyclerViewAdapterMovieList(
 
         private val name: TextView = itemView.findViewById(R.id.name)
         private val img: ImageView = itemView.findViewById(R.id.img)
+        private val again: Button = itemView.findViewById(R.id.again)
 
-        fun bind(result: Movie, urlImg: String, urlLoading: String, imgNotFound: String) {
+
+        fun bind(result: Movie, urlImg: String, urlLoading: String, imgNotFound: String,
+                 requestCategory: RequestCategory, movieCategory: MovieCategory) {
+
+            if(result.error)
+            {
+                img.visibility = View.INVISIBLE
+                again.visibility = View.VISIBLE
+                again.setOnClickListener {
+                    requestCategory.loadCategory(movieCategory)
+                }
+                return
+            }
+
+            again.visibility = View.INVISIBLE
+            img.visibility = View.VISIBLE
+
             if (result.loading) {
                 Glide.with(itemView).load(urlLoading).into(img)
                 return

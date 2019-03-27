@@ -9,5 +9,6 @@ data class Movie(
     @SerializedName("poster_path")
     val posterPath: String?,
     val title: String,
-    var loading: Boolean
+    val loading: Boolean,
+    val error: Boolean
 )
