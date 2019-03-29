@@ -1,5 +1,6 @@
 package com.example.imdb.ui
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.imdb.MainActivity
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.data.entity.Movie
@@ -70,6 +72,10 @@ class RecyclerViewAdapterMovieList(
                 Glide.with(itemView).load(urlLoading).into(img)
                 return
             }
+
+//            img.setOnClickListener {
+//                val startNewActivity = Intent(itemView.context, MainActivity::class.java)
+//            }
 
             val title = "Title: " + result.originalTitle
             name.text = title

@@ -33,23 +33,31 @@ object WebController {
     }
 
     private fun requestResponse(funResponse: (body: Movie) -> Unit) = object : Callback<Movie> {
+        val error = Movie(0, "asd", "asd", "asd", loading = false, error = true)
         override fun onFailure(call: Call<Movie?>, t: Throwable) {
-            funResponse(Movie(0, "asd", "asd", "asd", loading = false, error = true))
+            funResponse(error)
         }
 
         override fun onResponse(call: Call<Movie?>, response: Response<Movie?>) {
-            response.body()?.apply(funResponse)
+            if(response.body() == null)
+                funResponse(error)
+            else
+              response.body()?.apply(funResponse)
         }
     }
 
     private fun requestResponse(funResponse: (body: MoviesList) -> Unit) = object : Callback<MoviesList> {
+        val error = Movie(0, "asd", "asd", "asd", loading = false, error = true)
+
         override fun onFailure(call: Call<MoviesList?>, t: Throwable) {
-            val m = Movie(0, "asd", "asd", "asd", loading = false, error = true)
-            funResponse(MoviesList(0, listOf(m), 0))
+            funResponse(MoviesList(0, listOf(error), 0))
         }
 
         override fun onResponse(call: Call<MoviesList?>, response: Response<MoviesList?>) {
-            response.body()?.apply(funResponse)
+            if(response.body() == null || response.body()?.results?.count() == 0)
+                funResponse(MoviesList(0, listOf(error), 0))
+            else
+                response.body()?.apply(funResponse)
         }
     }
 
