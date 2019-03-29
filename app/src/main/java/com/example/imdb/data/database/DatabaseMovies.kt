@@ -4,6 +4,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.example.imdb.ctx
 import com.example.imdb.data.entity.Movie
+import com.example.imdb.data.entity.MovieDetail
 
 object DatabaseMovies {
 
@@ -15,8 +16,11 @@ object DatabaseMovies {
     private const val popular = "popular"
     private const val topRated = "topRated"
     private const val upcoming = "upcoming"
+    private var dataLastMovieDetail: MovieDetail = MovieDetail(false, "", 0, listOf(),
+        "", -1, "", "", 0.0, "", listOf(), "",
+        0, 0, listOf(), "", "", "",  0.0, 0)
 
-    fun getLatest() : MutableList<Movie> = getListMovies(latest)
+        fun getLatest() : MutableList<Movie> = getListMovies(latest)
 
     fun getNowPlaying() : MutableList<Movie> = getListMovies(nowPlaying)
 
@@ -25,6 +29,12 @@ object DatabaseMovies {
     fun getTopRated() : MutableList<Movie> = getListMovies(topRated)
 
     fun getUpcoming() : MutableList<Movie> = getListMovies(upcoming)
+
+    fun getDetailMovie() : MovieDetail = dataLastMovieDetail
+
+    fun setMovieDetail(movieDetail: MovieDetail) {
+        dataLastMovieDetail = movieDetail
+    }
 
     private fun getListMovies(type: String): MutableList<Movie> {
         val movies = mutableListOf<Movie>()

@@ -7,12 +7,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.MainActivity
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.data.entity.Movie
+import com.example.imdb.ui.moviedetail.MovieDetailActivity
 
 class RecyclerViewAdapterMovieList(
     private val informationMovies: MutableList<Movie>,
@@ -73,9 +75,11 @@ class RecyclerViewAdapterMovieList(
                 return
             }
 
-//            img.setOnClickListener {
-//                val startNewActivity = Intent(itemView.context, MainActivity::class.java)
-//            }
+            img.setOnClickListener {
+                val startNewActivity = Intent(itemView.context, MovieDetailActivity::class.java)
+                startNewActivity.putExtra("movieID", result.id)
+                startActivity(itemView.context, startNewActivity, null)
+            }
 
             val title = "Title: " + result.originalTitle
             name.text = title

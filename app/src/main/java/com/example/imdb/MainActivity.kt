@@ -72,7 +72,6 @@ class MainActivity : AppCompatActivity(), RequestCategory {
 
     private fun RecyclerView.loadCategory(category: MovieCategory) {
         mainActivityViewController.loadMovies(this.movieAdapter, category) {
-            println(it)
             this.movieAdapter.setMovies(it)
         }
     }

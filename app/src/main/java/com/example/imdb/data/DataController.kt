@@ -6,6 +6,7 @@ import com.example.imdb.MovieCategory
 import com.example.imdb.ctx
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.Movie
+import com.example.imdb.data.entity.MovieDetail
 import com.example.imdb.network.WebController
 
 object DataController {
@@ -17,6 +18,20 @@ object DataController {
 
     fun setupDatabase(language: String) {
         this.language = language
+    }
+
+    fun loadMovieDetail(id: Int, funResponse: (movies: MovieDetail) -> Unit) {
+
+        val movieDetail = DatabaseMovies.getDetailMovie()
+
+        if(movieDetail.id != id) {
+            WebController.loadMovieDetail(id) {
+                DatabaseMovies.setMovieDetail(it)
+                funResponse(it)
+            }
+        } else {
+            funResponse(movieDetail)
+        }
     }
 
     fun getLanguage() = language
