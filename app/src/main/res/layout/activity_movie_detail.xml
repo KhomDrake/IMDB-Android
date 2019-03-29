@@ -97,6 +97,26 @@
                   android:layout_marginStart="16dp" app:layout_constraintEnd_toEndOf="parent"
                   android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.485"/>
 
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/reviews"
+                android:text="@string/see_reviews"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+                android:layout_marginBottom="4dp" app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/recommendations"
+                android:text="@string/see_recommendations"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp" app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </RelativeLayout>

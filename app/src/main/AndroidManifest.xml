@@ -14,6 +14,10 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.review.ReviewActivity">
+        </activity>
+        <activity android:name=".ui.recommendation.RecommendationActivity">
+        </activity>
         <activity
                 android:name=".ui.moviedetail.MovieDetailActivity"
                 android:theme="@style/NoActionBar">

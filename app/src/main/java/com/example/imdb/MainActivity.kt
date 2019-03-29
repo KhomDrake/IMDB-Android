@@ -6,14 +6,17 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.imdb.ui.*
+import com.example.imdb.ui.mainactivity.MainActivityViewController
+import com.example.imdb.ui.mainactivity.RequestCategory
+import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
 
 enum class MovieCategory {
     Latest,
     NowPlaying,
     Popular,
     TopRated,
-    Upcoming
+    Upcoming,
+    Recommendation
 }
 
 class MainActivity : AppCompatActivity(), RequestCategory {
@@ -68,7 +71,8 @@ class MainActivity : AppCompatActivity(), RequestCategory {
     }
 
     private fun createAdapter(requestCategory: RequestCategory, movieCategory: MovieCategory) :
-            RecyclerViewAdapterMovieList = RecyclerViewAdapterMovieList(mutableListOf(), requestCategory, movieCategory)
+            RecyclerViewAdapterMovieList =
+        RecyclerViewAdapterMovieList(mutableListOf(), requestCategory, movieCategory)
 
     private fun RecyclerView.loadCategory(category: MovieCategory) {
         mainActivityViewController.loadMovies(this.movieAdapter, category) {

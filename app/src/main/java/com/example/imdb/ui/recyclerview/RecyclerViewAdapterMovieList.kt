@@ -1,4 +1,4 @@
-package com.example.imdb.ui
+package com.example.imdb.ui.recyclerview
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -10,10 +10,10 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.imdb.MainActivity
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.data.entity.Movie
+import com.example.imdb.ui.mainactivity.RequestCategory
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
 
 class RecyclerViewAdapterMovieList(

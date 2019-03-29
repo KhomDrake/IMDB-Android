@@ -22,7 +22,7 @@ object DataController {
 
     fun loadMovieDetail(id: Int, funResponse: (movies: MovieDetail) -> Unit) {
 
-        val movieDetail = DatabaseMovies.getDetailMovie()
+        val movieDetail = getDetailMovie()
 
         if(movieDetail.id != id) {
             WebController.loadMovieDetail(id) {
@@ -35,6 +35,15 @@ object DataController {
     }
 
     fun getLanguage() = language
+
+    fun loadRecommendation(id: Int, funResponse: (List<Movie>) -> Unit) {
+        val recommendation = DatabaseMovies.getRecommendationLastMovie()
+        if(recommendation.id != id) {
+
+        } else {
+            funResponse(recommendation.moviesList.results)
+        }
+    }
 
     fun loadLatest(funResponse: (movies: List<Movie>) -> Unit) {
         val latest = getLatest()
@@ -96,6 +105,8 @@ object DataController {
         }
     }
 
+    private fun getDetailMovie() = DatabaseMovies.getDetailMovie()
+
     private fun getLatest() = DatabaseMovies.getLatest()
 
     private fun getNowPlaying() = DatabaseMovies.getNowPlaying()
@@ -133,14 +144,7 @@ object DataController {
         if(!existLastUpdate(type))
             setTime(type)
 
-//        println(getCurrentTime()
-//            .minus(getTimeLastUpdate(type)))
-//
-//        println(sharedPreferences.all["lastUpdateTable$type"])
-
-        val result = deprecatedSinceLastUpdate(type)
-
-        return result
+        return deprecatedSinceLastUpdate(type)
     }
 
     private fun deprecatedSinceLastUpdate(type: String) = getCurrentTime()

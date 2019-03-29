@@ -8,4 +8,8 @@
     <string name="vote_average">Vote Average:</string>
     <string name="vote_count">Vote Count:</string>
     <string name="over_view">Over View:</string>
+    <string name="see_lists_where_it_appears">See Lists Where It Appears</string>
+    <string name="see_recommendations">See Recommendations</string>
+    <string name="see_reviews">See Reviews</string>
+    <string name="recommendation_text">Recommendations</string>
 </resources>

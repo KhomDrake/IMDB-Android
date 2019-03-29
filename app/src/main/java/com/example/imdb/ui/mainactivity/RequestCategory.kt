@@ -1,4 +1,4 @@
-package com.example.imdb.ui
+package com.example.imdb.ui.mainactivity
 
 import com.example.imdb.MovieCategory
 

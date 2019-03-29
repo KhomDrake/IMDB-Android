@@ -3,8 +3,7 @@ package com.example.imdb.data.database
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.example.imdb.ctx
-import com.example.imdb.data.entity.Movie
-import com.example.imdb.data.entity.MovieDetail
+import com.example.imdb.data.entity.*
 
 object DatabaseMovies {
 
@@ -20,7 +19,10 @@ object DatabaseMovies {
         "", -1, "", "", 0.0, "", listOf(), "",
         0, 0, listOf(), "", "", "",  0.0, 0)
 
-        fun getLatest() : MutableList<Movie> = getListMovies(latest)
+    private var recommendationLastMovieDetail: Recommendation = Recommendation(-1, MoviesList(0, listOf(), 0))
+    private var reviewsLastMovieDetail: Reviews = Reviews(-1, 0, listOf(), 0, 0)
+
+    fun getLatest() : MutableList<Movie> = getListMovies(latest)
 
     fun getNowPlaying() : MutableList<Movie> = getListMovies(nowPlaying)
 
@@ -31,6 +33,10 @@ object DatabaseMovies {
     fun getUpcoming() : MutableList<Movie> = getListMovies(upcoming)
 
     fun getDetailMovie() : MovieDetail = dataLastMovieDetail
+
+    fun getRecommendationLastMovie() : Recommendation = recommendationLastMovieDetail
+
+    fun getReviewsLastMovieDetail() : Reviews = reviewsLastMovieDetail
 
     fun setMovieDetail(movieDetail: MovieDetail) {
         dataLastMovieDetail = movieDetail
