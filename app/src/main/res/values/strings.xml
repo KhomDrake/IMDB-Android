@@ -12,4 +12,5 @@
     <string name="see_recommendations">See Recommendations</string>
     <string name="see_reviews">See Reviews</string>
     <string name="recommendation_text">Recommendations</string>
+    <string name="movie_review">Movie Review</string>
 </resources>

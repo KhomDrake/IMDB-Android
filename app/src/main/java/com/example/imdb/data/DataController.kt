@@ -5,8 +5,7 @@ import android.content.SharedPreferences
 import com.example.imdb.MovieCategory
 import com.example.imdb.ctx
 import com.example.imdb.data.database.DatabaseMovies
-import com.example.imdb.data.entity.Movie
-import com.example.imdb.data.entity.MovieDetail
+import com.example.imdb.data.entity.*
 import com.example.imdb.network.WebController
 
 object DataController {
@@ -36,10 +35,25 @@ object DataController {
 
     fun getLanguage() = language
 
+    fun loadReviews(id: Int, funResponse: (reviews: Reviews) -> Unit) {
+        val reviews = DatabaseMovies.getReviewsLastMovieDetail()
+        if(reviews.id != id) {
+            WebController.loadReviews(id) {
+                DatabaseMovies.setReviews(it)
+                funResponse(it)
+            }
+        } else {
+            funResponse(reviews)
+        }
+    }
+
     fun loadRecommendation(id: Int, funResponse: (List<Movie>) -> Unit) {
         val recommendation = DatabaseMovies.getRecommendationLastMovie()
         if(recommendation.id != id) {
-
+            WebController.loadRecommendation(id) {
+                DatabaseMovies.setRecommendationLastMovie(Recommendation(id, it))
+                funResponse(it.results)
+            }
         } else {
             funResponse(recommendation.moviesList.results)
         }

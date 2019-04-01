@@ -13,6 +13,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.imdb.R
+import com.example.imdb.ui.moviereview.ReviewActivity
 import com.example.imdb.ui.recommendation.RecommendationActivity
 
 class MovieDetailActivity : AppCompatActivity() {
@@ -74,6 +75,12 @@ class MovieDetailActivity : AppCompatActivity() {
 
         recommendation.setOnClickListener {
             val startNewActivity = Intent(this, RecommendationActivity::class.java)
+            startNewActivity.putExtra("movieID", movieID)
+            ContextCompat.startActivity(this, startNewActivity, null)
+        }
+
+        review.setOnClickListener {
+            val startNewActivity = Intent(this, ReviewActivity::class.java)
             startNewActivity.putExtra("movieID", movieID)
             ContextCompat.startActivity(this, startNewActivity, null)
         }

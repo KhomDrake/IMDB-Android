@@ -2,6 +2,8 @@ package com.example.imdb.ui.recommendation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
@@ -13,6 +15,7 @@ class RecommendationActivity : AppCompatActivity(), RequestCategory {
 
     private lateinit var recommendationViewController: RecommendationViewController
     private lateinit var recommendationRecyclerView: RecyclerView
+    private lateinit var loadingRecommendation: ProgressBar
     private var movieID: Int = -3000
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,6 +24,9 @@ class RecommendationActivity : AppCompatActivity(), RequestCategory {
 
         recommendationViewController = RecommendationViewController()
         recommendationRecyclerView = findViewById(R.id.recommendation)
+        loadingRecommendation = findViewById(R.id.loading_recommendation)
+
+        loadingRecommendation.visibility = View.VISIBLE
 
 
         movieID = intent.getIntExtra("movieID", -3000)
@@ -37,6 +43,7 @@ class RecommendationActivity : AppCompatActivity(), RequestCategory {
             MovieCategory.Recommendation -> {
                 recommendationViewController.loadRecommendation(movieID) {
                     recommendationRecyclerView.movieAdapter.setMovies(it)
+                    loadingRecommendation.visibility = View.INVISIBLE
                 }
             }
             else -> println("eita")
@@ -45,7 +52,7 @@ class RecommendationActivity : AppCompatActivity(), RequestCategory {
 
     private fun RecyclerView.setupAdapter(requestCategory: RequestCategory, movieCategory: MovieCategory) {
         this.adapter =  RecyclerViewAdapterMovieList(mutableListOf(), requestCategory, movieCategory)
-        this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        this.layoutManager = LinearLayoutManager(context)
     }
 
     private val RecyclerView.movieAdapter: RecyclerViewAdapterMovieList

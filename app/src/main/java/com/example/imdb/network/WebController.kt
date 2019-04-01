@@ -4,6 +4,7 @@ import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.MoviesList
 import com.example.imdb.data.entity.Movie
 import com.example.imdb.data.entity.MovieDetail
+import com.example.imdb.data.entity.Reviews
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,6 +45,16 @@ object WebController {
     fun loadMovieDetail(id: Int, funResponse: (body: MovieDetail) -> Unit) {
         api.getDetail(id, apiKey, DataController.getLanguage())
             .enqueue(requestResponse<MovieDetail>(funResponse, null))
+    }
+
+    fun loadRecommendation(id: Int, funResponse: (body: MoviesList) -> Unit) {
+        api.getRecommendation(id, apiKey, DataController.getLanguage())
+            .enqueue(requestResponse<MoviesList>(funResponse, null))
+    }
+
+    fun loadReviews(id: Int, funResponse: (body: Reviews) -> Unit) {
+        api.getReviews(id, apiKey, DataController.getLanguage())
+            .enqueue(requestResponse<Reviews>(funResponse, null))
     }
 
     private fun <T>requestResponse(funResponse: (body: T) -> Unit, error: T?) = object : Callback<T> {

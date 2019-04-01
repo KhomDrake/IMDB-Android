@@ -38,10 +38,6 @@ object DatabaseMovies {
 
     fun getReviewsLastMovieDetail() : Reviews = reviewsLastMovieDetail
 
-    fun setMovieDetail(movieDetail: MovieDetail) {
-        dataLastMovieDetail = movieDetail
-    }
-
     private fun getListMovies(type: String): MutableList<Movie> {
         val movies = mutableListOf<Movie>()
 
@@ -90,6 +86,18 @@ object DatabaseMovies {
         val posterPath = sharedPreferences.all["$type${id}posterPath"].toString()
 
         return Movie(id.toInt(), originalTitle, posterPath, "", false, false)
+    }
+
+    fun setReviews(reviews: Reviews) {
+        reviewsLastMovieDetail = reviews
+    }
+
+    fun setRecommendationLastMovie(recommendation: Recommendation) {
+        recommendationLastMovieDetail = recommendation
+    }
+
+    fun setMovieDetail(movieDetail: MovieDetail) {
+        dataLastMovieDetail = movieDetail
     }
 
     fun setLatest(movie: Movie) {

@@ -37,6 +37,7 @@ class MainActivityViewController {
             adapterMovieList.setMovies(mutableListOf(loading))
             DataController.loadUpcoming(funResponse)
         }
+        else -> Unit
     }
 
 }

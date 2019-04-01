@@ -1,6 +1,6 @@
 package com.example.imdb.data.entity
 
-data class Result(
+data class Review(
     val author: String,
     val content: String,
     val id: String,
