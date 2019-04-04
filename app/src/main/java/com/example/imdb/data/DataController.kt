@@ -2,16 +2,24 @@ package com.example.imdb.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
 import com.example.imdb.MovieCategory
-import com.example.imdb.ctx
 import com.example.imdb.data.database.DatabaseMovies
-import com.example.imdb.data.entity.*
+import com.example.imdb.data.entity.http.Movie
+import com.example.imdb.data.entity.http.MovieDetail
+import com.example.imdb.data.entity.http.Recommendation
+import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.network.WebController
 
 object DataController {
 
-    private val sharedPreferences
-        get() = ctx.getSharedPreferences("test", Context.MODE_PRIVATE)
+    private var createDatabase = false
+    private lateinit var databaseMovies: DatabaseMovies
+
+    fun createDatabase(ctx: Context) {
+        DatabaseMovies.instance(ctx)
+    }
+
     private lateinit var language: String
     private const val timeToBeDeprecated: Long = 5 * 60000
 
@@ -25,7 +33,7 @@ object DataController {
 
         if(movieDetail.id != id) {
             WebController.loadMovieDetail(id) {
-                DatabaseMovies.setMovieDetail(it)
+                databaseMovies.setMovieDetail(it)
                 funResponse(it)
             }
         } else {
@@ -36,10 +44,10 @@ object DataController {
     fun getLanguage() = language
 
     fun loadReviews(id: Int, funResponse: (reviews: Reviews) -> Unit) {
-        val reviews = DatabaseMovies.getReviewsLastMovieDetail()
+        val reviews = databaseMovies.getReviewsLastMovieDetail()
         if(reviews.id != id) {
             WebController.loadReviews(id) {
-                DatabaseMovies.setReviews(it)
+                databaseMovies.setReviews(it)
                 funResponse(it)
             }
         } else {
@@ -48,10 +56,10 @@ object DataController {
     }
 
     fun loadRecommendation(id: Int, funResponse: (List<Movie>) -> Unit) {
-        val recommendation = DatabaseMovies.getRecommendationLastMovie()
+        val recommendation = databaseMovies.getRecommendationLastMovie()
         if(recommendation.id != id) {
             WebController.loadRecommendation(id) {
-                DatabaseMovies.setRecommendationLastMovie(Recommendation(id, it))
+                databaseMovies.setRecommendationLastMovie(Recommendation(id, it))
                 funResponse(it.results)
             }
         } else {
@@ -119,27 +127,27 @@ object DataController {
         }
     }
 
-    private fun getDetailMovie() = DatabaseMovies.getDetailMovie()
+    private fun getDetailMovie() = databaseMovies.getDetailMovie()
 
-    private fun getLatest() = DatabaseMovies.getLatest()
+    private fun getLatest() = databaseMovies.getLatest()
 
-    private fun getNowPlaying() = DatabaseMovies.getNowPlaying()
+    private fun getNowPlaying() = databaseMovies.getNowPlaying()
 
-    private fun getPopular() = DatabaseMovies.getPopular()
+    private fun getPopular() = databaseMovies.getPopular()
 
-    private fun getTopRated() = DatabaseMovies.getTopRated()
+    private fun getTopRated() = databaseMovies.getTopRated()
 
-    private fun getUpcoming() = DatabaseMovies.getUpcoming()
+    private fun getUpcoming() = databaseMovies.getUpcoming()
 
-    private fun setLatest(movie: Movie) = DatabaseMovies.setLatest(movie)
+    private fun setLatest(movie: Movie) = databaseMovies.setLatest(movie)
 
-    private fun setNowPlaying(movies: List<Movie>) = DatabaseMovies.setNowPlaying(movies)
+    private fun setNowPlaying(movies: List<Movie>) = databaseMovies.setNowPlaying(movies)
 
-    private fun setPopular(movies: List<Movie>) = DatabaseMovies.setPopular(movies)
+    private fun setPopular(movies: List<Movie>) = databaseMovies.setPopular(movies)
 
-    private fun setTopRated(movies: List<Movie>) = DatabaseMovies.setTopRated(movies)
+    private fun setTopRated(movies: List<Movie>) = databaseMovies.setTopRated(movies)
 
-    private fun setUpcoming(movies: List<Movie>) = DatabaseMovies.setUpcoming(movies)
+    private fun setUpcoming(movies: List<Movie>) = databaseMovies.setUpcoming(movies)
 
     private fun MutableList<Movie>.isEmptyOrInLoading(): Boolean {
         for (movie in this) {
@@ -164,16 +172,16 @@ object DataController {
     private fun deprecatedSinceLastUpdate(type: String) = getCurrentTime()
         .minus(getTimeLastUpdate(type)) > timeToBeDeprecated
 
-    private fun getTimeLastUpdate(type: String) = sharedPreferences.all["lastUpdateTable$type"].toString().toLong()
+    private fun getTimeLastUpdate(type: String) = 23 //sharedPreferences.all["lastUpdateTable$type"].toString().toLong()
 
-    private fun existLastUpdate(type: String) = sharedPreferences.all["lastUpdateTable$type"] != null
+    private fun existLastUpdate(type: String) = false // sharedPreferences.all["lastUpdateTable$type"] != null
 
     private fun getCurrentTime() = System.currentTimeMillis()
 
     private fun setTime(type: String) {
-        val editor: SharedPreferences.Editor = sharedPreferences.edit()
-        editor.putLong("lastUpdateTable$type", System.currentTimeMillis())
-        editor.apply()
+//        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+//        editor.putLong("lastUpdateTable$type", System.currentTimeMillis())
+//        editor.apply()
     }
 
     private fun setListDatabaseMovies(movies: List<Movie>, movieCategory: MovieCategory) {
@@ -215,6 +223,6 @@ object DataController {
             setLatest(movie)
         }
         else
-            setLatest(movie = Movie( 0,"", "", "", loading = false, error = true))
+            setLatest(movie = Movie(0, "", "", "", loading = false, error = true))
     }
 }

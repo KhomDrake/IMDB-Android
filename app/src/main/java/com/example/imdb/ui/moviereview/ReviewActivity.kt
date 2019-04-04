@@ -2,6 +2,7 @@ package com.example.imdb.ui.moviereview
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,7 +32,7 @@ class ReviewActivity : AppCompatActivity() {
         loadingReview.visibility = View.VISIBLE
         reviewRecyclerView.setupAdapterReviews()
 
-        println(movieID)
+
 
         reviewViewController.loadReviews(movieID) {
             reviewRecyclerView.reviewAdapter.setReviews(it)

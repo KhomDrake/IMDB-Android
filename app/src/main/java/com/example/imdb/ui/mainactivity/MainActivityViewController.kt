@@ -2,13 +2,14 @@ package com.example.imdb.ui.mainactivity
 
 import com.example.imdb.MovieCategory
 import com.example.imdb.data.DataController
-import com.example.imdb.data.entity.Movie
+import com.example.imdb.data.entity.http.Movie
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
 import java.util.Locale
 
 class MainActivityViewController {
 
-    private val loading: Movie = Movie( 0,"", "", "", loading = true, error = false)
+    private val loading: Movie =
+        Movie(0, "", "", "", loading = true, error = false)
 
     init {
         DataController.setupDatabase(Locale.getDefault().toLanguageTag())

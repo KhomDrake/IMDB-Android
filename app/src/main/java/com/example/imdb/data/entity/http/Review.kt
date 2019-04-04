@@ -1,4 +1,4 @@
-package com.example.imdb.data.entity
+package com.example.imdb.data.entity.http
 
 data class Review(
     val author: String,

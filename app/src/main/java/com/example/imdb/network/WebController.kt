@@ -1,10 +1,10 @@
 package com.example.imdb.network
 
 import com.example.imdb.data.DataController
-import com.example.imdb.data.entity.MoviesList
-import com.example.imdb.data.entity.Movie
-import com.example.imdb.data.entity.MovieDetail
-import com.example.imdb.data.entity.Reviews
+import com.example.imdb.data.entity.http.MoviesList
+import com.example.imdb.data.entity.http.Movie
+import com.example.imdb.data.entity.http.MovieDetail
+import com.example.imdb.data.entity.http.Reviews
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,7 +13,8 @@ object WebController {
 
     private val api = API().service()
     private const val apiKey = "ed84e9c8c38d4d0a8f3adaa5ba324145"
-    private val errorMovie = Movie(0, "asd", "asd", "asd", loading = false, error = true)
+    private val errorMovie =
+        Movie(0, "asd", "asd", "asd", loading = false, error = true)
     private val errorMovieList = MoviesList(0, listOf(errorMovie), 0)
 
 
@@ -59,6 +60,7 @@ object WebController {
 
     private fun <T>requestResponse(funResponse: (body: T) -> Unit, error: T?) = object : Callback<T> {
         override fun onFailure(call: Call<T?>, t: Throwable) {
+            println(t)
             funResponse(error!!)
         }
 

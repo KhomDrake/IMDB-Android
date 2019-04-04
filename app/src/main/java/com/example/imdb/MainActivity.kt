@@ -2,10 +2,17 @@ package com.example.imdb
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.nfc.Tag
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.imdb.data.DataController
+import com.example.imdb.data.database.DatabaseMovies
+import com.example.imdb.data.entity.table.TableMovie
+import com.example.imdb.data.entity.table.TableMovieCategory
+import com.example.imdb.data.entity.table.TableMoviesList
 import com.example.imdb.ui.mainactivity.MainActivityViewController
 import com.example.imdb.ui.mainactivity.RequestCategory
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
@@ -32,9 +39,18 @@ class MainActivity : AppCompatActivity(), RequestCategory {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ctx = this
 
         mainActivityViewController = MainActivityViewController()
+
+        DataController.createDatabase(this)
+        val database = DatabaseMovies.Instance!!
+//        database.moviesDao().insertMovieList(TableMoviesList(1, 1, 3, "Latest"))
+//        database.moviesDao().insertMovie(TableMovie(23, "asda", "dasas", "asdas", 1))
+
+//        database.moviesDao().insertMovieCategory(TableMovieCategory(1, 23, 1))
+        Log.i("Selects", database.moviesDao().getMovies().toString())
+        Log.i("Selects", database.moviesDao().getMoviesList().toString())
+        Log.i("Selects", database.moviesDao().getMoviesListAndMovie().toString())
 
         nowPlaying = findViewById(R.id.movies)
         latest = findViewById(R.id.latest)
@@ -42,17 +58,17 @@ class MainActivity : AppCompatActivity(), RequestCategory {
         topRated = findViewById(R.id.toprated)
         upcoming = findViewById(R.id.upcoming)
 
-        latest.setupAdapter(this, MovieCategory.Latest)
-        nowPlaying.setupAdapter(this, MovieCategory.NowPlaying)
-        popular.setupAdapter(this, MovieCategory.Popular)
-        topRated.setupAdapter(this, MovieCategory.TopRated)
-        upcoming.setupAdapter(this, MovieCategory.Upcoming)
-
-        loadCategory(MovieCategory.Latest)
-        loadCategory(MovieCategory.NowPlaying)
-        loadCategory(MovieCategory.Popular)
-        loadCategory(MovieCategory.TopRated)
-        loadCategory(MovieCategory.Upcoming)
+//        latest.setupAdapter(this, MovieCategory.Latest)
+//        nowPlaying.setupAdapter(this, MovieCategory.NowPlaying)
+//        popular.setupAdapter(this, MovieCategory.Popular)
+//        topRated.setupAdapter(this, MovieCategory.TopRated)
+//        upcoming.setupAdapter(this, MovieCategory.Upcoming)
+//
+//        loadCategory(MovieCategory.Latest)
+//        loadCategory(MovieCategory.NowPlaying)
+//        loadCategory(MovieCategory.Popular)
+//        loadCategory(MovieCategory.TopRated)
+//        loadCategory(MovieCategory.Upcoming)
     }
 
     override fun loadCategory(type: MovieCategory) {
@@ -62,6 +78,7 @@ class MainActivity : AppCompatActivity(), RequestCategory {
             MovieCategory.Popular -> popular.loadCategory(type)
             MovieCategory.TopRated -> topRated.loadCategory(type)
             MovieCategory.Latest -> latest.loadCategory(type)
+            else -> Unit
         }
     }
 
@@ -83,6 +100,3 @@ class MainActivity : AppCompatActivity(), RequestCategory {
     private val RecyclerView.movieAdapter: RecyclerViewAdapterMovieList
         get() = adapter as RecyclerViewAdapterMovieList
 }
-
-@SuppressLint("StaticFieldLeak")
-lateinit var ctx: Context

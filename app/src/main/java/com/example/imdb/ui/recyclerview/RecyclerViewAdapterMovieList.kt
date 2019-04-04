@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
-import com.example.imdb.data.entity.Movie
+import com.example.imdb.data.entity.http.Movie
 import com.example.imdb.ui.mainactivity.RequestCategory
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
 

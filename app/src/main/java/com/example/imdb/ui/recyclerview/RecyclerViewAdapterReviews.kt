@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.R
-import com.example.imdb.data.entity.Review
-import com.example.imdb.data.entity.Reviews
+import com.example.imdb.data.entity.http.Review
+import com.example.imdb.data.entity.http.Reviews
 
 class RecyclerViewAdapterReviews (
     private val informationReview: MutableList<Review>
