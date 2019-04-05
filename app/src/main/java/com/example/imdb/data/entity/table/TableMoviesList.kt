@@ -10,6 +10,5 @@ data class TableMoviesList(
     @PrimaryKey(autoGenerate = true)
     val idMovieList: Int,
     val page: Int,
-    val totalPages: Int,
-    val category: String
+    val totalPages: Int
 )

@@ -6,11 +6,11 @@ import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(foreignKeys = arrayOf(
-            ForeignKey(entity = TableMovie::class,
+        ForeignKey(entity = TableMovie::class,
             parentColumns = arrayOf("idMovie"),
             childColumns = arrayOf("idMovie_fk"),
             onDelete = ForeignKey.CASCADE)
-        )
+    )
 )
 data class TableMovieDetail(
     @PrimaryKey(autoGenerate = true)

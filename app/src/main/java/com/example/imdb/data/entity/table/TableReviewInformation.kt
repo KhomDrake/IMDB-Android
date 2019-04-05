@@ -8,14 +8,14 @@ import androidx.room.PrimaryKey
     foreignKeys = arrayOf(
         ForeignKey(entity = TableMovie::class,
             parentColumns = arrayOf("idMovie"),
-            childColumns = arrayOf("idMovie"),
+            childColumns = arrayOf("idMovie_fk"),
             onDelete = ForeignKey.CASCADE)
     )
 )
 data class TableReviewInformation(
     @PrimaryKey(autoGenerate = false)
     val idReviewInformation: Int,
-    val idMovie: Int,
+    val idMovie_fk: Int,
     val page: Int,
     val totalPages: Int,
     val totalResults: Int

@@ -9,5 +9,6 @@ data class Reviews(
     @SerializedName("total_pages")
     val totalPages: Int,
     @SerializedName("total_results")
-    val totalResults: Int
+    val totalResults: Int,
+    var idMovie: Int
 )

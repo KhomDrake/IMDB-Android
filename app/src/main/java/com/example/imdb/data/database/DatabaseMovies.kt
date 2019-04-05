@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.imdb.MovieCategory
 import com.example.imdb.data.entity.http.*
 import com.example.imdb.data.entity.table.*
 
@@ -12,138 +13,153 @@ import com.example.imdb.data.entity.table.*
                             TableMovieCategory::class,
                             TableMovieDetail::class,
                             TableMoviesList::class,
-                            TableRecommendation::class,
                             TableReview::class,
+                            TableLastUpdateCategory::class,
                             TableReviewInformation::class), version = 1)
 abstract class DatabaseMovies : RoomDatabase() {
 
+    private var reviewsLastMovieDetail: Reviews =
+        Reviews(-1, 0, listOf(), 0, 0, 0)
+
     abstract fun moviesDao(): DaoMovies
 
-    private var movieDetail: MovieDetail =
-        MovieDetail(false, 0, "", "", "", 0, "", 0.0, 0)
+    fun getLatest() : MutableList<Movie> = getMovies(MovieCategory.Latest)
 
-    private var recommendationLastMovieDetail: Recommendation =
-        Recommendation(
-            -1,
-            MoviesList(0, listOf(), 0)
-        )
-    private var reviewsLastMovieDetail: Reviews =
-        Reviews(-1, 0, listOf(), 0, 0)
+    fun getNowPlaying() : MutableList<Movie> = getMovies(MovieCategory.NowPlaying)
 
-    fun getLatest() : MutableList<Movie> = mutableListOf()
+    fun getPopular() : MutableList<Movie> = getMovies(MovieCategory.Popular)
 
-    fun getNowPlaying() : MutableList<Movie> = mutableListOf()
+    fun getTopRated() : MutableList<Movie> = getMovies(MovieCategory.TopRated)
 
-    fun getPopular() : MutableList<Movie> = mutableListOf()
+    fun getUpcoming() : MutableList<Movie> = getMovies(MovieCategory.Upcoming)
 
-    fun getTopRated() : MutableList<Movie> = mutableListOf()
+    fun getDetailMovie(idMovie: Int) : MovieDetail {
+        val movieDetailDb = moviesDao().getMovieDetail(idMovie)
 
-    fun getUpcoming() : MutableList<Movie> = mutableListOf()
+        if(movieDetailDb != null) {
+            return MovieDetail(
+                movieDetailDb.adult,
+                movieDetailDb.idMovieDetail,
+                movieDetailDb.overview,
+                movieDetailDb.posterPath,
+                movieDetailDb.releaseDate,
+                movieDetailDb.runtime,
+                movieDetailDb.title,
+                movieDetailDb.voteAverage,
+                movieDetailDb.voteCount,
+                movieDetailDb.idMovie_fk
+            )
+        }
+        else {
+            return MovieDetail(false, 0, "", "", "", 0, "", 0.0, 0, 0)
+        }
+    }
 
-    fun getDetailMovie() : MovieDetail = movieDetail
-
-    fun getRecommendationLastMovie() : Recommendation = recommendationLastMovieDetail
+    fun getRecommendationLastMovie() : Recommendation {
+        return Recommendation(0, MoviesList(0, getMovies(MovieCategory.Recommendation).toList(), 0))
+    }
 
     fun getReviewsLastMovieDetail() : Reviews = reviewsLastMovieDetail
 
-    private fun getListMovies(type: String): MutableList<Movie> {
-        val movies = mutableListOf<Movie>()
-
-//        if (sharedPreferences.all[type] == null) return movies
-//
-//        val ids = (sharedPreferences.all[type] as String).split(";")
-//
-//        for (id in ids) {
-//            if (id != "") {
-//                movies.add(movies.count(), getMovie(type, id.trim()))
-//            }
-//        }
-
-        return movies
-    }
-
-    private fun setList(type: String, movies: List<Movie>) {
-//        val editor: SharedPreferences.Editor = sharedPreferences.edit()
-//        var ids = ""
-//        for (movie in movies) {
-//            mountMovie(editor, type, movie)
-//            ids += "${movie.id};"
-//        }
-//        editor.putString(type, ids)
-//        editor.apply()
-    }
-
-    private fun mountMovie(editor: SharedPreferences.Editor, type: String, movie: Movie) {
-        val keyOriginalTitle = "$type${movie.id}originalTitle"
-        val keyPosterPath = "$type${movie.id}posterPath"
-
-        var value = movie.posterPath
-
-        if (movie.posterPath == "" || movie.posterPath == "null" || movie.posterPath == null) {
-            value = ""
-        }
-
-        editor.run {
-            putString(keyOriginalTitle, movie.originalTitle)
-            putString(keyPosterPath, value)
-        }
-    }
-
-    private fun getMovie(type: String, id: String): Movie {
-        val originalTitle = "" //sharedPreferences.all["$type${id}originalTitle"].toString()
-        val posterPath = "" //sharedPreferences.all["$type${id}posterPath"].toString()
-
-        return Movie(id.toInt(), originalTitle, posterPath, "", false, false)
-    }
-
     fun setReviews(reviews: Reviews) {
-        reviewsLastMovieDetail = reviews
+        moviesDao().insertReviewInformation(TableReviewInformation(reviews.id, reviews.idMovie, 1, 1, 1))
+        for(review in reviews.results) {
+            moviesDao().insertReview(TableReview(0, review.author, review.content, review.url, reviews.id))
+        }
     }
 
     fun setRecommendationLastMovie(recommendation: Recommendation) {
-        recommendationLastMovieDetail = recommendation
+        for (movie in recommendation.moviesList.results) {
+            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
+            moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.Recommendation.ordinal))
+        }
     }
 
     fun setMovieDetail(movieDetail: MovieDetail) {
-        this.movieDetail = movieDetail
+        moviesDao().insertMovieDetail(TableMovieDetail(movieDetail.id, movieDetail.adult, movieDetail.idMovie, movieDetail.overview, movieDetail.posterPath, movieDetail.releaseDate, movieDetail.runtime, movieDetail.title, movieDetail.voteAverage, movieDetail.voteCount))
+    }
+
+    private fun getMovies(movieCategory: MovieCategory) : MutableList<Movie> {
+        val movies: MutableList<Movie> = mutableListOf()
+        val moviesDb = moviesDao().getMoviesListAndMovie(movieCategory.ordinal)
+        for (movie in moviesDb) {
+            movies.add(Movie(movie.idMovie, movie.originalTitle, movie.posterPath, movie.title, false, false))
+        }
+        return movies
     }
 
     fun setLatest(movie: Movie) {
-//        if(movie.error)
-//            setList(latest, listOf())
-//        else
-//            setList(latest, listOf(movie))
+        moviesDao().deleteMovieCategory(MovieCategory.Latest.ordinal)
+        moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
+        moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.Latest.ordinal))
     }
 
     fun setNowPlaying(movies: List<Movie>) {
-//        setList(nowPlaying, movies)
+        moviesDao().deleteMovieCategory(MovieCategory.NowPlaying.ordinal)
+        for (movie in movies) {
+            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
+            moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.NowPlaying.ordinal))
+        }
     }
 
     fun setPopular(movies: List<Movie>) {
-//        setList(popular, movies)
+        moviesDao().deleteMovieCategory(MovieCategory.Popular.ordinal)
+        for (movie in movies) {
+            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
+            moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.Popular.ordinal))
+        }
     }
 
     fun setTopRated(movies: List<Movie>) {
-//        setList(topRated, movies)
+        moviesDao().deleteMovieCategory(MovieCategory.TopRated.ordinal)
+        for (movie in movies) {
+            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
+            moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.TopRated.ordinal))
+        }
     }
 
     fun setUpcoming(movies: List<Movie>) {
-//        setList(upcoming, movies)
+        moviesDao().deleteMovieCategory(MovieCategory.Upcoming.ordinal)
+        for (movie in movies) {
+            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
+            moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.Upcoming.ordinal))
+        }
+    }
+
+    fun setup() {
+        moviesDao().insertMovieList(TableMoviesList(MovieCategory.Latest.ordinal, 1, 1))
+        moviesDao().insertMovieList(TableMoviesList(MovieCategory.NowPlaying.ordinal, 1, 1))
+        moviesDao().insertMovieList(TableMoviesList(MovieCategory.Popular.ordinal, 1, 1))
+        moviesDao().insertMovieList(TableMoviesList(MovieCategory.TopRated.ordinal, 1, 1))
+        moviesDao().insertMovieList(TableMoviesList(MovieCategory.Upcoming.ordinal, 1, 1))
+        moviesDao().insertMovieList(TableMoviesList(MovieCategory.Recommendation.ordinal, 1, 1))
+    }
+
+    fun lastTimeUpdateCategory(movieCategory: MovieCategory, currentTime: Long) {
+        moviesDao().insertLastUpdateCategory(TableLastUpdateCategory(movieCategory.ordinal, currentTime))
+    }
+
+    fun getLastTimeUpdateCategory(movieCategory: MovieCategory): Long {
+        val last = moviesDao().getLastUpdateCategory(movieCategory.ordinal)
+        return if(last != null) last.timeUpdate else System.currentTimeMillis()
     }
 
     companion object {
 
         var Instance: DatabaseMovies? = null
 
-        fun instance(ctx: Context) {
-            if(Instance != null)
+        fun instance(ctx: Context, response: () -> Unit) {
+            if(Instance != null) {
+                response()
                 return
+            }
 
             synchronized(DatabaseMovies::class) {
                 Instance = Room.databaseBuilder(
                     ctx.applicationContext, DatabaseMovies::class.java,
                     "movie.db"
                 ).allowMainThreadQueries().build()
+                response()
             }
         }
     }

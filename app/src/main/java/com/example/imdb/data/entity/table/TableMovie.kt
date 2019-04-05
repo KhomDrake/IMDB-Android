@@ -6,10 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class TableMovie(
-    @PrimaryKey(autoGenerate = false)
+    @PrimaryKey
     val idMovie: Int,
     val originalTitle: String,
     val posterPath: String?,
-    val title: String,
-    val idMovieListConnection: Int
+    val title: String
 )

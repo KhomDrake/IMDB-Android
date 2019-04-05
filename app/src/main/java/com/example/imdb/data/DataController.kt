@@ -1,8 +1,6 @@
 package com.example.imdb.data
 
 import android.content.Context
-import android.content.SharedPreferences
-import androidx.room.Room
 import com.example.imdb.MovieCategory
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.Movie
@@ -13,11 +11,11 @@ import com.example.imdb.network.WebController
 
 object DataController {
 
-    private var createDatabase = false
     private lateinit var databaseMovies: DatabaseMovies
 
-    fun createDatabase(ctx: Context) {
-        DatabaseMovies.instance(ctx)
+    fun createDatabase(ctx: Context, response: () -> Unit) {
+        DatabaseMovies.instance(ctx, response)
+        DatabaseMovies.Instance!!.setup()
     }
 
     private lateinit var language: String
@@ -29,7 +27,7 @@ object DataController {
 
     fun loadMovieDetail(id: Int, funResponse: (movies: MovieDetail) -> Unit) {
 
-        val movieDetail = getDetailMovie()
+        val movieDetail = getDetailMovie(id)
 
         if(movieDetail.id != id) {
             WebController.loadMovieDetail(id) {
@@ -47,6 +45,7 @@ object DataController {
         val reviews = databaseMovies.getReviewsLastMovieDetail()
         if(reviews.id != id) {
             WebController.loadReviews(id) {
+                it.idMovie = id
                 databaseMovies.setReviews(it)
                 funResponse(it)
             }
@@ -69,7 +68,7 @@ object DataController {
 
     fun loadLatest(funResponse: (movies: List<Movie>) -> Unit) {
         val latest = getLatest()
-        if (latest.isEmptyOrInLoading() || dataIsDeprecated("latest")) {
+        if (latest.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Latest)) {
             WebController.loadLatest {
                 setListDatabaseMovie(it)
                 funResponse(listOf(it))
@@ -81,7 +80,7 @@ object DataController {
 
     fun loadNowPlaying(funResponse: (movies: List<Movie>) -> Unit) {
         val nowPlaying = getNowPlaying()
-        if (nowPlaying.isEmptyOrInLoading() || dataIsDeprecated("nowplaying")) {
+        if (nowPlaying.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.NowPlaying)) {
             WebController.loadNowPlaying {
                 setListDatabaseMovies(it.results, MovieCategory.NowPlaying)
                 funResponse(it.results)
@@ -93,7 +92,7 @@ object DataController {
 
     fun loadPopular(funResponse: (movies: List<Movie>) -> Unit) {
         val popular = getPopular()
-        if (popular.isEmptyOrInLoading() || dataIsDeprecated("popular")) {
+        if (popular.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Popular)) {
             WebController.loadPopular {
                 setListDatabaseMovies(it.results, MovieCategory.Popular)
                 funResponse(it.results)
@@ -105,7 +104,7 @@ object DataController {
 
     fun loadTopRated(funResponse: (movies: List<Movie>) -> Unit) {
         val topRated = getTopRated()
-        if (topRated.isEmptyOrInLoading() || dataIsDeprecated("toprated")) {
+        if (topRated.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Popular)) {
             WebController.loadTopRated {
                 setListDatabaseMovies(it.results, MovieCategory.TopRated)
                 funResponse(it.results)
@@ -117,7 +116,7 @@ object DataController {
 
     fun loadUpcoming(funResponse: (movies: List<Movie>) -> Unit) {
         val upcoming = getUpcoming()
-        if (upcoming.isEmptyOrInLoading() || dataIsDeprecated("upcoming")) {
+        if (upcoming.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Upcoming)) {
             WebController.loadUpcoming {
                 setListDatabaseMovies(it.results, MovieCategory.Upcoming)
                 funResponse(it.results)
@@ -127,7 +126,7 @@ object DataController {
         }
     }
 
-    private fun getDetailMovie() = databaseMovies.getDetailMovie()
+    private fun getDetailMovie(idMovie: Int) = databaseMovies.getDetailMovie(idMovie)
 
     private fun getLatest() = databaseMovies.getLatest()
 
@@ -162,26 +161,22 @@ object DataController {
         return false
     }
 
-    private fun dataIsDeprecated(type: String) : Boolean {
-        if(!existLastUpdate(type))
-            setTime(type)
+    private fun dataIsDeprecated(movieCategory: MovieCategory) : Boolean {
 
-        return deprecatedSinceLastUpdate(type)
+        return deprecatedSinceLastUpdate(movieCategory)
     }
 
-    private fun deprecatedSinceLastUpdate(type: String) = getCurrentTime()
-        .minus(getTimeLastUpdate(type)) > timeToBeDeprecated
+    private fun deprecatedSinceLastUpdate(movieCategory: MovieCategory) = getCurrentTime()
+        .minus(getTimeLastUpdate(movieCategory)) > timeToBeDeprecated
 
-    private fun getTimeLastUpdate(type: String) = 23 //sharedPreferences.all["lastUpdateTable$type"].toString().toLong()
+    private fun getTimeLastUpdate(movieCategory: MovieCategory) = databaseMovies.getLastTimeUpdateCategory(movieCategory)
 
     private fun existLastUpdate(type: String) = false // sharedPreferences.all["lastUpdateTable$type"] != null
 
     private fun getCurrentTime() = System.currentTimeMillis()
 
-    private fun setTime(type: String) {
-//        val editor: SharedPreferences.Editor = sharedPreferences.edit()
-//        editor.putLong("lastUpdateTable$type", System.currentTimeMillis())
-//        editor.apply()
+    private fun setTime(movieCategory: MovieCategory) {
+        databaseMovies.lastTimeUpdateCategory(movieCategory, getCurrentTime())
     }
 
     private fun setListDatabaseMovies(movies: List<Movie>, movieCategory: MovieCategory) {
@@ -193,25 +188,25 @@ object DataController {
         when(movieCategory) {
             MovieCategory.NowPlaying -> {
                 if(list.count() != 0)
-                    setTime("nowplaying")
+                    setTime(MovieCategory.NowPlaying)
                 setNowPlaying(list)
             }
 
             MovieCategory.Popular -> {
                 if(list.count() != 0)
-                    setTime("popular")
+                    setTime(MovieCategory.Popular)
                 setPopular(list)
             }
 
             MovieCategory.TopRated -> {
                 if(list.count() != 0)
-                    setTime("toprated")
+                    setTime(MovieCategory.TopRated)
                 setTopRated(list)
             }
 
             MovieCategory.Upcoming -> {
                 if(list.count() != 0)
-                    setTime("upcoming")
+                    setTime(MovieCategory.Upcoming)
                 setUpcoming(list)
             }
         }
@@ -219,7 +214,7 @@ object DataController {
 
     private fun setListDatabaseMovie(movie: Movie) {
         if(!movie.error) {
-            setTime("latest")
+            setTime(MovieCategory.Latest)
             setLatest(movie)
         }
         else

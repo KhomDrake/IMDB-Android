@@ -2,35 +2,48 @@ package com.example.imdb.data.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.imdb.data.entity.select.TableMovieAndListAndCategory
-import com.example.imdb.data.entity.table.TableMovie
-import com.example.imdb.data.entity.table.TableMovieCategory
-import com.example.imdb.data.entity.table.TableMoviesList
+import com.example.imdb.data.entity.select.SelectMovieReviewsAndReviewInformation
+import com.example.imdb.data.entity.table.*
 
 @Dao
 interface DaoMovies {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovies(movies: List<TableMovie>)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovieList(movieList: TableMoviesList)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovie(movie: TableMovie)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertLastUpdateCategory(updateCategory: TableLastUpdateCategory)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovieCategory(movieCategory: TableMovieCategory)
 
-    // insert TableMovieDetail
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertReviewInformation(reviewInformation: TableReviewInformation)
 
-    // insert TableRecommendation
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertReviews(reviews: List<TableReview>)
 
-    // insert TableReview
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertReview(review: TableReview)
 
-    // insert TableReviewInformation
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertMovieDetail(movieDetail: TableMovieDetail)
 
-    // query SELECT
+    @Query("DELETE FROM TableMovieCategory where TableMovieCategory.idMovieList_fk = :category")
+    fun deleteMovieCategory(category: Int)
+
+    @Query("SELECT * FROM TableMovieDetail where TableMovieDetail.idMovie_fk = :movie")
+    fun getMovieDetail(movie: Int): TableMovieDetail?
+
+    @Query("SELECT * FROM TableLastUpdateCategory where TableLastUpdateCategory.id = :category")
+    fun getLastUpdateCategory(category: Int): TableLastUpdateCategory?
 
     @Query("SELECT * FROM TableMovie")
     fun getMovies(): List<TableMovie>
@@ -38,9 +51,10 @@ interface DaoMovies {
     @Query("SELECT * FROM TableMoviesList")
     fun getMoviesList(): List<TableMoviesList>
 
-    @Query("SELECT TableMovie.*, TableMoviesList.*, TableMovieCategory.* FROM TableMovie INNER JOIN TableMovieCategory ON TableMovie.idMovie = TableMovieCategory.idMovie_fk INNER JOIN TableMoviesList ON TableMovieCategory.idMovieList_fk = TableMoviesList.idMovieList")
-    fun getMoviesListAndMovie(): List<TableMovieAndListAndCategory>
+    @Query("SELECT TableMovie.* FROM TableMovie, TableMovieCategory, TableMoviesList where TableMovie.idMovie = TableMovieCategory.idMovie_fk and TableMovieCategory.idMovieList_fk = :category  and TableMoviesList.idMovieList = :category")
+    fun getMoviesListAndMovie(category: Int): List<TableMovie>
 
-    @Query("SELECT TableMovie.*, TableMoviesList.*, TableMovieCategory.* FROM TableMovie INNER JOIN TableMovieCategory ON TableMovie.idMovie = TableMovieCategory.idMovie_fk INNER JOIN TableMoviesList ON TableMovieCategory.idMovieList_fk = :category")
-    fun getMoviesListAndMovie(category: Int): List<TableMovieAndListAndCategory>
+    @Query("SELECT TableMovie.*, TableReview.*, TableReviewInformation.* FROM TableMovie, TableReview, TableReviewInformation where TableMovie.idMovie = :movie and TableReviewInformation.idMovie_fk = :movie and TableReview.idReviewInformation_fk = TableReviewInformation.idReviewInformation")
+    fun getMovieReviews(movie: Int): List<SelectMovieReviewsAndReviewInformation>
+
 }
