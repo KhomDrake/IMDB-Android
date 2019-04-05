@@ -3,6 +3,7 @@ package com.example.imdb.ui.moviedetail
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -60,6 +61,7 @@ class MovieDetailActivity : AppCompatActivity() {
         if(movieID < 0)
             return
         movieDetailViewController.loadMovieDetail(movieID) {
+            Log.i("test", "asdkjskdjaksdjsak")
             progressBar.visibility = View.INVISIBLE
             constraintLayout.visibility = View.VISIBLE
 

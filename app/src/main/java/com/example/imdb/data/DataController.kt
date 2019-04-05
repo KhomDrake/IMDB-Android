@@ -1,6 +1,7 @@
 package com.example.imdb.data
 
 import android.content.Context
+import android.util.Log
 import com.example.imdb.MovieCategory
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.Movie
@@ -13,9 +14,10 @@ object DataController {
 
     private lateinit var databaseMovies: DatabaseMovies
 
-    fun createDatabase(ctx: Context, response: () -> Unit) {
-        DatabaseMovies.instance(ctx, response)
-        DatabaseMovies.Instance!!.setup()
+    fun createDatabase(ctx: Context) {
+        DatabaseMovies.instance(ctx)
+        databaseMovies = DatabaseMovies.Instance!!
+        databaseMovies.setup()
     }
 
     private lateinit var language: String
@@ -29,6 +31,8 @@ object DataController {
 
         val movieDetail = getDetailMovie(id)
 
+        Log.i("test", "asdkjskdjaksdjsak3")
+        Log.i("test", (movieDetail.id != id).toString())
         if(movieDetail.id != id) {
             WebController.loadMovieDetail(id) {
                 databaseMovies.setMovieDetail(it)
@@ -171,8 +175,6 @@ object DataController {
 
     private fun getTimeLastUpdate(movieCategory: MovieCategory) = databaseMovies.getLastTimeUpdateCategory(movieCategory)
 
-    private fun existLastUpdate(type: String) = false // sharedPreferences.all["lastUpdateTable$type"] != null
-
     private fun getCurrentTime() = System.currentTimeMillis()
 
     private fun setTime(movieCategory: MovieCategory) {
@@ -213,9 +215,11 @@ object DataController {
     }
 
     private fun setListDatabaseMovie(movie: Movie) {
+        Log.i("test", movie.toString())
         if(!movie.error) {
             setTime(MovieCategory.Latest)
             setLatest(movie)
+            Log.i("test", "aslkdj")
         }
         else
             setLatest(movie = Movie(0, "", "", "", loading = false, error = true))

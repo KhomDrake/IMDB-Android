@@ -2,6 +2,7 @@ package com.example.imdb.data.database
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -34,8 +35,10 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun getUpcoming() : MutableList<Movie> = getMovies(MovieCategory.Upcoming)
 
     fun getDetailMovie(idMovie: Int) : MovieDetail {
-        val movieDetailDb = moviesDao().getMovieDetail(idMovie)
 
+        Log.i("test", "asdkjskdjaksdjsak4")
+        val movieDetailDb = moviesDao().getMovieDetail(idMovie)
+        Log.i("test", "asdkjskdjaksdjsak5")
         if(movieDetailDb != null) {
             return MovieDetail(
                 movieDetailDb.adult,
@@ -148,18 +151,14 @@ abstract class DatabaseMovies : RoomDatabase() {
 
         var Instance: DatabaseMovies? = null
 
-        fun instance(ctx: Context, response: () -> Unit) {
-            if(Instance != null) {
-                response()
-                return
-            }
+        fun instance(ctx: Context) {
+            if(Instance != null) return
 
             synchronized(DatabaseMovies::class) {
                 Instance = Room.databaseBuilder(
                     ctx.applicationContext, DatabaseMovies::class.java,
                     "movie.db"
                 ).allowMainThreadQueries().build()
-                response()
             }
         }
     }

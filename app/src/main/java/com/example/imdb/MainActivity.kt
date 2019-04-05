@@ -10,6 +10,7 @@ import com.example.imdb.ui.mainactivity.RequestCategory
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
 
 enum class MovieCategory {
+    Zero,
     Latest,
     NowPlaying,
     Popular,
@@ -34,26 +35,25 @@ class MainActivity : AppCompatActivity(), RequestCategory {
 
         mainActivityViewController = MainActivityViewController()
 
-        DataController.createDatabase(this) {
-            nowPlaying = findViewById(R.id.movies)
-            latest = findViewById(R.id.latest)
-            popular = findViewById(R.id.popular)
-            topRated = findViewById(R.id.toprated)
-            upcoming = findViewById(R.id.upcoming)
+        DataController.createDatabase(this)
 
-            latest.setupAdapter(this, MovieCategory.Latest)
-            nowPlaying.setupAdapter(this, MovieCategory.NowPlaying)
-            popular.setupAdapter(this, MovieCategory.Popular)
-            topRated.setupAdapter(this, MovieCategory.TopRated)
-            upcoming.setupAdapter(this, MovieCategory.Upcoming)
+        nowPlaying = findViewById(R.id.movies)
+        latest = findViewById(R.id.latest)
+        popular = findViewById(R.id.popular)
+        topRated = findViewById(R.id.toprated)
+        upcoming = findViewById(R.id.upcoming)
 
-            loadCategory(MovieCategory.Latest)
-            loadCategory(MovieCategory.NowPlaying)
-            loadCategory(MovieCategory.Popular)
-            loadCategory(MovieCategory.Upcoming)
-            loadCategory(MovieCategory.TopRated)
-        }
+        latest.setupAdapter(this, MovieCategory.Latest)
+        nowPlaying.setupAdapter(this, MovieCategory.NowPlaying)
+        popular.setupAdapter(this, MovieCategory.Popular)
+        topRated.setupAdapter(this, MovieCategory.TopRated)
+        upcoming.setupAdapter(this, MovieCategory.Upcoming)
 
+        loadCategory(MovieCategory.Latest)
+        loadCategory(MovieCategory.NowPlaying)
+        loadCategory(MovieCategory.Popular)
+        loadCategory(MovieCategory.Upcoming)
+        loadCategory(MovieCategory.TopRated)
     }
 
     override fun loadCategory(type: MovieCategory) {
