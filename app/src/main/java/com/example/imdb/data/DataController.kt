@@ -44,8 +44,8 @@ object DataController {
     fun getLanguage() = language
 
     fun loadReviews(id: Int, funResponse: (reviews: Reviews) -> Unit) {
-        val reviews = databaseMovies.getReviewsLastMovieDetail()
-        if(reviews.id != id) {
+        val reviews = databaseMovies.getReviewsLastMovieDetail(id)
+        if(reviews.idMovie != id) {
             WebController.loadReviews(id) {
                 it.idMovie = id
                 databaseMovies.setReviews(it)

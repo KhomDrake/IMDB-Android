@@ -19,9 +19,6 @@ import com.example.imdb.data.entity.table.*
                             TableReviewInformation::class), version = 1)
 abstract class DatabaseMovies : RoomDatabase() {
 
-    private var reviewsLastMovieDetail: Reviews =
-        Reviews(-1, 0, listOf(), 0, 0, 0)
-
     abstract fun moviesDao(): DaoMovies
 
     fun getLatest() : MutableList<Movie> = getMovies(MovieCategory.Latest)
@@ -35,24 +32,19 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun getUpcoming() : MutableList<Movie> = getMovies(MovieCategory.Upcoming)
 
     fun getDetailMovie(idMovie: Int) : MovieDetail {
-
-        Log.i("test", "asdkjskdjaksdjsak4")
         val movieDetailDb = moviesDao().getMovieDetail(idMovie)
-        Log.i("test", "asdkjskdjaksdjsak5")
-        if(movieDetailDb != null) {
-            return MovieDetail(
-                movieDetailDb.adult,
-                movieDetailDb.idMovieDetail,
-                movieDetailDb.overview,
-                movieDetailDb.posterPath,
-                movieDetailDb.releaseDate,
-                movieDetailDb.runtime,
-                movieDetailDb.title,
-                movieDetailDb.voteAverage,
-                movieDetailDb.voteCount,
-                movieDetailDb.idMovie_fk
-            )
-        }
+        if(movieDetailDb != null) return MovieDetail(
+            movieDetailDb.adult,
+            movieDetailDb.idMovieDetail,
+            movieDetailDb.overview,
+            movieDetailDb.posterPath,
+            movieDetailDb.releaseDate,
+            movieDetailDb.runtime,
+            movieDetailDb.title,
+            movieDetailDb.voteAverage,
+            movieDetailDb.voteCount,
+            movieDetailDb.idMovie_fk
+        )
         else {
             return MovieDetail(false, 0, "", "", "", 0, "", 0.0, 0, 0)
         }
@@ -62,7 +54,32 @@ abstract class DatabaseMovies : RoomDatabase() {
         return Recommendation(0, MoviesList(0, getMovies(MovieCategory.Recommendation).toList(), 0))
     }
 
-    fun getReviewsLastMovieDetail() : Reviews = reviewsLastMovieDetail
+    fun getReviewsLastMovieDetail(idMovie: Int) : Reviews {
+        val reviews = moviesDao().getMovieReviews(idMovie)
+
+        var id = -1
+        var page = 0
+        val listOfRevies = mutableListOf<Review>()
+        var totalPages = 0
+        var totalResults = 0
+        var idMovie = 0
+
+        if(reviews.isEmpty()) {
+            val reviewInformation = reviews[0]
+            id = reviewInformation.reviewInformation.idReviewInformation
+            page = reviewInformation.reviewInformation.page
+
+            for (review in reviews) {
+                val r = review.review
+                listOfRevies.add(Review(r.author, r.content, r.idReview.toString(), r.url))
+            }
+            totalPages = reviewInformation.reviewInformation.totalPages
+            totalResults = reviewInformation.reviewInformation.totalResults
+            idMovie = reviewInformation.reviewInformation.idMovie_fk
+        }
+
+        return Reviews(id, page, listOfRevies.toList(), totalPages, totalResults, idMovie)
+    }
 
     fun setReviews(reviews: Reviews) {
         moviesDao().insertReviewInformation(TableReviewInformation(reviews.id, reviews.idMovie, 1, 1, 1))
@@ -79,7 +96,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setMovieDetail(movieDetail: MovieDetail) {
-        moviesDao().insertMovieDetail(TableMovieDetail(movieDetail.id, movieDetail.adult, movieDetail.id, movieDetail.overview, movieDetail.posterPath, movieDetail.releaseDate, movieDetail.runtime, movieDetail.title, movieDetail.voteAverage, movieDetail.voteCount))
+        moviesDao().insertMovieDetail(TableMovieDetail(movieDetail.id, movieDetail.adult, movieDetail.id, movieDetail.overview, movieDetail.posterPath.toString(), movieDetail.releaseDate, movieDetail.runtime, movieDetail.title, movieDetail.voteAverage, movieDetail.voteCount))
     }
 
     private fun getMovies(movieCategory: MovieCategory) : MutableList<Movie> {

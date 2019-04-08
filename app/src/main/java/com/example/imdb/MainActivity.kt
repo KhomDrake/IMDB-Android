@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity(), RequestCategory {
 
         mainActivityViewController = MainActivityViewController()
 
-        DataController.createDatabase(this)
+        mainActivityViewController.createDatabase(this)
 
         nowPlaying = findViewById(R.id.movies)
         latest = findViewById(R.id.latest)

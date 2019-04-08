@@ -1,5 +1,7 @@
 package com.example.imdb.ui.mainactivity
 
+import android.content.Context
+import com.example.imdb.MainActivity
 import com.example.imdb.MovieCategory
 import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.http.Movie
@@ -39,6 +41,10 @@ class MainActivityViewController {
             DataController.loadUpcoming(funResponse)
         }
         else -> Unit
+    }
+
+    fun createDatabase(ctx: Context) {
+        DataController.createDatabase(ctx)
     }
 
 }
