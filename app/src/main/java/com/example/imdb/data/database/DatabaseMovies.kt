@@ -79,7 +79,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setMovieDetail(movieDetail: MovieDetail) {
-        moviesDao().insertMovieDetail(TableMovieDetail(movieDetail.id, movieDetail.adult, movieDetail.idMovie, movieDetail.overview, movieDetail.posterPath, movieDetail.releaseDate, movieDetail.runtime, movieDetail.title, movieDetail.voteAverage, movieDetail.voteCount))
+        moviesDao().insertMovieDetail(TableMovieDetail(movieDetail.id, movieDetail.adult, movieDetail.id, movieDetail.overview, movieDetail.posterPath, movieDetail.releaseDate, movieDetail.runtime, movieDetail.title, movieDetail.voteAverage, movieDetail.voteCount))
     }
 
     private fun getMovies(movieCategory: MovieCategory) : MutableList<Movie> {

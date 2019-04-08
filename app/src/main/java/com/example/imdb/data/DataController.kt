@@ -31,8 +31,6 @@ object DataController {
 
         val movieDetail = getDetailMovie(id)
 
-        Log.i("test", "asdkjskdjaksdjsak3")
-        Log.i("test", (movieDetail.id != id).toString())
         if(movieDetail.id != id) {
             WebController.loadMovieDetail(id) {
                 databaseMovies.setMovieDetail(it)
