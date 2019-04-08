@@ -1,12 +1,18 @@
 package com.example.imdb
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.data.DataController
 import com.example.imdb.ui.mainactivity.MainActivityViewController
 import com.example.imdb.ui.mainactivity.RequestCategory
+import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
 
 enum class MovieCategory {
@@ -65,6 +71,16 @@ class MainActivity : AppCompatActivity(), RequestCategory {
             MovieCategory.Latest -> latest.loadCategory(type)
             else -> Unit
         }
+    }
+
+    override fun makeTransition(view: View, movieId: Int) {
+        val startNewActivity = Intent(view.context, MovieDetailActivity::class.java)
+        val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this,
+            view,
+            view.transitionName)
+        startNewActivity.putExtra("movieID", movieId)
+        ContextCompat.startActivity(view.context, startNewActivity, optionsCompat.toBundle())
     }
 
     private fun RecyclerView.setupAdapter(requestCategory: RequestCategory, movieCategory: MovieCategory) {

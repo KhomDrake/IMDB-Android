@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -53,7 +54,6 @@ class RecyclerViewAdapterMovieList(
         private val img: ImageView = itemView.findViewById(R.id.img)
         private val again: Button = itemView.findViewById(R.id.again)
 
-
         fun bind(result: Movie, urlImg: String, urlLoading: String, imgNotFound: String,
                  requestCategory: RequestCategory, movieCategory: MovieCategory) {
 
@@ -76,9 +76,7 @@ class RecyclerViewAdapterMovieList(
             }
 
             img.setOnClickListener {
-                val startNewActivity = Intent(itemView.context, MovieDetailActivity::class.java)
-                startNewActivity.putExtra("movieID", result.id)
-                startActivity(itemView.context, startNewActivity, null)
+                requestCategory.makeTransition(img, result.id)
             }
 
             val title = "Title: " + result.originalTitle

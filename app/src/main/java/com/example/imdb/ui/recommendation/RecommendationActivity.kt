@@ -1,14 +1,18 @@
 package com.example.imdb.ui.recommendation
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.ui.mainactivity.RequestCategory
+import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
 
 class RecommendationActivity : AppCompatActivity(), RequestCategory {
@@ -48,6 +52,16 @@ class RecommendationActivity : AppCompatActivity(), RequestCategory {
             }
             else -> println("eita")
         }
+    }
+
+    override fun makeTransition(view: View, movieId: Int) {
+        val startNewActivity = Intent(view.context, MovieDetailActivity::class.java)
+        val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this,
+            view,
+            view.transitionName)
+        startNewActivity.putExtra("movieID", movieId)
+        ContextCompat.startActivity(view.context, startNewActivity, optionsCompat.toBundle())
     }
 
     private fun RecyclerView.setupAdapter(requestCategory: RequestCategory, movieCategory: MovieCategory) {

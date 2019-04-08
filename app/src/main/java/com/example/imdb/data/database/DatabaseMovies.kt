@@ -64,7 +64,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         var totalResults = 0
         var idMovie = 0
 
-        if(reviews.isEmpty()) {
+        if(reviews.isNotEmpty()) {
             val reviewInformation = reviews[0]
             id = reviewInformation.reviewInformation.idReviewInformation
             page = reviewInformation.reviewInformation.page
