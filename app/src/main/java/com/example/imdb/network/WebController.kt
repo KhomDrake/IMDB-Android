@@ -16,6 +16,8 @@ object WebController {
     private val errorMovie =
         Movie(0, "asd", "asd", "asd", loading = false, error = true)
     private val errorMovieList = MoviesList(0, listOf(errorMovie), 0)
+    private val errorMovieDetail = MovieDetail(false, 0, "", "", "", 0, "", 0.0, 0, true)
+    private val errorReview = Reviews(0, 0, listOf(), 0, 0, 0, true)
 
 
     fun loadLatest(funResponse: (body: Movie) -> Unit) {
@@ -45,22 +47,22 @@ object WebController {
 
     fun loadMovieDetail(id: Int, funResponse: (body: MovieDetail) -> Unit) {
         api.getDetail(id, apiKey, DataController.getLanguage())
-            .enqueue(requestResponse<MovieDetail>(funResponse, null))
+            .enqueue(requestResponse<MovieDetail>(funResponse, errorMovieDetail))
     }
 
     fun loadRecommendation(id: Int, funResponse: (body: MoviesList) -> Unit) {
         api.getRecommendation(id, apiKey, DataController.getLanguage())
-            .enqueue(requestResponse<MoviesList>(funResponse, null))
+            .enqueue(requestResponse<MoviesList>(funResponse, errorMovieList))
     }
 
     fun loadReviews(id: Int, funResponse: (body: Reviews) -> Unit) {
         api.getReviews(id, apiKey, DataController.getLanguage())
-            .enqueue(requestResponse<Reviews>(funResponse, null))
+            .enqueue(requestResponse<Reviews>(funResponse, errorReview))
     }
 
     private fun <T>requestResponse(funResponse: (body: T) -> Unit, error: T?) = object : Callback<T> {
         override fun onFailure(call: Call<T?>, t: Throwable) {
-            println(t)
+            println(t.message)
             funResponse(error!!)
         }
 

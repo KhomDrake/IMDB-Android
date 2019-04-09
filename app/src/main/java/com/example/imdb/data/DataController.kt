@@ -33,7 +33,8 @@ object DataController {
 
         if(movieDetail.id != id) {
             WebController.loadMovieDetail(id) {
-                databaseMovies.setMovieDetail(it)
+                if(!it.error)
+                    databaseMovies.setMovieDetail(it)
                 funResponse(it)
             }
         } else {
@@ -44,7 +45,7 @@ object DataController {
     fun getLanguage() = language
 
     fun loadReviews(id: Int, funResponse: (reviews: Reviews) -> Unit) {
-        val reviews = databaseMovies.getReviewsLastMovieDetail(id)
+        val reviews = databaseMovies.getMovieReviews(id)
         if(reviews.idMovie != id) {
             WebController.loadReviews(id) {
                 it.idMovie = id
@@ -57,9 +58,11 @@ object DataController {
     }
 
     fun loadRecommendation(id: Int, funResponse: (List<Movie>) -> Unit) {
-        val recommendation = databaseMovies.getRecommendationLastMovie()
+        val recommendation = databaseMovies.getRecommendationLastMovie(id)
+
         if(recommendation.id != id) {
             WebController.loadRecommendation(id) {
+                Log.i("vini", "alksjdlkasjd")
                 databaseMovies.setRecommendationLastMovie(Recommendation(id, it))
                 funResponse(it.results)
             }

@@ -16,5 +16,5 @@ data class MovieDetail(
     val voteAverage: Double,
     @SerializedName("vote_count")
     val voteCount: Int,
-    var idMovie: Int
+    val error: Boolean
 )

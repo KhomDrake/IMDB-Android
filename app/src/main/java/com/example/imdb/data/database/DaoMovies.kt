@@ -18,6 +18,9 @@ interface DaoMovies {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMovie(movie: TableMovie)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertMovieRecommendation(movie: TableMovieRecommendation)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertLastUpdateCategory(updateCategory: TableLastUpdateCategory)
 
@@ -50,6 +53,9 @@ interface DaoMovies {
 
     @Query("SELECT * FROM TableMoviesList")
     fun getMoviesList(): List<TableMoviesList>
+
+    @Query("SELECT TableMovie.* FROM TableMovie, TableMovieRecommendation where TableMovie.idMovie = TableMovieRecommendation.idMovieRecommendation_fk and TableMovieRecommendation.idMovie_fk = :movieID")
+    fun getRecommendationMovie(movieID: Int): List<TableMovie>
 
     @Query("SELECT TableMovie.* FROM TableMovie, TableMovieCategory, TableMoviesList where TableMovie.idMovie = TableMovieCategory.idMovie_fk and TableMovieCategory.idMovieList_fk = :category  and TableMoviesList.idMovieList = :category")
     fun getMoviesListAndMovie(category: Int): List<TableMovie>

@@ -7,6 +7,6 @@ interface RequestCategory {
 
     fun loadCategory(type: MovieCategory)
 
-    fun makeTransition(view: View, movieId: Int)
+    fun makeTransition(view: View, movieId: Int, url: String)
 
 }

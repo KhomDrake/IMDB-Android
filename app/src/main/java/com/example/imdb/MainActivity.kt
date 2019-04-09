@@ -73,13 +73,14 @@ class MainActivity : AppCompatActivity(), RequestCategory {
         }
     }
 
-    override fun makeTransition(view: View, movieId: Int) {
+    override fun makeTransition(view: View, movieId: Int, url: String) {
         val startNewActivity = Intent(view.context, MovieDetailActivity::class.java)
         val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
             this,
             view,
             view.transitionName)
         startNewActivity.putExtra("movieID", movieId)
+        startNewActivity.putExtra("url", url)
         ContextCompat.startActivity(view.context, startNewActivity, optionsCompat.toBundle())
     }
 

@@ -1,21 +1,17 @@
 package com.example.imdb.ui.recyclerview
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.data.entity.http.Movie
 import com.example.imdb.ui.mainactivity.RequestCategory
-import com.example.imdb.ui.moviedetail.MovieDetailActivity
 
 class RecyclerViewAdapterMovieList(
     private val informationMovies: MutableList<Movie>,
@@ -75,14 +71,16 @@ class RecyclerViewAdapterMovieList(
                 return
             }
 
+            val path = getPath(result.posterPath, urlImg, imgNotFound)
+
             img.setOnClickListener {
-                requestCategory.makeTransition(img, result.id)
+                requestCategory.makeTransition(img, result.id, path)
             }
 
             val title = "Title: " + result.originalTitle
             name.text = title
 
-            val path = getPath(result.posterPath, urlImg, imgNotFound)
+
             Glide.with(itemView).load(path).into(img)
         }
 

@@ -1,8 +1,6 @@
 package com.example.imdb.data.database
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -16,6 +14,7 @@ import com.example.imdb.data.entity.table.*
                             TableMoviesList::class,
                             TableReview::class,
                             TableLastUpdateCategory::class,
+                            TableMovieRecommendation::class,
                             TableReviewInformation::class), version = 1)
 abstract class DatabaseMovies : RoomDatabase() {
 
@@ -43,23 +42,28 @@ abstract class DatabaseMovies : RoomDatabase() {
             movieDetailDb.title,
             movieDetailDb.voteAverage,
             movieDetailDb.voteCount,
-            movieDetailDb.idMovie_fk
+            false
         )
         else {
-            return MovieDetail(false, 0, "", "", "", 0, "", 0.0, 0, 0)
+            return MovieDetail(false, 0, "", "", "", 0, "", 0.0, 0, false)
         }
     }
 
-    fun getRecommendationLastMovie() : Recommendation {
-        return Recommendation(0, MoviesList(0, getMovies(MovieCategory.Recommendation).toList(), 0))
+    fun getRecommendationLastMovie(idMovie: Int) : Recommendation {
+        val moviesDb = moviesDao().getRecommendationMovie(idMovie)
+        val movies = tableMoviesToMovies(moviesDb)
+        if(movies.isEmpty())
+            return Recommendation(0, MoviesList(0, movies, 0))
+        else
+            return Recommendation(idMovie, MoviesList(0, movies, 0))
     }
 
-    fun getReviewsLastMovieDetail(idMovie: Int) : Reviews {
+    fun getMovieReviews(idMovie: Int) : Reviews {
         val reviews = moviesDao().getMovieReviews(idMovie)
 
         var id = -1
         var page = 0
-        val listOfRevies = mutableListOf<Review>()
+        val listOfReviews = mutableListOf<Review>()
         var totalPages = 0
         var totalResults = 0
         var idMovie = 0
@@ -71,14 +75,14 @@ abstract class DatabaseMovies : RoomDatabase() {
 
             for (review in reviews) {
                 val r = review.review
-                listOfRevies.add(Review(r.author, r.content, r.idReview.toString(), r.url))
+                listOfReviews.add(Review(r.author, r.content, r.idReview.toString(), r.url))
             }
             totalPages = reviewInformation.reviewInformation.totalPages
             totalResults = reviewInformation.reviewInformation.totalResults
             idMovie = reviewInformation.reviewInformation.idMovie_fk
         }
 
-        return Reviews(id, page, listOfRevies.toList(), totalPages, totalResults, idMovie)
+        return Reviews(id, page, listOfReviews.toList(), totalPages, totalResults, idMovie, false)
     }
 
     fun setReviews(reviews: Reviews) {
@@ -89,9 +93,10 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setRecommendationLastMovie(recommendation: Recommendation) {
+        val idMovie = recommendation.id
         for (movie in recommendation.moviesList.results) {
             moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
-            moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.Recommendation.ordinal))
+            moviesDao().insertMovieRecommendation(TableMovieRecommendation(idMovie + movie.id, idMovie, movie.id))
         }
     }
 
@@ -100,8 +105,12 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     private fun getMovies(movieCategory: MovieCategory) : MutableList<Movie> {
-        val movies: MutableList<Movie> = mutableListOf()
         val moviesDb = moviesDao().getMoviesListAndMovie(movieCategory.ordinal)
+        return tableMoviesToMovies(moviesDb)
+    }
+
+    private fun tableMoviesToMovies(moviesDb: List<TableMovie>) : MutableList<Movie> {
+        val movies: MutableList<Movie> = mutableListOf()
         for (movie in moviesDb) {
             movies.add(Movie(movie.idMovie, movie.originalTitle, movie.posterPath, movie.title, false, false))
         }
