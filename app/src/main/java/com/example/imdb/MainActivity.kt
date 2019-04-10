@@ -1,15 +1,14 @@
 package com.example.imdb
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.imdb.data.DataController
 import com.example.imdb.ui.mainactivity.MainActivityViewController
 import com.example.imdb.ui.mainactivity.RequestCategory
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
@@ -95,6 +94,7 @@ class MainActivity : AppCompatActivity(), RequestCategory {
 
     private fun RecyclerView.loadCategory(category: MovieCategory) {
         mainActivityViewController.loadMovies(this.movieAdapter, category) {
+            Log.i("vini", it.toString())
             this.movieAdapter.setMovies(it)
         }
     }
