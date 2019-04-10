@@ -14,13 +14,15 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.moviereview.ReviewActivity">
+        <activity android:name=".ui.HomeAppActivity">
         </activity>
-        <activity android:name=".ui.recommendation.RecommendationActivity">
+        <activity android:name=".ui.old.moviereview.ReviewActivity">
+        </activity>
+        <activity android:name=".ui.old.recommendation.RecommendationActivity">
         </activity>
         <activity
-                android:name=".ui.moviedetail.MovieDetailActivity"
-                android:theme="@style/NoActionBar">
+                android:name=".ui.old.moviedetail.MovieDetailActivity"
+                android:theme="@style/AppTheme">
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>

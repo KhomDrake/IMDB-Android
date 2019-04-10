@@ -1,4 +1,4 @@
-package com.example.imdb.ui.moviereview
+package com.example.imdb.ui.old.moviereview
 
 import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.http.Reviews

@@ -14,4 +14,8 @@
     <string name="recommendation_text">Recommendations</string>
     <string name="movie_review">Movie Review</string>
     <string name="image_movie">image_movie</string>
+    <string name="logo_themoviedb">logo_themoviedb</string>
+    <string name="text_home_login">Login</string>
+    <string name="text_home_guest">Guest</string>
+    <string name="title_home">Home</string>
 </resources>

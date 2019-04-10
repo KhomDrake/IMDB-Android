@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@drawable/background_screens"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <ImageView
+            android:src="@drawable/themoviedblogo"
+            android:layout_width="109dp"
+            android:layout_height="84dp"
+            android:id="@+id/imageView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:contentDescription="@string/image_movie"/>
+    <TextView
+            android:text="@string/title_home"
+            android:layout_width="300dp"
+            android:textColor="@color/imdb_text"
+            android:background="@color/imdb_background_text"
+            android:textAlignment="center"
+            android:textSize="54sp"
+            android:layout_height="84dp"
+            android:id="@+id/textView2"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

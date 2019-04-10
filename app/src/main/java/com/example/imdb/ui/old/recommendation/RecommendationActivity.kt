@@ -1,4 +1,4 @@
-package com.example.imdb.ui.recommendation
+package com.example.imdb.ui.old.recommendation
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
-import com.example.imdb.ui.mainactivity.RequestCategory
-import com.example.imdb.ui.moviedetail.MovieDetailActivity
-import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
+import com.example.imdb.ui.old.mainactivity.RequestCategory
+import com.example.imdb.ui.old.moviedetail.MovieDetailActivity
+import com.example.imdb.ui.old.recyclerview.RecyclerViewAdapterMovieList
 
 class RecommendationActivity : AppCompatActivity(), RequestCategory {
 

@@ -2,17 +2,11 @@ package com.example.imdb
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.View
+import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.imdb.ui.mainactivity.MainActivityViewController
-import com.example.imdb.ui.mainactivity.RequestCategory
-import com.example.imdb.ui.moviedetail.MovieDetailActivity
-import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
+import com.example.imdb.ui.HomeAppActivity
 
 enum class MovieCategory {
     Zero,
@@ -24,81 +18,26 @@ enum class MovieCategory {
     Recommendation
 }
 
-class MainActivity : AppCompatActivity(), RequestCategory {
+class MainActivity : AppCompatActivity() {
 
-    private lateinit var latest: RecyclerView
-    private lateinit var nowPlaying: RecyclerView
-    private lateinit var popular: RecyclerView
-    private lateinit var topRated: RecyclerView
-    private lateinit var upcoming: RecyclerView
-
-    private lateinit var mainActivityViewController: MainActivityViewController
+    private lateinit var loginButton: Button
+    private lateinit var guestButton: Button
+    private val messageLoginButton = "Função indisponível"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainActivityViewController = MainActivityViewController()
+        loginButton = findViewById(R.id.login)
+        guestButton = findViewById(R.id.guest)
 
-        mainActivityViewController.createDatabase(this)
+        loginButton.setOnClickListener {
+            Toast.makeText(this, messageLoginButton, Toast.LENGTH_SHORT).show()
+        }
 
-        nowPlaying = findViewById(R.id.movies)
-        latest = findViewById(R.id.latest)
-        popular = findViewById(R.id.popular)
-        topRated = findViewById(R.id.toprated)
-        upcoming = findViewById(R.id.upcoming)
-
-        latest.setupAdapter(this, MovieCategory.Latest)
-        nowPlaying.setupAdapter(this, MovieCategory.NowPlaying)
-        popular.setupAdapter(this, MovieCategory.Popular)
-        topRated.setupAdapter(this, MovieCategory.TopRated)
-        upcoming.setupAdapter(this, MovieCategory.Upcoming)
-
-        loadCategory(MovieCategory.Latest)
-        loadCategory(MovieCategory.NowPlaying)
-        loadCategory(MovieCategory.Popular)
-        loadCategory(MovieCategory.Upcoming)
-        loadCategory(MovieCategory.TopRated)
-    }
-
-    override fun loadCategory(type: MovieCategory) {
-        when(type) {
-            MovieCategory.Upcoming -> upcoming.loadCategory(type)
-            MovieCategory.NowPlaying -> nowPlaying.loadCategory(type)
-            MovieCategory.Popular -> popular.loadCategory(type)
-            MovieCategory.TopRated -> topRated.loadCategory(type)
-            MovieCategory.Latest -> latest.loadCategory(type)
-            else -> Unit
+        guestButton.setOnClickListener {
+            val startNewActivity = Intent(this, HomeAppActivity::class.java)
+            ContextCompat.startActivity(this, startNewActivity, null)
         }
     }
-
-    override fun makeTransition(view: View, movieId: Int, url: String) {
-        val startNewActivity = Intent(view.context, MovieDetailActivity::class.java)
-        val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            this,
-            view,
-            view.transitionName)
-        startNewActivity.putExtra("movieID", movieId)
-        startNewActivity.putExtra("url", url)
-        ContextCompat.startActivity(view.context, startNewActivity, optionsCompat.toBundle())
-    }
-
-    private fun RecyclerView.setupAdapter(requestCategory: RequestCategory, movieCategory: MovieCategory) {
-        this.adapter = createAdapter(requestCategory, movieCategory)
-        this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-    }
-
-    private fun createAdapter(requestCategory: RequestCategory, movieCategory: MovieCategory) :
-            RecyclerViewAdapterMovieList =
-        RecyclerViewAdapterMovieList(mutableListOf(), requestCategory, movieCategory)
-
-    private fun RecyclerView.loadCategory(category: MovieCategory) {
-        mainActivityViewController.loadMovies(this.movieAdapter, category) {
-            Log.i("vini", it.toString())
-            this.movieAdapter.setMovies(it)
-        }
-    }
-
-    private val RecyclerView.movieAdapter: RecyclerViewAdapterMovieList
-        get() = adapter as RecyclerViewAdapterMovieList
 }

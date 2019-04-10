@@ -1,16 +1,14 @@
-package com.example.imdb.ui.moviereview
+package com.example.imdb.ui.old.moviereview
 
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.R
-import com.example.imdb.ui.recyclerview.RecyclerViewAdapterReviews
+import com.example.imdb.ui.old.recyclerview.RecyclerViewAdapterReviews
 
 class ReviewActivity : AppCompatActivity() {
 

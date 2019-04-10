@@ -1,11 +1,10 @@
-package com.example.imdb.ui.mainactivity
+package com.example.imdb.ui.old.mainactivity
 
 import android.content.Context
-import com.example.imdb.MainActivity
 import com.example.imdb.MovieCategory
 import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.http.Movie
-import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
+import com.example.imdb.ui.old.recyclerview.RecyclerViewAdapterMovieList
 import java.util.Locale
 
 class MainActivityViewController {

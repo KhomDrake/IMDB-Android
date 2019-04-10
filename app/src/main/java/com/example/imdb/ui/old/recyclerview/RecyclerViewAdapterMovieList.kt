@@ -1,4 +1,4 @@
-package com.example.imdb.ui.recyclerview
+package com.example.imdb.ui.old.recyclerview
 
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.data.entity.http.Movie
-import com.example.imdb.ui.mainactivity.RequestCategory
+import com.example.imdb.ui.old.mainactivity.RequestCategory
 
 class RecyclerViewAdapterMovieList(
     private val informationMovies: MutableList<Movie>,

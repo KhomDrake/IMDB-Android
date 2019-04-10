@@ -3,4 +3,9 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="imdb">#01d277</color>
+
+    <color name="imdb_text">#008000</color>
+    <color name="imdb_title">#008000</color>
+    <color name="imdb_background_text">#079234</color>
 </resources>

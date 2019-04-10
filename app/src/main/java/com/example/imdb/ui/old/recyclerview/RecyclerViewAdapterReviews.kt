@@ -1,4 +1,4 @@
-package com.example.imdb.ui.recyclerview
+package com.example.imdb.ui.old.recyclerview
 
 import android.view.LayoutInflater
 import android.view.View
