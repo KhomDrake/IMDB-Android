@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/IMDB-Android.iml" filepath="$PROJECT_DIR$/IMDB-Android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/IMDB-Android2.iml" filepath="$PROJECT_DIR$/.idea/IMDB-Android2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
