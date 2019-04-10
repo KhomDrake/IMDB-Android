@@ -6,7 +6,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.example.imdb.ui.HomeAppActivity
+import com.example.imdb.ui.home.HomeAppActivity
 
 enum class MovieCategory {
     Zero,

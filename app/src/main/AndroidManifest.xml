@@ -14,7 +14,11 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.HomeAppActivity">
+        <activity android:name=".ui.hometv.HomeTvActivity">
+        </activity>
+        <activity android:name=".ui.homemovies.HomeMoviesActivity">
+        </activity>
+        <activity android:name=".ui.home.HomeAppActivity">
         </activity>
         <activity android:name=".ui.old.moviereview.ReviewActivity">
         </activity>
