@@ -7,18 +7,37 @@ import androidx.room.RoomDatabase
 import com.example.imdb.MovieCategory
 import com.example.imdb.data.entity.http.*
 import com.example.imdb.data.entity.table.*
-
 @Database(entities = arrayOf(TableMovie::class,
                             TableMovieCategory::class,
                             TableMovieDetail::class,
                             TableMoviesList::class,
                             TableReview::class,
                             TableLastUpdateCategory::class,
+                            TableCast::class,
                             TableMovieRecommendation::class,
                             TableReviewInformation::class), version = 1)
 abstract class DatabaseMovies : RoomDatabase() {
 
     abstract fun moviesDao(): DaoMovies
+
+    fun setup() {
+        moviesDao().insertMovieList(TableMoviesList(MovieCategory.Latest.ordinal, 1, 1))
+        moviesDao().insertMovieList(TableMoviesList(MovieCategory.NowPlaying.ordinal, 1, 1))
+        moviesDao().insertMovieList(TableMoviesList(MovieCategory.Popular.ordinal, 1, 1))
+        moviesDao().insertMovieList(TableMoviesList(MovieCategory.TopRated.ordinal, 1, 1))
+        moviesDao().insertMovieList(TableMoviesList(MovieCategory.Upcoming.ordinal, 1, 1))
+        moviesDao().insertMovieList(TableMoviesList(MovieCategory.Recommendation.ordinal, 1, 1))
+    }
+
+    fun getMovieCredit(idMovie: Int) : MovieCredit {
+        val creditMovieDb = moviesDao().getMovieCreditCast(idMovie)
+        val id= if(creditMovieDb.isEmpty()) 0 else idMovie
+        val creditMovie = mutableListOf<Cast>()
+        for (cast in creditMovieDb) {
+            creditMovie.add(Cast(cast.idCast, cast.character, cast.gender, cast.id, cast.name, cast.order, cast.profilePath))
+        }
+        return MovieCredit(creditMovie, id, false)
+    }
 
     fun getLatest() : MutableList<Movie> = getMovies(MovieCategory.Latest)
 
@@ -104,19 +123,6 @@ abstract class DatabaseMovies : RoomDatabase() {
         moviesDao().insertMovieDetail(TableMovieDetail(movieDetail.id, movieDetail.adult, movieDetail.id, movieDetail.overview, movieDetail.posterPath.toString(), movieDetail.releaseDate, movieDetail.runtime, movieDetail.title, movieDetail.voteAverage, movieDetail.voteCount))
     }
 
-    private fun getMovies(movieCategory: MovieCategory) : MutableList<Movie> {
-        val moviesDb = moviesDao().getMoviesListAndMovie(movieCategory.ordinal)
-        return tableMoviesToMovies(moviesDb)
-    }
-
-    private fun tableMoviesToMovies(moviesDb: List<TableMovie>) : MutableList<Movie> {
-        val movies: MutableList<Movie> = mutableListOf()
-        for (movie in moviesDb) {
-            movies.add(Movie(movie.idMovie, movie.originalTitle, movie.posterPath, movie.title, false, false))
-        }
-        return movies
-    }
-
     fun setLatest(movie: Movie) {
         moviesDao().deleteMovieCategory(MovieCategory.Latest.ordinal)
         moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
@@ -155,17 +161,27 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun setup() {
-        moviesDao().insertMovieList(TableMoviesList(MovieCategory.Latest.ordinal, 1, 1))
-        moviesDao().insertMovieList(TableMoviesList(MovieCategory.NowPlaying.ordinal, 1, 1))
-        moviesDao().insertMovieList(TableMoviesList(MovieCategory.Popular.ordinal, 1, 1))
-        moviesDao().insertMovieList(TableMoviesList(MovieCategory.TopRated.ordinal, 1, 1))
-        moviesDao().insertMovieList(TableMoviesList(MovieCategory.Upcoming.ordinal, 1, 1))
-        moviesDao().insertMovieList(TableMoviesList(MovieCategory.Recommendation.ordinal, 1, 1))
+    fun setCreditMovie(credit: MovieCredit, idMovie: Int) {
+        for (cast in credit.cast) {
+            moviesDao().insertMovieCast(TableCast(cast.castId, idMovie, cast.character, cast.gender, cast.id, cast.name, cast.order, cast.profilePath))
+        }
     }
 
     fun lastTimeUpdateCategory(movieCategory: MovieCategory, currentTime: Long) {
         moviesDao().insertLastUpdateCategory(TableLastUpdateCategory(movieCategory.ordinal, currentTime))
+    }
+
+    private fun getMovies(movieCategory: MovieCategory) : MutableList<Movie> {
+        val moviesDb = moviesDao().getMoviesListAndMovie(movieCategory.ordinal)
+        return tableMoviesToMovies(moviesDb)
+    }
+
+    private fun tableMoviesToMovies(moviesDb: List<TableMovie>) : MutableList<Movie> {
+        val movies: MutableList<Movie> = mutableListOf()
+        for (movie in moviesDb) {
+            movies.add(Movie(movie.idMovie, movie.originalTitle, movie.posterPath, movie.title, false, false))
+        }
+        return movies
     }
 
     fun getLastTimeUpdateCategory(movieCategory: MovieCategory): Long {

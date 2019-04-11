@@ -1,3 +1,4 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="size_title_home_movies">26sp</dimen>
 </resources>

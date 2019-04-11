@@ -1,9 +1,6 @@
 package com.example.imdb.network.themoviedb
 
-import com.example.imdb.data.entity.http.MoviesList
-import com.example.imdb.data.entity.http.Movie
-import com.example.imdb.data.entity.http.MovieDetail
-import com.example.imdb.data.entity.http.Reviews
+import com.example.imdb.data.entity.http.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -66,5 +63,10 @@ interface TheMovieDBAPI {
         @Query("language") language: String
     ): Call<Reviews>
 
+    @GET("{id}/reviews")
+    fun getMovieCredit(
+        @Path("id") id: Int,
+        @Query("api_key") key: String
+    ): Call<MovieCredit>
 
 }

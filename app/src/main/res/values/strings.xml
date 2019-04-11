@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">IMDB</string>
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
-    <string name="tentar_novamente">Tentar novamente</string>
+    <string name="try_again">Try Again</string>
     <string name="title">Title:</string>
     <string name="runtime">Runtime:</string>
     <string name="release_date">Release Date:</string>
@@ -14,11 +14,19 @@
     <string name="recommendation_text">Recommendations</string>
     <string name="movie_review">Movie Review</string>
     <string name="image_movie">image_movie</string>
-    <string name="logo_themoviedb">logo_themoviedb</string>
+    <string name="logo_the_movie_db">logo_themoviedb</string>
     <string name="text_home_login">Login</string>
     <string name="text_home_guest">Guest</string>
     <string name="title_home">Home</string>
     <string name="go_to_movie_button">Movie</string>
     <string name="go_to_tv_button">TV</string>
-    <string name="nenhum_favorito_ainda">Nenhum Favorito Ainda</string>
+    <string name="no_favorites_yet">No Favorites Yet</string>
+    <string name="title_movies">Movies</string>
+    <string name="title_latest">Latest</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="top_rated">Top Rated</string>
+    <string name="popular">Popular</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="starscore">StarScore</string>
+    <string name="cast">Cast</string>
 </resources>

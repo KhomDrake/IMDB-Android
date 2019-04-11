@@ -1,4 +1,4 @@
-package com.example.imdb.ui.old.mainactivity
+package com.example.imdb.ui
 
 import android.view.View
 import com.example.imdb.MovieCategory

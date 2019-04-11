@@ -45,7 +45,7 @@
 
     <Button android:layout_width="195dp"
             android:layout_height="43dp"
-            android:text="@string/tentar_novamente"
+            android:text="@string/try_again"
             app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/again"
             android:layout_marginEnd="8dp"

@@ -36,6 +36,9 @@ interface DaoMovies {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertReview(review: TableReview)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertMovieCast(cast: TableCast)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMovieDetail(movieDetail: TableMovieDetail)
 
@@ -62,5 +65,8 @@ interface DaoMovies {
 
     @Query("SELECT TableMovie.*, TableReview.*, TableReviewInformation.* FROM TableMovie, TableReview, TableReviewInformation where TableMovie.idMovie = :movie and TableReviewInformation.idMovie_fk = :movie and TableReview.idReviewInformation_fk = TableReviewInformation.idReviewInformation")
     fun getMovieReviews(movie: Int): List<SelectMovieReviewsAndReviewInformation>
+
+    @Query("SELECT TableCast.* FROM TableCast where TableCast.idMovieCredit_fk = :movie")
+    fun getMovieCreditCast(movie: Int): List<TableCast>
 
 }

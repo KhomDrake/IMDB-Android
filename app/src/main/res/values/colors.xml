@@ -6,6 +6,7 @@
     <color name="imdb">#01d277</color>
     <color name="imdb_text">#00E065</color>
     <color name="imdb_title">#008000</color>
+    <color name="imdb_background">#0d0d0d</color>
     <color name="imdb_background_text">#079234</color>
     <color name="imdb_background_text2">#00282A</color>
     <color name="imdb_background_text3">#003426</color>

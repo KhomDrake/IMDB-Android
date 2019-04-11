@@ -4,15 +4,16 @@ import android.content.Context
 import android.util.Log
 import com.example.imdb.MovieCategory
 import com.example.imdb.data.database.DatabaseMovies
-import com.example.imdb.data.entity.http.Movie
-import com.example.imdb.data.entity.http.MovieDetail
-import com.example.imdb.data.entity.http.Recommendation
-import com.example.imdb.data.entity.http.Reviews
+import com.example.imdb.data.entity.http.*
 import com.example.imdb.network.WebController
 
 object DataController {
 
     private lateinit var databaseMovies: DatabaseMovies
+
+    private lateinit var language: String
+
+    private const val timeToBeDeprecated: Long = 5 * 60000
 
     fun createDatabase(ctx: Context) {
         DatabaseMovies.instance(ctx)
@@ -20,11 +21,22 @@ object DataController {
         databaseMovies.setup()
     }
 
-    private lateinit var language: String
-    private const val timeToBeDeprecated: Long = 5 * 60000
-
     fun setupDatabase(language: String) {
         this.language = language
+    }
+
+    fun getLanguage() = language
+
+    fun loadMovieCredit(id: Int, funResponse: (movieCredit: MovieCredit) -> Unit) {
+        val movieCredit = databaseMovies.getMovieCredit(id)
+        if(id != movieCredit.id) {
+            WebController.loadMovieCredit(id) {
+                databaseMovies.setCreditMovie(it, id)
+                funResponse(it)
+            }
+        } else {
+            funResponse(movieCredit)
+        }
     }
 
     fun loadMovieDetail(id: Int, funResponse: (movies: MovieDetail) -> Unit) {
@@ -41,8 +53,6 @@ object DataController {
             funResponse(movieDetail)
         }
     }
-
-    fun getLanguage() = language
 
     fun loadReviews(id: Int, funResponse: (reviews: Reviews) -> Unit) {
         val reviews = databaseMovies.getMovieReviews(id)
@@ -131,18 +141,6 @@ object DataController {
         }
     }
 
-    private fun getDetailMovie(idMovie: Int) = databaseMovies.getDetailMovie(idMovie)
-
-    private fun getLatest() = databaseMovies.getLatest()
-
-    private fun getNowPlaying() = databaseMovies.getNowPlaying()
-
-    private fun getPopular() = databaseMovies.getPopular()
-
-    private fun getTopRated() = databaseMovies.getTopRated()
-
-    private fun getUpcoming() = databaseMovies.getUpcoming()
-
     private fun setLatest(movie: Movie) = databaseMovies.setLatest(movie)
 
     private fun setNowPlaying(movies: List<Movie>) = databaseMovies.setNowPlaying(movies)
@@ -152,31 +150,6 @@ object DataController {
     private fun setTopRated(movies: List<Movie>) = databaseMovies.setTopRated(movies)
 
     private fun setUpcoming(movies: List<Movie>) = databaseMovies.setUpcoming(movies)
-
-    private fun MutableList<Movie>.isEmptyOrInLoading(): Boolean {
-        for (movie in this) {
-            if (movie.loading) {
-                return true
-            }
-        }
-
-        if (this.count() == 0)
-            return true
-
-        return false
-    }
-
-    private fun dataIsDeprecated(movieCategory: MovieCategory) : Boolean {
-
-        return deprecatedSinceLastUpdate(movieCategory)
-    }
-
-    private fun deprecatedSinceLastUpdate(movieCategory: MovieCategory) = getCurrentTime()
-        .minus(getTimeLastUpdate(movieCategory)) > timeToBeDeprecated
-
-    private fun getTimeLastUpdate(movieCategory: MovieCategory) = databaseMovies.getLastTimeUpdateCategory(movieCategory)
-
-    private fun getCurrentTime() = System.currentTimeMillis()
 
     private fun setTime(movieCategory: MovieCategory) {
         databaseMovies.lastTimeUpdateCategory(movieCategory, getCurrentTime())
@@ -225,4 +198,41 @@ object DataController {
         else
             setLatest(movie = Movie(0, "", "", "", loading = false, error = true))
     }
+
+    private fun getDetailMovie(idMovie: Int) = databaseMovies.getDetailMovie(idMovie)
+
+    private fun getLatest() = databaseMovies.getLatest()
+
+    private fun getNowPlaying() = databaseMovies.getNowPlaying()
+
+    private fun getPopular() = databaseMovies.getPopular()
+
+    private fun getTopRated() = databaseMovies.getTopRated()
+
+    private fun getUpcoming() = databaseMovies.getUpcoming()
+
+    private fun MutableList<Movie>.isEmptyOrInLoading(): Boolean {
+        for (movie in this) {
+            if (movie.loading) {
+                return true
+            }
+        }
+
+        if (this.count() == 0)
+            return true
+
+        return false
+    }
+
+    private fun dataIsDeprecated(movieCategory: MovieCategory) : Boolean {
+
+        return deprecatedSinceLastUpdate(movieCategory)
+    }
+
+    private fun deprecatedSinceLastUpdate(movieCategory: MovieCategory) = getCurrentTime()
+        .minus(getTimeLastUpdate(movieCategory)) > timeToBeDeprecated
+
+    private fun getTimeLastUpdate(movieCategory: MovieCategory) = databaseMovies.getLastTimeUpdateCategory(movieCategory)
+
+    private fun getCurrentTime() = System.currentTimeMillis()
 }

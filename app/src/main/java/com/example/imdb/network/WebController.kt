@@ -1,10 +1,7 @@
 package com.example.imdb.network
 
 import com.example.imdb.data.DataController
-import com.example.imdb.data.entity.http.MoviesList
-import com.example.imdb.data.entity.http.Movie
-import com.example.imdb.data.entity.http.MovieDetail
-import com.example.imdb.data.entity.http.Reviews
+import com.example.imdb.data.entity.http.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +15,7 @@ object WebController {
     private val errorMovieList = MoviesList(0, listOf(errorMovie), 0)
     private val errorMovieDetail = MovieDetail(false, 0, "", "", "", 0, "", 0.0, 0, true)
     private val errorReview = Reviews(0, 0, listOf(), 0, 0, 0, true)
+    private val errorMovieCredit = MovieCredit(listOf(), 0, true)
 
 
     fun loadLatest(funResponse: (body: Movie) -> Unit) {
@@ -58,6 +56,11 @@ object WebController {
     fun loadReviews(id: Int, funResponse: (body: Reviews) -> Unit) {
         api.getReviews(id, apiKey, DataController.getLanguage())
             .enqueue(requestResponse<Reviews>(funResponse, errorReview))
+    }
+
+    fun loadMovieCredit(id: Int, funResponse: (body: MovieCredit) -> Unit) {
+        api.getMovieCredit(id, apiKey)
+            .enqueue(requestResponse<MovieCredit>(funResponse, errorMovieCredit))
     }
 
     private fun <T>requestResponse(funResponse: (body: T) -> Unit, error: T?) = object : Callback<T> {

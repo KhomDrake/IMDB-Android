@@ -9,10 +9,10 @@ package com.example.imdb
 //import androidx.core.content.ContextCompat
 //import androidx.recyclerview.widget.LinearLayoutManager
 //import androidx.recyclerview.widget.RecyclerView
-//import com.example.imdb.ui.old.mainactivity.MainActivityViewController
-//import com.example.imdb.ui.old.mainactivity.RequestCategory
-//import com.example.imdb.ui.old.moviedetail.MovieDetailActivity
-//import com.example.imdb.ui.old.recyclerview.RecyclerViewAdapterMovieList
+//import com.example.imdb.ui.mainactivity.MainActivityViewController
+//import com.example.imdb.ui.RequestCategory
+//import com.example.imdb.ui.moviedetail.MovieDetailActivity
+//import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
 //
 //enum class MovieCategory {
 //    Zero,
@@ -26,11 +26,7 @@ package com.example.imdb
 //
 //class MainActivity : AppCompatActivity(), RequestCategory {
 //
-//    private lateinit var latest: RecyclerView
-//    private lateinit var nowPlaying: RecyclerView
-//    private lateinit var popular: RecyclerView
-//    private lateinit var topRated: RecyclerView
-//    private lateinit var upcoming: RecyclerView
+
 //
 //    private lateinit var mainActivityViewController: MainActivityViewController
 //

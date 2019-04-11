@@ -8,7 +8,7 @@ import android.widget.ProgressBar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.R
-import com.example.imdb.ui.old.recyclerview.RecyclerViewAdapterReviews
+import com.example.imdb.ui.recyclerview.RecyclerViewAdapterReviews
 
 class ReviewActivity : AppCompatActivity() {
 

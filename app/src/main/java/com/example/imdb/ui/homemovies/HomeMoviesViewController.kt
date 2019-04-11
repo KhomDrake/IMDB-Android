@@ -1,14 +1,13 @@
-package com.example.imdb.ui.old.mainactivity
+package com.example.imdb.ui.homemovies
 
 import android.content.Context
 import com.example.imdb.MovieCategory
 import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.http.Movie
-import com.example.imdb.ui.old.recyclerview.RecyclerViewAdapterMovieList
-import java.util.Locale
+import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
+import java.util.*
 
-class MainActivityViewController {
-
+class HomeMoviesViewController {
     private val loading: Movie =
         Movie(0, "", "", "", loading = true, error = false)
 
@@ -45,5 +44,4 @@ class MainActivityViewController {
     fun createDatabase(ctx: Context) {
         DataController.createDatabase(ctx)
     }
-
 }

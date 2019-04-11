@@ -65,7 +65,7 @@
             android:textSize="36sp"
             android:textColor="@color/imdb_title"
             android:textAlignment="center"
-            android:text="@string/nenhum_favorito_ainda"
+            android:text="@string/no_favorites_yet"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp"
             app:layout_constraintEnd_toEndOf="parent"
