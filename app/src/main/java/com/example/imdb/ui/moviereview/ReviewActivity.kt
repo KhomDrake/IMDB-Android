@@ -18,6 +18,7 @@ class ReviewActivity : AppCompatActivity() {
     private lateinit var loadingReview: ProgressBar
     private lateinit var tryAgain: Button
     private lateinit var reviewTitle: TextView
+    private lateinit var noReviews: TextView
     private lateinit var title: String
     private var movieID: Int = -3000
 
@@ -27,10 +28,13 @@ class ReviewActivity : AppCompatActivity() {
 
         tryAgain = findViewById(R.id.again)
         reviewTitle = findViewById(R.id.title_reviews)
+        noReviews = findViewById(R.id.no_review)
         title = intent.getStringExtra("title")
         movieID = intent.getIntExtra("movieID", -1)
         if(movieID < 0)
             return
+
+        noReviews.visibility = View.INVISIBLE
 
         reviewTitle.text = "Review: $title"
 
@@ -54,6 +58,10 @@ class ReviewActivity : AppCompatActivity() {
                 tryAgain.visibility = View.VISIBLE
                 return@loadReviews
             }
+
+            if(it.results.isEmpty())
+                noReviews.visibility = View.VISIBLE
+
             tryAgain.visibility = View.INVISIBLE
             reviewRecyclerView.reviewAdapter.setReviews(it)
         }

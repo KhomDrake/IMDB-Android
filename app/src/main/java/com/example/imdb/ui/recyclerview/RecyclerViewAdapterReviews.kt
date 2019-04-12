@@ -40,7 +40,7 @@ class RecyclerViewAdapterReviews (
 
         fun bind(review: Review) {
             name.text = "Autor: ${review.author}"
-            content.text = review.content
+            content.text = if(review.content.isEmpty() || review.content.isBlank()) "Nenhum comentário"  else review.content
         }
     }
 }
