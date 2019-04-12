@@ -1,10 +1,11 @@
-package com.example.imdb.ui.old.moviereview
+package com.example.imdb.ui.moviereview
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.R
@@ -16,6 +17,8 @@ class ReviewActivity : AppCompatActivity() {
     private lateinit var reviewRecyclerView: RecyclerView
     private lateinit var loadingReview: ProgressBar
     private lateinit var tryAgain: Button
+    private lateinit var reviewTitle: TextView
+    private lateinit var title: String
     private var movieID: Int = -3000
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,9 +26,13 @@ class ReviewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_review)
 
         tryAgain = findViewById(R.id.again)
+        reviewTitle = findViewById(R.id.title_reviews)
+        title = intent.getStringExtra("title")
         movieID = intent.getIntExtra("movieID", -1)
         if(movieID < 0)
             return
+
+        reviewTitle.text = "Review: $title"
 
         tryAgain.visibility = View.INVISIBLE
         reviewViewController = ReviewViewController()

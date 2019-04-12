@@ -20,6 +20,7 @@
 
     <ProgressBar android:layout_width="246dp"
                  android:layout_height="231dp"
+                 android:indeterminate="true"
                  app:layout_constraintEnd_toEndOf="parent"
                  android:layout_marginEnd="16dp"
                  android:id="@+id/loading"

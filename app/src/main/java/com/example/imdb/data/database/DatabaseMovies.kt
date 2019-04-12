@@ -1,6 +1,7 @@
 package com.example.imdb.data.database
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -162,6 +163,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setCreditMovie(credit: MovieCredit, idMovie: Int) {
+        Log.i("vini", credit.toString())
         for (cast in credit.cast) {
             moviesDao().insertMovieCast(TableCast(cast.castId, idMovie, cast.character, cast.gender, cast.id, cast.name, cast.order, cast.profilePath))
         }

@@ -3,7 +3,6 @@ package com.example.imdb.ui.moviedetail
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -11,11 +10,11 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.R
-import com.example.imdb.ui.old.moviereview.ReviewActivity
-import com.example.imdb.ui.old.recommendation.RecommendationActivity
+import com.example.imdb.ui.cast.CastActivity
+import com.example.imdb.ui.moviereview.ReviewActivity
+import com.example.imdb.ui.recommendation.RecommendationActivity
 
 class MovieDetailActivity : AppCompatActivity() {
 
@@ -29,18 +28,15 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var overView: TextView
     private lateinit var recommendation: Button
     private lateinit var review: Button
+    private lateinit var cast: Button
     private lateinit var tryAgain: Button
-    private lateinit var cast: TextView
-    private lateinit var castRecycler: RecyclerView
     private lateinit var overViewText: TextView
+    private lateinit var titleText: String
     private val viewsDetailMovie: List<View>
-        get() = listOf(title, runtime, releaseDate, voteCount, overView, overViewText, recommendation, review, cast)
+        get() = listOf(title, runtime, releaseDate, voteCount, overView, overViewText, recommendation, review)
 
     private val listOfStars: List<ImageView>
-        get() = listOf(findViewById(R.id.first_star),findViewById(R.id.second_star),findViewById(R.id.third_star),findViewById(R.id.fourth_star),findViewById(R.id.third_star))
-
-    private val urlImg = "https://image.tmdb.org/t/p/w200"
-    private val imgNotFound = "http://hotspottagger.com/locationimages/noimage.jpg"
+        get() = listOf(findViewById(R.id.first_star),findViewById(R.id.second_star),findViewById(R.id.third_star),findViewById(R.id.fourth_star),findViewById(R.id.fifth_star))
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +57,6 @@ class MovieDetailActivity : AppCompatActivity() {
         review = findViewById(R.id.reviews)
         overViewText = findViewById(R.id.overview_text)
         cast = findViewById(R.id.cast)
-        castRecycler = findViewById(R.id.cast_recycler)
 
         tryAgain.visibility = View.INVISIBLE
         img.visibility = View.VISIBLE
@@ -78,11 +73,19 @@ class MovieDetailActivity : AppCompatActivity() {
         recommendation.setOnClickListener {
             val startNewActivity = Intent(this, RecommendationActivity::class.java)
             startNewActivity.putExtra("movieID", movieID)
+            startNewActivity.putExtra("title", titleText)
             ContextCompat.startActivity(this, startNewActivity, null)
         }
         review.setOnClickListener {
             val startNewActivity = Intent(this, ReviewActivity::class.java)
             startNewActivity.putExtra("movieID", movieID)
+            startNewActivity.putExtra("title", titleText)
+            ContextCompat.startActivity(this, startNewActivity, null)
+        }
+        cast.setOnClickListener {
+            val startNewActivity = Intent(this, CastActivity::class.java)
+            startNewActivity.putExtra("movieID", movieID)
+            startNewActivity.putExtra("title", titleText)
             ContextCompat.startActivity(this, startNewActivity, null)
         }
         tryAgain.setOnClickListener {
@@ -107,27 +110,24 @@ class MovieDetailActivity : AppCompatActivity() {
                 it.visibility = View.VISIBLE
             }
 
-            val quantStars = Math.round(Math.round(it.voteAverage)/2.0).toInt()
+            val quantStars: Int = movieDetailViewController.getQuantStars(it.voteAverage)
 
             for (i in 0 until quantStars) {
                 listOfStars[i].visibility = View.VISIBLE
             }
 
-            val releaseDateSplit = it.releaseDate.split("-")
-            val month = releaseDateSplit[1]
-            val day = releaseDateSplit[2]
-            val year = releaseDateSplit[0]
-            title.text = "${it.title}"
-            runtime.text = "Runtime: ${it.runtime} min"
-            releaseDate.text = "Release Date: $day/$month/$year"
-            overViewText.text = "${it.overview}"
-            voteCount.text = "Vote Count: ${it.voteCount}"
+            titleText = movieDetailViewController.getMovieTitle(it.title)
+            val date: String = movieDetailViewController.getDate(it.releaseDate)
+            val runtimeText: String = movieDetailViewController.getRuntime(it.runtime)
+            val overView: String = movieDetailViewController.getOverview(it.overview)
+            val voteCountText: String = movieDetailViewController.getVoteCount(it.voteCount)
+            title.text = titleText
+            runtime.text = runtimeText
+            releaseDate.text = date
+            overViewText.text = overView
+            voteCount.text = voteCountText
 
             progressBar.visibility = View.INVISIBLE
         }
     }
-
-    private fun getPath(path: String?, urlImg: String, imgNotFound: String) =
-        if (path == "null" || path == "" || path == null) imgNotFound else urlImg + path
-
 }

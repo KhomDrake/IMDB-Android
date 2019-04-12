@@ -14,18 +14,20 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.cast.CastActivity">
+        </activity>
         <activity android:name=".ui.hometv.HomeTvActivity">
         </activity>
         <activity android:name=".ui.homemovies.HomeMoviesActivity">
         </activity>
         <activity android:name=".ui.home.HomeAppActivity">
         </activity>
-        <activity android:name=".ui.old.moviereview.ReviewActivity">
+        <activity android:name=".ui.moviereview.ReviewActivity">
         </activity>
-        <activity android:name=".ui.old.recommendation.RecommendationActivity">
+        <activity android:name="com.example.imdb.ui.recommendation.RecommendationActivity">
         </activity>
         <activity
-                android:name="com.example.imdb.ui.moviedetail.MovieDetailActivity"
+                android:name=".ui.moviedetail.MovieDetailActivity"
                 android:theme="@style/AppTheme">
         </activity>
         <activity android:name=".MainActivity">

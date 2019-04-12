@@ -63,7 +63,7 @@ interface TheMovieDBAPI {
         @Query("language") language: String
     ): Call<Reviews>
 
-    @GET("{id}/reviews")
+    @GET("{id}/credits")
     fun getMovieCredit(
         @Path("id") id: Int,
         @Query("api_key") key: String

@@ -1,10 +1,11 @@
-package com.example.imdb.ui.old.recommendation
+package com.example.imdb.ui.recommendation
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,8 @@ class RecommendationActivity : AppCompatActivity(), RequestCategory {
     private lateinit var recommendationViewController: RecommendationViewController
     private lateinit var recommendationRecyclerView: RecyclerView
     private lateinit var loadingRecommendation: ProgressBar
+    private lateinit var recommendationTitle: TextView
+    private lateinit var title: String
     private var movieID: Int = -3000
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,14 +31,17 @@ class RecommendationActivity : AppCompatActivity(), RequestCategory {
 
         recommendationViewController = RecommendationViewController()
         recommendationRecyclerView = findViewById(R.id.recommendation)
+        recommendationTitle = findViewById(R.id.recommendation_title)
         loadingRecommendation = findViewById(R.id.loading_recommendation)
 
         loadingRecommendation.visibility = View.VISIBLE
 
-
+        title = intent.getStringExtra("title")
         movieID = intent.getIntExtra("movieID", -3000)
         if(movieID < 0)
             return
+
+        recommendationTitle.text = "Recommendation: $title"
 
         recommendationRecyclerView.setupAdapter(this, MovieCategory.Recommendation)
 

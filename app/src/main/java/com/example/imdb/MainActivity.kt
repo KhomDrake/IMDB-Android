@@ -19,6 +19,8 @@ enum class MovieCategory {
     Recommendation
 }
 
+const val TAG_VINI = "vini"
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var loginButton: Button
