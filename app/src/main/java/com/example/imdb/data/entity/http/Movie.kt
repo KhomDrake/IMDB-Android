@@ -10,5 +10,6 @@ data class Movie(
     val posterPath: String?,
     val title: String,
     val loading: Boolean,
-    val error: Boolean
+    val error: Boolean,
+    val adult: Boolean
 )

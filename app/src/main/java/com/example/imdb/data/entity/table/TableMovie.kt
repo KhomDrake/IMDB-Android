@@ -10,5 +10,6 @@ data class TableMovie(
     val idMovie: Int,
     val originalTitle: String,
     val posterPath: String?,
-    val title: String
+    val title: String,
+    val adult: Boolean
 )

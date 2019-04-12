@@ -189,14 +189,12 @@ object DataController {
     }
 
     private fun setListDatabaseMovie(movie: Movie) {
-        Log.i("test", movie.toString())
         if(!movie.error) {
             setTime(MovieCategory.Latest)
             setLatest(movie)
-            Log.i("test", "aslkdj")
         }
         else
-            setLatest(movie = Movie(0, "", "", "", loading = false, error = true))
+            setLatest(movie = Movie(0, "", "", "", loading = false, error = true, adult = false))
     }
 
     private fun getDetailMovie(idMovie: Int) = databaseMovies.getDetailMovie(idMovie)

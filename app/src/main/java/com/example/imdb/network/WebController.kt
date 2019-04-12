@@ -11,7 +11,7 @@ object WebController {
     private val api = API().service()
     private const val apiKey = "ed84e9c8c38d4d0a8f3adaa5ba324145"
     private val errorMovie =
-        Movie(0, "asd", "asd", "asd", loading = false, error = true)
+        Movie(0, "asd", "asd", "asd", loading = false, error = true, adult = false)
     private val errorMovieList = MoviesList(0, listOf(errorMovie), 0)
     private val errorMovieDetail = MovieDetail(false, 0, "", "", "", 0, "", 0.0, 0, true)
     private val errorReview = Reviews(0, 0, listOf(), 0, 0, 0, true)

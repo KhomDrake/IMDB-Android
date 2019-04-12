@@ -115,7 +115,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun setRecommendationLastMovie(recommendation: Recommendation) {
         val idMovie = recommendation.id
         for (movie in recommendation.moviesList.results) {
-            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
+            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
             moviesDao().insertMovieRecommendation(TableMovieRecommendation(idMovie + movie.id, idMovie, movie.id))
         }
     }
@@ -126,14 +126,14 @@ abstract class DatabaseMovies : RoomDatabase() {
 
     fun setLatest(movie: Movie) {
         moviesDao().deleteMovieCategory(MovieCategory.Latest.ordinal)
-        moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
+        moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
         moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.Latest.ordinal))
     }
 
     fun setNowPlaying(movies: List<Movie>) {
         moviesDao().deleteMovieCategory(MovieCategory.NowPlaying.ordinal)
         for (movie in movies) {
-            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
+            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
             moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.NowPlaying.ordinal))
         }
     }
@@ -141,7 +141,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun setPopular(movies: List<Movie>) {
         moviesDao().deleteMovieCategory(MovieCategory.Popular.ordinal)
         for (movie in movies) {
-            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
+            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
             moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.Popular.ordinal))
         }
     }
@@ -149,7 +149,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun setTopRated(movies: List<Movie>) {
         moviesDao().deleteMovieCategory(MovieCategory.TopRated.ordinal)
         for (movie in movies) {
-            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
+            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
             moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.TopRated.ordinal))
         }
     }
@@ -157,7 +157,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun setUpcoming(movies: List<Movie>) {
         moviesDao().deleteMovieCategory(MovieCategory.Upcoming.ordinal)
         for (movie in movies) {
-            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title))
+            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
             moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.Upcoming.ordinal))
         }
     }
@@ -181,7 +181,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     private fun tableMoviesToMovies(moviesDb: List<TableMovie>) : MutableList<Movie> {
         val movies: MutableList<Movie> = mutableListOf()
         for (movie in moviesDb) {
-            movies.add(Movie(movie.idMovie, movie.originalTitle, movie.posterPath, movie.title, false, false))
+            movies.add(Movie(movie.idMovie, movie.originalTitle, movie.posterPath, movie.title, false, false, movie.adult))
         }
         return movies
     }

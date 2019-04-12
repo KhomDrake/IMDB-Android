@@ -9,7 +9,7 @@ import java.util.*
 
 class HomeMoviesViewController {
     private val loading: Movie =
-        Movie(0, "", "", "", loading = true, error = false)
+        Movie(0, "", "", "", loading = true, error = false, adult = false)
 
     init {
         DataController.setupDatabase(Locale.getDefault().toLanguageTag())

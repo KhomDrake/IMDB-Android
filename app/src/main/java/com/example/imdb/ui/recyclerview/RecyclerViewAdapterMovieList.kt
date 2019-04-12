@@ -22,6 +22,7 @@ class RecyclerViewAdapterMovieList(
 
     private val urlImg = "https://image.tmdb.org/t/p/w300"
     private val imgNotFound = "http://hotspottagger.com/locationimages/noimage.jpg"
+    private val plus18 = "http://diarionews.com.br/wp-content/uploads/2018/02/18-logo-1.png"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.information_movies, parent, false)
@@ -29,7 +30,7 @@ class RecyclerViewAdapterMovieList(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(informationMovies[position], urlImg, imgNotFound, requestCategory, movieCategory)
+        holder.bind(informationMovies[position], urlImg, imgNotFound, requestCategory, movieCategory, plus18)
     }
 
     fun setMovies(movies: List<Movie>) {
@@ -54,7 +55,7 @@ class RecyclerViewAdapterMovieList(
             get() = listOf(img, again, loading, title)
 
         fun bind(result: Movie, urlImg: String, imgNotFound: String,
-                 requestCategory: RequestCategory, movieCategory: MovieCategory) {
+                 requestCategory: RequestCategory, movieCategory: MovieCategory, plus18: String) {
 
             listToMakeInvisible.forEach { it.visibility = View.INVISIBLE }
 
@@ -74,16 +75,21 @@ class RecyclerViewAdapterMovieList(
 
             img.visibility = View.VISIBLE
 
-            val path = getPath(result.posterPath, urlImg, imgNotFound)
+            var path = getPath(result.posterPath, urlImg, imgNotFound)
 
             if(path == imgNotFound) {
                 title.visibility = View.VISIBLE
                 title.text = "${result.title}"
             }
 
+            if(result.adult)
+                path = plus18
+
             img.setOnClickListener {
                 requestCategory.makeTransition(img, result.id, path)
             }
+
+
             Glide.with(itemView).load(path).into(img)
         }
 
