@@ -32,4 +32,7 @@
     <string name="image_cast">ImageCast</string>
     <string name="see_cast">See Cast</string>
     <string name="no_reviews">No Reviews</string>
+    <string name="no_recommendation">No Recommendation</string>
+    <string name="poster_img">poster_img</string>
+    <string name="heart_empty">heart_empty</string>
 </resources>

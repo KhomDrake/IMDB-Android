@@ -10,6 +10,5 @@ data class Reviews(
     val totalPages: Int,
     @SerializedName("total_results")
     val totalResults: Int,
-    var idMovie: Int,
-    val error: Boolean
+    var idMovie: Int
 )

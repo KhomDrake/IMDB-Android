@@ -10,7 +10,7 @@ import com.example.imdb.ui.home.HomeAppActivity
 import com.example.imdb.ui.mainactivity.MainActivityViewController
 
 enum class MovieCategory {
-    Zero,
+    None,
     Latest,
     NowPlaying,
     Popular,

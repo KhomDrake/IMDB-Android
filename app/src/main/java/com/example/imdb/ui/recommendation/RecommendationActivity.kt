@@ -12,16 +12,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
-import com.example.imdb.ui.RequestCategory
+import com.example.imdb.ui.ActivityInteraction
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
 
-class RecommendationActivity : AppCompatActivity(), RequestCategory {
+class RecommendationActivity : AppCompatActivity(), ActivityInteraction {
 
     private lateinit var recommendationViewController: RecommendationViewController
     private lateinit var recommendationRecyclerView: RecyclerView
     private lateinit var loadingRecommendation: ProgressBar
     private lateinit var recommendationTitle: TextView
+    private lateinit var recommendationNoFound: TextView
     private lateinit var title: String
     private var movieID: Int = -3000
 
@@ -32,8 +33,10 @@ class RecommendationActivity : AppCompatActivity(), RequestCategory {
         recommendationViewController = RecommendationViewController()
         recommendationRecyclerView = findViewById(R.id.recommendation)
         recommendationTitle = findViewById(R.id.recommendation_title)
+        recommendationNoFound = findViewById(R.id.no_recommendation)
         loadingRecommendation = findViewById(R.id.loading_recommendation)
 
+        recommendationNoFound.visibility = View.INVISIBLE
         loadingRecommendation.visibility = View.VISIBLE
 
         title = intent.getStringExtra("title")
@@ -45,13 +48,14 @@ class RecommendationActivity : AppCompatActivity(), RequestCategory {
 
         recommendationRecyclerView.setupAdapter(this, MovieCategory.Recommendation)
 
-        loadCategory(MovieCategory.Recommendation)
+        loadTryAgain(MovieCategory.Recommendation)
     }
 
-    override fun loadCategory(type: MovieCategory) {
+    override fun loadTryAgain(type: MovieCategory) {
         when(type) {
             MovieCategory.Recommendation -> {
                 recommendationViewController.loadRecommendation(movieID) {
+                    if(it.isEmpty()) recommendationNoFound.visibility = View.VISIBLE
                     recommendationRecyclerView.movieAdapter.setMovies(it)
                     loadingRecommendation.visibility = View.INVISIBLE
                 }
@@ -71,8 +75,12 @@ class RecommendationActivity : AppCompatActivity(), RequestCategory {
         ContextCompat.startActivity(view.context, startNewActivity, optionsCompat.toBundle())
     }
 
-    private fun RecyclerView.setupAdapter(requestCategory: RequestCategory, movieCategory: MovieCategory) {
-        this.adapter =  RecyclerViewAdapterMovieList(mutableListOf(), requestCategory, movieCategory)
+    override fun updateVisualMovies() {
+        loadTryAgain(MovieCategory.Recommendation)
+    }
+
+    private fun RecyclerView.setupAdapter(activityInteraction: ActivityInteraction, movieCategory: MovieCategory) {
+        this.adapter =  RecyclerViewAdapterMovieList(mutableListOf(), activityInteraction, movieCategory)
         this.layoutManager = LinearLayoutManager(context)
     }
 

@@ -19,7 +19,7 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-            android:layout_width="395dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/imdb_background_text3"
             android:id="@+id/content"
@@ -29,5 +29,23 @@
             android:layout_marginTop="32dp"
             app:layout_constraintTop_toBottomOf="@+id/name" android:layout_marginStart="16dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"/>
+
+    <Button android:layout_width="197dp"
+            android:layout_height="89dp"
+            android:text="@string/try_again"
+            android:textColor="@color/imdb_text"
+            android:background="@color/imdb_background_text3"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/again"
+            android:textSize="30sp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintHorizontal_bias="0.562"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.454"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -185,6 +185,7 @@ object DataController {
                     setTime(MovieCategory.Upcoming)
                 setUpcoming(list)
             }
+            else -> Unit
         }
     }
 
@@ -194,7 +195,7 @@ object DataController {
             setLatest(movie)
         }
         else
-            setLatest(movie = Movie(0, "", "", "", loading = false, error = true, adult = false))
+            setLatest(movie = Movie(0, "", "", "", loading = false, error = true, adult = false, favorite = false))
     }
 
     private fun getDetailMovie(idMovie: Int) = databaseMovies.getDetailMovie(idMovie)
@@ -233,4 +234,12 @@ object DataController {
     private fun getTimeLastUpdate(movieCategory: MovieCategory) = databaseMovies.getLastTimeUpdateCategory(movieCategory)
 
     private fun getCurrentTime() = System.currentTimeMillis()
+
+    fun getFavorites(): List<Movie> {
+        return databaseMovies.getFavorites()
+    }
+
+    fun favoriteMovie(movieId: Int, favorite: Boolean) {
+        databaseMovies.favoriteMovie(movieId, favorite)
+    }
 }

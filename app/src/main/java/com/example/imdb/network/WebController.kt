@@ -1,5 +1,7 @@
 package com.example.imdb.network
 
+import android.util.Log
+import com.example.imdb.TAG_VINI
 import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.http.*
 import retrofit2.Call
@@ -11,11 +13,13 @@ object WebController {
     private val api = API().service()
     private const val apiKey = "ed84e9c8c38d4d0a8f3adaa5ba324145"
     private val errorMovie =
-        Movie(0, "asd", "asd", "asd", loading = false, error = true, adult = false)
+        Movie(0, "asd", "asd", "asd", loading = false, error = true, adult = false, favorite = false)
     private val errorMovieList = MoviesList(0, listOf(errorMovie), 0)
     private val errorMovieDetail = MovieDetail(false, 0, "", "", "", 0, "", 0.0, 0, true)
-    private val errorReview = Reviews(0, 0, listOf(), 0, 0, 0, true)
-    private val errorMovieCredit = MovieCredit(listOf(), 0, true)
+    private val errorReview = Review("asd", "", "", "", true)
+    private val errorReviews = Reviews(0, 0, listOf(), 0, 0, 0)
+    private val errorCast = Cast(2, "asd", 0, 0, "", 0, "", true)
+    private val errorMovieCredit = MovieCredit(listOf(errorCast), 0)
 
 
     fun loadLatest(funResponse: (body: Movie) -> Unit) {
@@ -55,7 +59,7 @@ object WebController {
 
     fun loadReviews(id: Int, funResponse: (body: Reviews) -> Unit) {
         api.getReviews(id, apiKey, DataController.getLanguage())
-            .enqueue(requestResponse<Reviews>(funResponse, errorReview))
+            .enqueue(requestResponse<Reviews>(funResponse, errorReviews))
     }
 
     fun loadMovieCredit(id: Int, funResponse: (body: MovieCredit) -> Unit) {
@@ -65,7 +69,7 @@ object WebController {
 
     private fun <T>requestResponse(funResponse: (body: T) -> Unit, error: T?) = object : Callback<T> {
         override fun onFailure(call: Call<T?>, t: Throwable) {
-            println(t.message)
+            Log.i(TAG_VINI, t.message)
             funResponse(error!!)
         }
 

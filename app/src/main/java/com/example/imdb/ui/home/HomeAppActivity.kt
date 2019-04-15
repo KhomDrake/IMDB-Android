@@ -7,15 +7,18 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import com.example.imdb.MovieCategory
 import com.example.imdb.R
+import com.example.imdb.ui.ActivityInteraction
 import com.example.imdb.ui.homemovies.HomeMoviesActivity
 import com.example.imdb.ui.hometv.HomeTvActivity
 
-class HomeAppActivity : AppCompatActivity() {
+class HomeAppActivity : AppCompatActivity(), ActivityInteraction {
 
     private lateinit var movie: Button
     private lateinit var tv: Button
-    private lateinit var messengeNotFavorites: TextView
+    private lateinit var messengerNotFavorites: TextView
+    private lateinit var homeAppViewController: HomeAppViewController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,7 +26,8 @@ class HomeAppActivity : AppCompatActivity() {
 
         movie = findViewById(R.id.movie)
         tv = findViewById(R.id.tv)
-        messengeNotFavorites = findViewById(R.id.nenhum_favorito)
+        messengerNotFavorites = findViewById(R.id.nenhum_favorito)
+        homeAppViewController = HomeAppViewController()
 
         movie.setOnClickListener {
             val startNewActivity = Intent(this, HomeMoviesActivity::class.java)
@@ -35,6 +39,20 @@ class HomeAppActivity : AppCompatActivity() {
             ContextCompat.startActivity(this, startNewActivity, null)
         }
 
-        messengeNotFavorites.visibility = View.VISIBLE
+        val favorites = homeAppViewController.getFavorites();
+
+        messengerNotFavorites.visibility = View.VISIBLE
+    }
+
+    override fun loadTryAgain(type: MovieCategory) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun makeTransition(view: View, movieId: Int, url: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun updateVisualMovies() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -10,11 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
-import com.example.imdb.ui.RequestCategory
+import com.example.imdb.ui.ActivityInteraction
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
 
-class HomeMoviesActivity : AppCompatActivity(), RequestCategory {
+class HomeMoviesActivity : AppCompatActivity(), ActivityInteraction {
 
     private lateinit var latest: RecyclerView
     private lateinit var nowPlaying: RecyclerView
@@ -43,14 +43,10 @@ class HomeMoviesActivity : AppCompatActivity(), RequestCategory {
         topRated.setupAdapter(this, MovieCategory.TopRated)
         upcoming.setupAdapter(this, MovieCategory.Upcoming)
 
-        loadCategory(MovieCategory.Latest)
-        loadCategory(MovieCategory.NowPlaying)
-        loadCategory(MovieCategory.Popular)
-        loadCategory(MovieCategory.Upcoming)
-        loadCategory(MovieCategory.TopRated)
+        loadAllCategorys()
     }
 
-    override fun loadCategory(type: MovieCategory) {
+    override fun loadTryAgain(type: MovieCategory) {
         when(type) {
             MovieCategory.Upcoming -> upcoming.loadCategory(type)
             MovieCategory.NowPlaying -> nowPlaying.loadCategory(type)
@@ -59,6 +55,14 @@ class HomeMoviesActivity : AppCompatActivity(), RequestCategory {
             MovieCategory.Latest -> latest.loadCategory(type)
             else -> Unit
         }
+    }
+
+    private fun loadAllCategorys() {
+        loadTryAgain(MovieCategory.Latest)
+        loadTryAgain(MovieCategory.NowPlaying)
+        loadTryAgain(MovieCategory.Popular)
+        loadTryAgain(MovieCategory.Upcoming)
+        loadTryAgain(MovieCategory.TopRated)
     }
 
     override fun makeTransition(view: View, movieId: Int, url: String) {
@@ -72,14 +76,18 @@ class HomeMoviesActivity : AppCompatActivity(), RequestCategory {
         ContextCompat.startActivity(view.context, startNewActivity, optionsCompat.toBundle())
     }
 
-    private fun RecyclerView.setupAdapter(requestCategory: RequestCategory, movieCategory: MovieCategory) {
-        this.adapter = createAdapter(requestCategory, movieCategory)
+    override fun updateVisualMovies() {
+        loadAllCategorys()
+    }
+
+    private fun RecyclerView.setupAdapter(activityInteraction: ActivityInteraction, movieCategory: MovieCategory) {
+        this.adapter = createAdapter(activityInteraction, movieCategory)
         this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
-    private fun createAdapter(requestCategory: RequestCategory, movieCategory: MovieCategory) :
+    private fun createAdapter(activityInteraction: ActivityInteraction, movieCategory: MovieCategory) :
             RecyclerViewAdapterMovieList =
-        RecyclerViewAdapterMovieList(mutableListOf(), requestCategory, movieCategory)
+        RecyclerViewAdapterMovieList(mutableListOf(), activityInteraction, movieCategory)
 
     private fun RecyclerView.loadCategory(category: MovieCategory) {
         homeMoviesViewController.loadMovies(this.movieAdapter, category) {
@@ -89,4 +97,6 @@ class HomeMoviesActivity : AppCompatActivity(), RequestCategory {
 
     private val RecyclerView.movieAdapter: RecyclerViewAdapterMovieList
         get() = adapter as RecyclerViewAdapterMovieList
+
+
 }

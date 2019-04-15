@@ -3,10 +3,11 @@ package com.example.imdb.ui
 import android.view.View
 import com.example.imdb.MovieCategory
 
-interface RequestCategory {
+interface ActivityInteraction {
 
-    fun loadCategory(type: MovieCategory)
+    fun loadTryAgain(type: MovieCategory)
 
     fun makeTransition(view: View, movieId: Int, url: String)
 
+    fun updateVisualMovies()
 }

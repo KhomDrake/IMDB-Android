@@ -8,10 +8,12 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.imdb.MovieCategory
 import com.example.imdb.R
+import com.example.imdb.ui.ActivityInteraction
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterReviews
 
-class ReviewActivity : AppCompatActivity() {
+class ReviewActivity : AppCompatActivity(), ActivityInteraction {
 
     private lateinit var reviewViewController: ReviewViewController
     private lateinit var reviewRecyclerView: RecyclerView
@@ -43,7 +45,9 @@ class ReviewActivity : AppCompatActivity() {
         reviewRecyclerView = findViewById(R.id.reviews)
         loadingReview = findViewById(R.id.loading_review)
         loadingReview.visibility = View.VISIBLE
-        reviewRecyclerView.setupAdapterReviews()
+
+        reviewRecyclerView.adapter = RecyclerViewAdapterReviews(mutableListOf(), this)
+        reviewRecyclerView.layoutManager = LinearLayoutManager(this)
 
         loadReviews()
         tryAgain.setOnClickListener {
@@ -51,10 +55,20 @@ class ReviewActivity : AppCompatActivity() {
         }
     }
 
+    override fun loadTryAgain(type: MovieCategory) {}
+
+    override fun makeTransition(view: View, movieId: Int, url: String) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun updateVisualMovies() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     private fun loadReviews() {
         reviewViewController.loadReviews(movieID) {
             loadingReview.visibility = View.INVISIBLE
-            if(it.error) {
+            if(it.results.isNotEmpty() && it.results[0].error) {
                 tryAgain.visibility = View.VISIBLE
                 return@loadReviews
             }
@@ -65,11 +79,6 @@ class ReviewActivity : AppCompatActivity() {
             tryAgain.visibility = View.INVISIBLE
             reviewRecyclerView.reviewAdapter.setReviews(it)
         }
-    }
-
-    private fun RecyclerView.setupAdapterReviews() {
-        this.adapter = RecyclerViewAdapterReviews(mutableListOf())
-        this.layoutManager = LinearLayoutManager(context)
     }
 
     private val RecyclerView.reviewAdapter: RecyclerViewAdapterReviews

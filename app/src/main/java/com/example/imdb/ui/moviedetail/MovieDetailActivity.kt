@@ -33,7 +33,7 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var overViewText: TextView
     private lateinit var titleText: String
     private val viewsDetailMovie: List<View>
-        get() = listOf(title, runtime, releaseDate, voteCount, overView, overViewText, recommendation, review)
+        get() = listOf(title, runtime, releaseDate, voteCount, overView, overViewText, recommendation, review, cast)
 
     private val listOfStars: List<ImageView>
         get() = listOf(findViewById(R.id.first_star),findViewById(R.id.second_star),findViewById(R.id.third_star),findViewById(R.id.fourth_star),findViewById(R.id.fifth_star))
@@ -60,9 +60,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
         tryAgain.visibility = View.INVISIBLE
         img.visibility = View.VISIBLE
-        viewsDetailMovie.forEach {
-            it.visibility = View.INVISIBLE
-        }
+        viewsDetailMovie.forEach { it.visibility = View.INVISIBLE }
         progressBar.visibility = View.VISIBLE
         val movieID: Int = intent.getIntExtra("movieID", -1)
         if(movieID < 0)
@@ -106,22 +104,18 @@ class MovieDetailActivity : AppCompatActivity() {
             tryAgain.visibility = View.INVISIBLE
             img.visibility = View.VISIBLE
 
-            viewsDetailMovie.forEach {
-                it.visibility = View.VISIBLE
-            }
+            viewsDetailMovie.forEach { it.visibility = View.VISIBLE }
 
             val quantStars: Int = movieDetailViewController.getQuantStars(it.voteAverage)
 
-            for (i in 0 until quantStars) {
-                listOfStars[i].visibility = View.VISIBLE
-            }
+            for (i in 0 until quantStars) { listOfStars[i].visibility = View.VISIBLE }
 
-            titleText = movieDetailViewController.getMovieTitle(it.title)
+            titleText = it.title
             val date: String = movieDetailViewController.getDate(it.releaseDate)
             val runtimeText: String = movieDetailViewController.getRuntime(it.runtime)
             val overView: String = movieDetailViewController.getOverview(it.overview)
             val voteCountText: String = movieDetailViewController.getVoteCount(it.voteCount)
-            title.text = titleText
+            title.text = movieDetailViewController.getMovieTitle(titleText)
             runtime.text = runtimeText
             releaseDate.text = date
             overViewText.text = overView

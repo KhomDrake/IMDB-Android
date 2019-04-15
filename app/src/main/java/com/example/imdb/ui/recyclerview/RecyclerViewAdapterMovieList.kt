@@ -11,12 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
+import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.http.Movie
-import com.example.imdb.ui.RequestCategory
+import com.example.imdb.ui.ActivityInteraction
 
 class RecyclerViewAdapterMovieList(
     private val informationMovies: MutableList<Movie>,
-    private val requestCategory: RequestCategory,
+    private val activityInteraction: ActivityInteraction,
     private val movieCategory: MovieCategory
 ) : RecyclerView.Adapter<RecyclerViewAdapterMovieList.ViewHolder>() {
 
@@ -30,16 +31,16 @@ class RecyclerViewAdapterMovieList(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(informationMovies[position], urlImg, imgNotFound, requestCategory, movieCategory, plus18)
+        holder.bind(informationMovies[position], urlImg, imgNotFound, activityInteraction, movieCategory, plus18)
     }
 
     fun setMovies(movies: List<Movie>) {
         if(movies.isEmpty())
             return
 
-        informationMovies.removeAll(informationMovies)
-
+        informationMovies.clear()
         informationMovies.addAll(movies)
+
         notifyDataSetChanged()
     }
 
@@ -51,11 +52,13 @@ class RecyclerViewAdapterMovieList(
         private val again: Button = itemView.findViewById(R.id.again)
         private val loading: ProgressBar = itemView.findViewById(R.id.loading)
         private val title: TextView = itemView.findViewById(R.id.title_movie)
+        private val heartEmpty: ImageView = itemView.findViewById(R.id.heart_empty)
+        private val heart: ImageView = itemView.findViewById(R.id.heart)
         private val listToMakeInvisible: List<View>
-            get() = listOf(img, again, loading, title)
+            get() = listOf(img, again, loading, title, heartEmpty, heart)
 
         fun bind(result: Movie, urlImg: String, imgNotFound: String,
-                 requestCategory: RequestCategory, movieCategory: MovieCategory, plus18: String) {
+                 activityInteraction: ActivityInteraction, movieCategory: MovieCategory, plus18: String) {
 
             listToMakeInvisible.forEach { it.visibility = View.INVISIBLE }
 
@@ -63,7 +66,7 @@ class RecyclerViewAdapterMovieList(
             {
                 again.visibility = View.VISIBLE
                 again.setOnClickListener {
-                    requestCategory.loadCategory(movieCategory)
+                    activityInteraction.loadTryAgain(movieCategory)
                 }
                 return
             }
@@ -72,6 +75,8 @@ class RecyclerViewAdapterMovieList(
                 loading.visibility = View.VISIBLE
                 return
             }
+
+            if(result.favorite) showHeart() else showEmptyHeart()
 
             img.visibility = View.VISIBLE
 
@@ -82,15 +87,34 @@ class RecyclerViewAdapterMovieList(
                 title.text = "${result.title}"
             }
 
-            if(result.adult)
-                path = plus18
+            if(result.adult) path = plus18
 
-            img.setOnClickListener {
-                requestCategory.makeTransition(img, result.id, path)
+            img.setOnClickListener { activityInteraction.makeTransition(img, result.id, path) }
+
+            heartEmpty.setOnClickListener {
+                showHeart()
+                DataController.favoriteMovie(result.id, true)
+                activityInteraction.updateVisualMovies()
+            }
+
+            heart.setOnClickListener {
+                showEmptyHeart()
+                DataController.favoriteMovie(result.id, false)
+                activityInteraction.updateVisualMovies()
             }
 
 
             Glide.with(itemView).load(path).into(img)
+        }
+
+        private fun showHeart() {
+            heartEmpty.visibility = View.INVISIBLE
+            heart.visibility = View.VISIBLE
+        }
+
+        private fun showEmptyHeart() {
+            heartEmpty.visibility = View.VISIBLE
+            heart.visibility = View.INVISIBLE
         }
 
         private fun getPath(path: String?, urlImg: String, imgNotFound: String) =

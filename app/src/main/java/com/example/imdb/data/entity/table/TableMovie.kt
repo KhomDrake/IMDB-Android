@@ -11,5 +11,6 @@ data class TableMovie(
     val originalTitle: String,
     val posterPath: String?,
     val title: String,
-    val adult: Boolean
+    val adult: Boolean,
+    val favorite: Boolean
 )
