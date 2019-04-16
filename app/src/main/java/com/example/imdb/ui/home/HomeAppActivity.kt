@@ -3,12 +3,14 @@ package com.example.imdb.ui.home
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
+import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.ActivityInteraction
 import com.example.imdb.ui.homemovies.HomeMoviesActivity
 import com.example.imdb.ui.hometv.HomeTvActivity
@@ -39,7 +41,7 @@ class HomeAppActivity : AppCompatActivity(), ActivityInteraction {
             ContextCompat.startActivity(this, startNewActivity, null)
         }
 
-        val favorites = homeAppViewController.getFavorites();
+        val favorites = homeAppViewController.getFavorites()
 
         messengerNotFavorites.visibility = View.VISIBLE
     }

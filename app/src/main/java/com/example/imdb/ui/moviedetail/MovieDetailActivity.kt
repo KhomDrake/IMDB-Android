@@ -3,6 +3,7 @@ package com.example.imdb.ui.moviedetail
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.imdb.R
+import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.cast.CastActivity
 import com.example.imdb.ui.moviereview.ReviewActivity
 import com.example.imdb.ui.recommendation.RecommendationActivity
@@ -61,13 +63,15 @@ class MovieDetailActivity : AppCompatActivity() {
         tryAgain.visibility = View.INVISIBLE
         img.visibility = View.VISIBLE
         viewsDetailMovie.forEach { it.visibility = View.INVISIBLE }
+
         progressBar.visibility = View.VISIBLE
         val movieID: Int = intent.getIntExtra("movieID", -1)
         if(movieID < 0)
             return
 
         val url = intent.getStringExtra("url")
-        loadMovieDetail(url, movieID)
+        Glide.with(this).load(url).into(img)
+        loadMovieDetail(movieID)
         recommendation.setOnClickListener {
             val startNewActivity = Intent(this, RecommendationActivity::class.java)
             startNewActivity.putExtra("movieID", movieID)
@@ -87,41 +91,40 @@ class MovieDetailActivity : AppCompatActivity() {
             ContextCompat.startActivity(this, startNewActivity, null)
         }
         tryAgain.setOnClickListener {
-            loadMovieDetail(url, movieID)
+            loadMovieDetail(movieID)
         }
     }
 
-    private fun loadMovieDetail(url: String, movieID: Int) {
+    private fun loadMovieDetail(movieID: Int) {
         progressBar.visibility = View.VISIBLE
         tryAgain.visibility = View.INVISIBLE
-        Glide.with(this).load(url).into(img)
         movieDetailViewController.loadMovieDetail(movieID) {
             if (it.error) {
                 img.visibility = View.INVISIBLE
+                progressBar.visibility = View.INVISIBLE
                 tryAgain.visibility = View.VISIBLE
-                return@loadMovieDetail
+            } else {
+                tryAgain.visibility = View.INVISIBLE
+                img.visibility = View.VISIBLE
+
+                viewsDetailMovie.forEach { it.visibility = View.VISIBLE }
+
+                val quantStars: Int = movieDetailViewController.getQuantStars(it.voteAverage)
+
+                for (i in 0 until quantStars) { listOfStars[i].visibility = View.VISIBLE }
+
+                titleText = it.title
+                val date: String = movieDetailViewController.getDate(it.releaseDate)
+                val runtimeText: String = movieDetailViewController.getRuntime(it.runtime)
+                val overView: String = movieDetailViewController.getOverview(it.overview)
+                val voteCountText: String = movieDetailViewController.getVoteCount(it.voteCount)
+                title.text = movieDetailViewController.getMovieTitle(titleText)
+                runtime.text = runtimeText
+                releaseDate.text = date
+                overViewText.text = overView
+                voteCount.text = voteCountText
+                progressBar.visibility = View.INVISIBLE
             }
-            tryAgain.visibility = View.INVISIBLE
-            img.visibility = View.VISIBLE
-
-            viewsDetailMovie.forEach { it.visibility = View.VISIBLE }
-
-            val quantStars: Int = movieDetailViewController.getQuantStars(it.voteAverage)
-
-            for (i in 0 until quantStars) { listOfStars[i].visibility = View.VISIBLE }
-
-            titleText = it.title
-            val date: String = movieDetailViewController.getDate(it.releaseDate)
-            val runtimeText: String = movieDetailViewController.getRuntime(it.runtime)
-            val overView: String = movieDetailViewController.getOverview(it.overview)
-            val voteCountText: String = movieDetailViewController.getVoteCount(it.voteCount)
-            title.text = movieDetailViewController.getMovieTitle(titleText)
-            runtime.text = runtimeText
-            releaseDate.text = date
-            overViewText.text = overView
-            voteCount.text = voteCountText
-
-            progressBar.visibility = View.INVISIBLE
         }
     }
 }

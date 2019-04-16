@@ -127,6 +127,9 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setLatest(movie: Movie) {
+        if(movie.error)
+            return
+
         moviesDao().deleteMovieCategory(MovieCategory.Latest.ordinal)
         moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult, false))
         moviesDao().insertMovieCategory(TableMovieCategory(0, movie.id, MovieCategory.Latest.ordinal))
@@ -165,7 +168,6 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setCreditMovie(credit: MovieCredit, idMovie: Int) {
-        Log.i("vini", credit.toString())
         for (cast in credit.cast) {
             moviesDao().insertMovieCast(TableCast(cast.castId, idMovie, cast.character, cast.gender, cast.id, cast.name, cast.order, cast.profilePath))
         }

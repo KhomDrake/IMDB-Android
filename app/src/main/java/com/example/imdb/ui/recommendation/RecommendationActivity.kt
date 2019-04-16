@@ -3,6 +3,7 @@ package com.example.imdb.ui.recommendation
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
+import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.ActivityInteraction
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
@@ -37,7 +39,6 @@ class RecommendationActivity : AppCompatActivity(), ActivityInteraction {
         loadingRecommendation = findViewById(R.id.loading_recommendation)
 
         recommendationNoFound.visibility = View.INVISIBLE
-        loadingRecommendation.visibility = View.VISIBLE
 
         title = intent.getStringExtra("title")
         movieID = intent.getIntExtra("movieID", -3000)
@@ -46,21 +47,21 @@ class RecommendationActivity : AppCompatActivity(), ActivityInteraction {
 
         recommendationTitle.text = "Recommendation: $title"
 
-        recommendationRecyclerView.setupAdapter(this, MovieCategory.Recommendation)
-
         loadTryAgain(MovieCategory.Recommendation)
     }
 
     override fun loadTryAgain(type: MovieCategory) {
         when(type) {
             MovieCategory.Recommendation -> {
+                loadingRecommendation.visibility = View.VISIBLE
+                recommendationRecyclerView.setupAdapter(this, MovieCategory.Recommendation)
                 recommendationViewController.loadRecommendation(movieID) {
                     if(it.isEmpty()) recommendationNoFound.visibility = View.VISIBLE
                     recommendationRecyclerView.movieAdapter.setMovies(it)
                     loadingRecommendation.visibility = View.INVISIBLE
                 }
             }
-            else -> println("eita")
+            else -> Log.i(TAG_VINI, "Isso não deveria acontecer")
         }
     }
 
@@ -80,7 +81,7 @@ class RecommendationActivity : AppCompatActivity(), ActivityInteraction {
     }
 
     private fun RecyclerView.setupAdapter(activityInteraction: ActivityInteraction, movieCategory: MovieCategory) {
-        this.adapter =  RecyclerViewAdapterMovieList(mutableListOf(), activityInteraction, movieCategory)
+        this.adapter = RecyclerViewAdapterMovieList(mutableListOf(), activityInteraction, movieCategory)
         this.layoutManager = LinearLayoutManager(context)
     }
 

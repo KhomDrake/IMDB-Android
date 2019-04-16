@@ -1,5 +1,6 @@
 package com.example.imdb.ui.recyclerview
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
+import com.example.imdb.TAG_VINI
 import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.http.Movie
 import com.example.imdb.ui.ActivityInteraction
@@ -102,7 +104,6 @@ class RecyclerViewAdapterMovieList(
                 DataController.favoriteMovie(result.id, false)
                 activityInteraction.updateVisualMovies()
             }
-
 
             Glide.with(itemView).load(path).into(img)
         }

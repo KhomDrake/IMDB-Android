@@ -1,7 +1,6 @@
 package com.example.imdb.data
 
 import android.content.Context
-import android.util.Log
 import com.example.imdb.MovieCategory
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.*
@@ -59,7 +58,8 @@ object DataController {
         if(reviews.idMovie != id) {
             WebController.loadReviews(id) {
                 it.idMovie = id
-                databaseMovies.setReviews(it)
+                if(it.results.isNotEmpty() && !it.results[0].error)
+                    databaseMovies.setReviews(it)
                 funResponse(it)
             }
         } else {
@@ -69,12 +69,11 @@ object DataController {
 
     fun loadRecommendation(id: Int, funResponse: (List<Movie>) -> Unit) {
         val recommendation = databaseMovies.getRecommendationLastMovie(id)
-
         if(recommendation.id != id) {
             WebController.loadRecommendation(id) {
-                Log.i("vini", "alksjdlkasjd")
-                databaseMovies.setRecommendationLastMovie(Recommendation(id, it))
-                funResponse(it.results)
+                if(it.results.isNotEmpty() && !it.results.first().error)
+                    databaseMovies.setRecommendationLastMovie(Recommendation(id, it))
+                funResponse(databaseMovies.getRecommendationLastMovie(id).moviesList.results)
             }
         } else {
             funResponse(recommendation.moviesList.results)
@@ -86,7 +85,7 @@ object DataController {
         if (latest.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Latest)) {
             WebController.loadLatest {
                 setListDatabaseMovie(it)
-                funResponse(listOf(it))
+                returnRightResponse(funResponse, listOf(it), MovieCategory.Latest)
             }
         } else {
             funResponse(latest)
@@ -98,7 +97,7 @@ object DataController {
         if (nowPlaying.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.NowPlaying)) {
             WebController.loadNowPlaying {
                 setListDatabaseMovies(it.results, MovieCategory.NowPlaying)
-                funResponse(it.results)
+                returnRightResponse(funResponse, it.results, MovieCategory.NowPlaying)
             }
         } else {
             funResponse(nowPlaying)
@@ -110,7 +109,7 @@ object DataController {
         if (popular.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Popular)) {
             WebController.loadPopular {
                 setListDatabaseMovies(it.results, MovieCategory.Popular)
-                funResponse(it.results)
+                returnRightResponse(funResponse, it.results, MovieCategory.Popular)
             }
         } else {
             funResponse(popular)
@@ -122,7 +121,7 @@ object DataController {
         if (topRated.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Popular)) {
             WebController.loadTopRated {
                 setListDatabaseMovies(it.results, MovieCategory.TopRated)
-                funResponse(it.results)
+                returnRightResponse(funResponse, it.results, MovieCategory.TopRated)
             }
         } else {
             funResponse(topRated)
@@ -134,7 +133,7 @@ object DataController {
         if (upcoming.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Upcoming)) {
             WebController.loadUpcoming {
                 setListDatabaseMovies(it.results, MovieCategory.Upcoming)
-                funResponse(it.results)
+                returnRightResponse(funResponse, it.results, MovieCategory.Upcoming)
             }
         } else {
             funResponse(upcoming)
@@ -156,34 +155,36 @@ object DataController {
     }
 
     private fun setListDatabaseMovies(movies: List<Movie>, movieCategory: MovieCategory) {
-        val list: List<Movie> = if(movies.isEmpty() || movies[0].error)
-            listOf()
-        else
-            movies
+        val list: List<Movie> = if(movies.isEmpty() || movies[0].error) listOf() else movies
 
         when(movieCategory) {
             MovieCategory.NowPlaying -> {
-                if(list.count() != 0)
+                if(list.isNotEmpty()) {
                     setTime(MovieCategory.NowPlaying)
-                setNowPlaying(list)
+                    setNowPlaying(list)
+                }
             }
 
             MovieCategory.Popular -> {
-                if(list.count() != 0)
+                if(list.isNotEmpty()) {
                     setTime(MovieCategory.Popular)
-                setPopular(list)
+                    setPopular(list)
+                }
             }
 
             MovieCategory.TopRated -> {
-                if(list.count() != 0)
+                if(list.isNotEmpty()) {
                     setTime(MovieCategory.TopRated)
-                setTopRated(list)
+                    setTopRated(list)
+                }
             }
 
             MovieCategory.Upcoming -> {
-                if(list.count() != 0)
+                if(list.isNotEmpty()) {
                     setTime(MovieCategory.Upcoming)
-                setUpcoming(list)
+                    setUpcoming(list)
+                }
+
             }
             else -> Unit
         }
@@ -209,6 +210,17 @@ object DataController {
     private fun getTopRated() = databaseMovies.getTopRated()
 
     private fun getUpcoming() = databaseMovies.getUpcoming()
+
+    private fun returnRightResponse(funResponse: (movies: List<Movie>) -> Unit, movies: List<Movie>, movieCategory: MovieCategory) = when(movieCategory) {
+        MovieCategory.Latest -> if(hasError(movies)) funResponse(getLatest()) else funResponse(movies)
+        MovieCategory.Upcoming -> if(hasError(movies)) funResponse(getUpcoming()) else funResponse(movies)
+        MovieCategory.TopRated -> if(hasError(movies)) funResponse(getTopRated()) else funResponse(movies)
+        MovieCategory.NowPlaying -> if(hasError(movies)) funResponse(getNowPlaying()) else funResponse(movies)
+        MovieCategory.Popular -> if(hasError(movies)) funResponse(getNowPlaying()) else funResponse(movies)
+        else -> Unit
+    }
+
+    private fun hasError(movies: List<Movie>) = movies.isNotEmpty() && !movies.first().error
 
     private fun MutableList<Movie>.isEmptyOrInLoading(): Boolean {
         for (movie in this) {

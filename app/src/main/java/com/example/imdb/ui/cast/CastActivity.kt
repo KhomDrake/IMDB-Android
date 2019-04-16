@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,8 @@ class CastActivity : AppCompatActivity(), ActivityInteraction {
     private lateinit var castViewController: CastViewController
     private lateinit var recyclerViewCast: RecyclerView
     private lateinit var castTitle: TextView
+    private lateinit var loading: ProgressBar
+    private var movieId: Int = -3000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,26 +28,29 @@ class CastActivity : AppCompatActivity(), ActivityInteraction {
         castViewController = CastViewController()
         recyclerViewCast = findViewById(R.id.movie_cast)
         castTitle = findViewById(R.id.title_reviews)
+        loading = findViewById(R.id.loading)
 
-        val movieID: Int = intent.getIntExtra("movieID", -1)
+        movieId = intent.getIntExtra("movieID", -1)
         val title: String = intent.getStringExtra("title")
 
-        if(movieID < 0)
+        if(movieId < 0)
             return
 
-        Log.i(TAG_VINI, movieID.toString())
+        loading.visibility = View.VISIBLE
 
         castTitle.text = "Cast: $title"
 
         recyclerViewCast.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        recyclerViewCast.adapter = RecyclerViewAdapterCast(mutableListOf(), movieID, this)
-        castViewController.loadCast(movieID) {
-            recyclerViewCast.castAdapter.setMovieCredit(it.cast)
-        }
+        recyclerViewCast.adapter = RecyclerViewAdapterCast(mutableListOf(), movieId, this)
+
+        loadTryAgain(MovieCategory.None)
     }
 
     override fun loadTryAgain(type: MovieCategory) {
-
+        castViewController.loadCast(movieId) {
+            loading.visibility = View.INVISIBLE
+            recyclerViewCast.castAdapter.setMovieCredit(it.cast)
+        }
     }
 
     override fun makeTransition(view: View, movieId: Int, url: String) = Unit

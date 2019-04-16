@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.data.entity.http.Cast
 import com.example.imdb.ui.ActivityInteraction
@@ -27,7 +28,7 @@ class RecyclerViewAdapterCast(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(informationCast[position], urlImg, imgNotFound, idMovie)
+        holder.bind(informationCast[position], urlImg, imgNotFound, idMovie, activityInteraction)
     }
 
     fun setMovieCredit(cast: List<Cast>) {
@@ -48,10 +49,24 @@ class RecyclerViewAdapterCast(
         private val nameCast: TextView = itemView.findViewById(R.id.name_cast)
         private val tryAgain: Button = itemView.findViewById(R.id.again)
 
-        fun bind(cast: Cast, urlImg: String, imgNotFound: String, idMovie: Int) {
-            nameCast.text = "${cast.name}"
-            val path = getPath(cast.profilePath, urlImg, imgNotFound)
+        fun bind(cast: Cast, urlImg: String, imgNotFound: String, idMovie: Int, activityInteraction: ActivityInteraction) {
+
+            if(cast.error) {
+                tryAgain.visibility = View.VISIBLE
+                nameCast.visibility = View.INVISIBLE
+                imgCast.visibility = View.INVISIBLE
+            } else {
+                tryAgain.visibility = View.INVISIBLE
+                nameCast.visibility = View.VISIBLE
+                imgCast.visibility = View.VISIBLE
+                nameCast.text = "${cast.name}"
+                val path = getPath(cast.profilePath, urlImg, imgNotFound)
                 Glide.with(itemView).load(path).into(imgCast)
+            }
+
+            tryAgain.setOnClickListener {
+                activityInteraction.loadTryAgain(MovieCategory.None)
+            }
         }
 
         private fun getPath(path: String?, urlImg: String, imgNotFound: String) =

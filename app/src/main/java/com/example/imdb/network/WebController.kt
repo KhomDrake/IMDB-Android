@@ -17,7 +17,7 @@ object WebController {
     private val errorMovieList = MoviesList(0, listOf(errorMovie), 0)
     private val errorMovieDetail = MovieDetail(false, 0, "", "", "", 0, "", 0.0, 0, true)
     private val errorReview = Review("asd", "", "", "", true)
-    private val errorReviews = Reviews(0, 0, listOf(), 0, 0, 0)
+    private val errorReviews = Reviews(0, 0, listOf(errorReview), 0, 0, 0)
     private val errorCast = Cast(2, "asd", 0, 0, "", 0, "", true)
     private val errorMovieCredit = MovieCredit(listOf(errorCast), 0)
 
@@ -69,7 +69,6 @@ object WebController {
 
     private fun <T>requestResponse(funResponse: (body: T) -> Unit, error: T?) = object : Callback<T> {
         override fun onFailure(call: Call<T?>, t: Throwable) {
-            Log.i(TAG_VINI, t.message)
             funResponse(error!!)
         }
 
