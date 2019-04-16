@@ -8,9 +8,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.imdb.MovieCategory
 import com.example.imdb.R
-import com.example.imdb.ui.ActivityInteraction
+import com.example.imdb.auxiliary.becomeInvisible
+import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterReviews
 
 class ReviewActivity : AppCompatActivity() {
@@ -28,19 +28,21 @@ class ReviewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_review)
 
+        reviewViewController = ReviewViewController()
+
         tryAgain = findViewById(R.id.again)
         reviewTitle = findViewById(R.id.title_reviews)
         noReviews = findViewById(R.id.no_review)
+
         title = intent.getStringExtra("title")
         movieID = intent.getIntExtra("movieID", -1)
         if(movieID < 0)
             return
 
-        noReviews.visibility = View.INVISIBLE
+        noReviews.becomeInvisible()
 
         reviewTitle.text = "Review: $title"
 
-        reviewViewController = ReviewViewController()
         reviewRecyclerView = findViewById(R.id.reviews)
         loadingReview = findViewById(R.id.loading_review)
 
@@ -48,19 +50,22 @@ class ReviewActivity : AppCompatActivity() {
         reviewRecyclerView.layoutManager = LinearLayoutManager(this)
 
         loadReviews()
+
         tryAgain.setOnClickListener { loadReviews() }
     }
 
     private fun loadReviews() {
-        loadingReview.visibility = View.VISIBLE
-        tryAgain.visibility = View.INVISIBLE
+        loadingReview.becomeVisible()
+        tryAgain.becomeInvisible()
+
         reviewViewController.loadReviews(movieID) {
-            loadingReview.visibility = View.INVISIBLE
+            loadingReview.becomeInvisible()
+
             if(it.results.isNotEmpty() && it.results[0].error) {
-                tryAgain.visibility = View.VISIBLE
+                tryAgain.becomeVisible()
             } else {
-                if(it.results.isEmpty())
-                    noReviews.visibility = View.VISIBLE
+                if(it.results.isEmpty()) noReviews.becomeVisible()
+
                 reviewRecyclerView.reviewAdapter.setReviews(it)
             }
         }

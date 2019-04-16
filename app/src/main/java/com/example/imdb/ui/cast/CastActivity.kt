@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.TAG_VINI
+import com.example.imdb.auxiliary.becomeInvisible
+import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.ui.ActivityInteraction
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterCast
 
@@ -25,7 +27,9 @@ class CastActivity : AppCompatActivity(), ActivityInteraction {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cast)
+
         castViewController = CastViewController()
+
         recyclerViewCast = findViewById(R.id.movie_cast)
         castTitle = findViewById(R.id.title_reviews)
         loading = findViewById(R.id.loading)
@@ -36,7 +40,7 @@ class CastActivity : AppCompatActivity(), ActivityInteraction {
         if(movieId < 0)
             return
 
-        loading.visibility = View.VISIBLE
+        loading.becomeVisible()
 
         castTitle.text = "Cast: $title"
 
@@ -48,12 +52,12 @@ class CastActivity : AppCompatActivity(), ActivityInteraction {
 
     override fun loadTryAgain(type: MovieCategory) {
         castViewController.loadCast(movieId) {
-            loading.visibility = View.INVISIBLE
+            loading.becomeInvisible()
             recyclerViewCast.castAdapter.setMovieCredit(it.cast)
         }
     }
 
-    override fun makeTransition(view: View, movieId: Int, url: String) = Unit
+    override fun makeImageTransition(view: View, movieId: Int, url: String) = Unit
 
     override fun updateVisualMovies() = Unit
 

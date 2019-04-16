@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
+import com.example.imdb.auxiliary.becomeInvisible
+import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.data.entity.http.Cast
 import com.example.imdb.ui.ActivityInteraction
 
@@ -52,13 +54,13 @@ class RecyclerViewAdapterCast(
         fun bind(cast: Cast, urlImg: String, imgNotFound: String, idMovie: Int, activityInteraction: ActivityInteraction) {
 
             if(cast.error) {
-                tryAgain.visibility = View.VISIBLE
-                nameCast.visibility = View.INVISIBLE
-                imgCast.visibility = View.INVISIBLE
+                tryAgain.becomeVisible()
+                nameCast.becomeInvisible()
+                imgCast.becomeInvisible()
             } else {
-                tryAgain.visibility = View.INVISIBLE
-                nameCast.visibility = View.VISIBLE
-                imgCast.visibility = View.VISIBLE
+                tryAgain.becomeInvisible()
+                nameCast.becomeVisible()
+                imgCast.becomeVisible()
                 nameCast.text = "${cast.name}"
                 val path = getPath(cast.profilePath, urlImg, imgNotFound)
                 Glide.with(itemView).load(path).into(imgCast)

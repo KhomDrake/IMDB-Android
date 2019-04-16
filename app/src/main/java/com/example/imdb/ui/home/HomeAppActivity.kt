@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.TAG_VINI
+import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.ui.ActivityInteraction
 import com.example.imdb.ui.homemovies.HomeMoviesActivity
 import com.example.imdb.ui.hometv.HomeTvActivity
@@ -43,14 +44,16 @@ class HomeAppActivity : AppCompatActivity(), ActivityInteraction {
 
         val favorites = homeAppViewController.getFavorites()
 
-        messengerNotFavorites.visibility = View.VISIBLE
+        Log.i(TAG_VINI, favorites.toString())
+
+        messengerNotFavorites.becomeVisible()
     }
 
     override fun loadTryAgain(type: MovieCategory) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun makeTransition(view: View, movieId: Int, url: String) {
+    override fun makeImageTransition(view: View, movieId: Int, url: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

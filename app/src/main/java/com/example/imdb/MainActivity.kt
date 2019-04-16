@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mainActivityViewController = MainActivityViewController()
-
         mainActivityViewController.createDatabase(this)
 
         loginButton = findViewById(R.id.login)

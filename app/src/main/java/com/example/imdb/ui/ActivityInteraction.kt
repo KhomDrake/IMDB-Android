@@ -7,7 +7,7 @@ interface ActivityInteraction {
 
     fun loadTryAgain(type: MovieCategory)
 
-    fun makeTransition(view: View, movieId: Int, url: String)
+    fun makeImageTransition(view: View, movieId: Int, url: String)
 
     fun updateVisualMovies()
 }

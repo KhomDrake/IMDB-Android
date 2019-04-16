@@ -1,6 +1,5 @@
 package com.example.imdb.ui.recyclerview
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
-import com.example.imdb.TAG_VINI
+import com.example.imdb.auxiliary.becomeInvisible
+import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.http.Movie
 import com.example.imdb.ui.ActivityInteraction
@@ -56,6 +56,7 @@ class RecyclerViewAdapterMovieList(
         private val title: TextView = itemView.findViewById(R.id.title_movie)
         private val heartEmpty: ImageView = itemView.findViewById(R.id.heart_empty)
         private val heart: ImageView = itemView.findViewById(R.id.heart)
+
         private val listToMakeInvisible: List<View>
             get() = listOf(img, again, loading, title, heartEmpty, heart)
 
@@ -66,7 +67,7 @@ class RecyclerViewAdapterMovieList(
 
             if(result.error)
             {
-                again.visibility = View.VISIBLE
+                again.becomeVisible()
                 again.setOnClickListener {
                     activityInteraction.loadTryAgain(movieCategory)
                 }
@@ -74,24 +75,24 @@ class RecyclerViewAdapterMovieList(
             }
 
             if (result.loading) {
-                loading.visibility = View.VISIBLE
+                loading.becomeVisible()
                 return
             }
 
             if(result.favorite) showHeart() else showEmptyHeart()
 
-            img.visibility = View.VISIBLE
+            img.becomeVisible()
 
             var path = getPath(result.posterPath, urlImg, imgNotFound)
 
             if(path == imgNotFound) {
-                title.visibility = View.VISIBLE
+                title.becomeVisible()
                 title.text = "${result.title}"
             }
 
             if(result.adult) path = plus18
 
-            img.setOnClickListener { activityInteraction.makeTransition(img, result.id, path) }
+            img.setOnClickListener { activityInteraction.makeImageTransition(img, result.id, path) }
 
             heartEmpty.setOnClickListener {
                 showHeart()
@@ -109,13 +110,13 @@ class RecyclerViewAdapterMovieList(
         }
 
         private fun showHeart() {
-            heartEmpty.visibility = View.INVISIBLE
-            heart.visibility = View.VISIBLE
+            heartEmpty.becomeInvisible()
+            heart.becomeVisible()
         }
 
         private fun showEmptyHeart() {
-            heartEmpty.visibility = View.VISIBLE
-            heart.visibility = View.INVISIBLE
+            heartEmpty.becomeVisible()
+            heart.becomeInvisible()
         }
 
         private fun getPath(path: String?, urlImg: String, imgNotFound: String) =

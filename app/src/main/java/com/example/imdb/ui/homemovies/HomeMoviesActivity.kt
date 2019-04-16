@@ -23,7 +23,6 @@ class HomeMoviesActivity : AppCompatActivity(), ActivityInteraction {
     private lateinit var popular: RecyclerView
     private lateinit var topRated: RecyclerView
     private lateinit var upcoming: RecyclerView
-
     private lateinit var homeMoviesViewController: HomeMoviesViewController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +30,6 @@ class HomeMoviesActivity : AppCompatActivity(), ActivityInteraction {
         setContentView(R.layout.activity_home_movies)
 
         homeMoviesViewController = HomeMoviesViewController()
-        homeMoviesViewController.createDatabase(this)
 
         latest = findViewById(R.id.latest)
         nowPlaying = findViewById(R.id.now_playing)
@@ -67,7 +65,7 @@ class HomeMoviesActivity : AppCompatActivity(), ActivityInteraction {
         loadTryAgain(MovieCategory.TopRated)
     }
 
-    override fun makeTransition(view: View, movieId: Int, url: String) {
+    override fun makeImageTransition(view: View, movieId: Int, url: String) {
         val startNewActivity = Intent(view.context, MovieDetailActivity::class.java)
         val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
             this,
@@ -87,14 +85,11 @@ class HomeMoviesActivity : AppCompatActivity(), ActivityInteraction {
         this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
-    private fun createAdapter(activityInteraction: ActivityInteraction, movieCategory: MovieCategory) :
-            RecyclerViewAdapterMovieList =
+    private fun createAdapter(activityInteraction: ActivityInteraction, movieCategory: MovieCategory)=
         RecyclerViewAdapterMovieList(mutableListOf(), activityInteraction, movieCategory)
 
     private fun RecyclerView.loadCategory(category: MovieCategory) {
-        homeMoviesViewController.loadMovies(this.movieAdapter, category) {
-            this.movieAdapter.setMovies(it)
-        }
+        homeMoviesViewController.loadMovies(this.movieAdapter, category) { this.movieAdapter.setMovies(it) }
     }
 
     private val RecyclerView.movieAdapter: RecyclerViewAdapterMovieList

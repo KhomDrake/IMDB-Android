@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.TAG_VINI
+import com.example.imdb.auxiliary.becomeInvisible
+import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.ui.ActivityInteraction
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
@@ -33,12 +35,13 @@ class RecommendationActivity : AppCompatActivity(), ActivityInteraction {
         setContentView(R.layout.activity_recommendation)
 
         recommendationViewController = RecommendationViewController()
+
         recommendationRecyclerView = findViewById(R.id.recommendation)
         recommendationTitle = findViewById(R.id.recommendation_title)
         recommendationNoFound = findViewById(R.id.no_recommendation)
         loadingRecommendation = findViewById(R.id.loading_recommendation)
 
-        recommendationNoFound.visibility = View.INVISIBLE
+        recommendationNoFound.becomeInvisible()
 
         title = intent.getStringExtra("title")
         movieID = intent.getIntExtra("movieID", -3000)
@@ -53,19 +56,21 @@ class RecommendationActivity : AppCompatActivity(), ActivityInteraction {
     override fun loadTryAgain(type: MovieCategory) {
         when(type) {
             MovieCategory.Recommendation -> {
-                loadingRecommendation.visibility = View.VISIBLE
+                loadingRecommendation.becomeVisible()
+
                 recommendationRecyclerView.setupAdapter(this, MovieCategory.Recommendation)
                 recommendationViewController.loadRecommendation(movieID) {
-                    if(it.isEmpty()) recommendationNoFound.visibility = View.VISIBLE
+                    if(it.isEmpty()) recommendationNoFound.becomeVisible()
+
                     recommendationRecyclerView.movieAdapter.setMovies(it)
-                    loadingRecommendation.visibility = View.INVISIBLE
+                    loadingRecommendation.becomeInvisible()
                 }
             }
             else -> Log.i(TAG_VINI, "Isso não deveria acontecer")
         }
     }
 
-    override fun makeTransition(view: View, movieId: Int, url: String) {
+    override fun makeImageTransition(view: View, movieId: Int, url: String) {
         val startNewActivity = Intent(view.context, MovieDetailActivity::class.java)
         val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
             this,
@@ -76,9 +81,7 @@ class RecommendationActivity : AppCompatActivity(), ActivityInteraction {
         ContextCompat.startActivity(view.context, startNewActivity, optionsCompat.toBundle())
     }
 
-    override fun updateVisualMovies() {
-        loadTryAgain(MovieCategory.Recommendation)
-    }
+    override fun updateVisualMovies() { loadTryAgain(MovieCategory.Recommendation) }
 
     private fun RecyclerView.setupAdapter(activityInteraction: ActivityInteraction, movieCategory: MovieCategory) {
         this.adapter = RecyclerViewAdapterMovieList(mutableListOf(), activityInteraction, movieCategory)
