@@ -1,8 +1,6 @@
 package com.example.imdb.data.database
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.imdb.MovieCategory
 import com.example.imdb.auxiliary.EMPTY_MOVIE_DETAIL
@@ -22,6 +20,12 @@ import com.example.imdb.data.entity.table.*
 abstract class DatabaseMovies : RoomDatabase() {
 
     abstract fun moviesDao(): DaoMovies
+    private val language = ""
+    fun getLanguage() = language
+
+    init {
+        setup()
+    }
 
     fun setup() {
         moviesDao().insertMovieList(TableMoviesList(MovieCategory.Latest.ordinal, 1, 1))
@@ -201,21 +205,5 @@ abstract class DatabaseMovies : RoomDatabase() {
             movies.add(Movie(movie.idMovie, movie.originalTitle, movie.posterPath, movie.title, false, false, movie.adult, movie.favorite))
         }
         return movies
-    }
-
-    companion object {
-
-        var Instance: DatabaseMovies? = null
-
-        fun instance(ctx: Context) {
-            if(Instance != null) return
-
-            synchronized(DatabaseMovies::class) {
-                Instance = Room.databaseBuilder(
-                    ctx.applicationContext, DatabaseMovies::class.java,
-                    "movie.db"
-                ).allowMainThreadQueries().build()
-            }
-        }
     }
 }

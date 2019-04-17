@@ -3,8 +3,8 @@ package com.example.imdb.ui.moviereview
 import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.http.Reviews
 
-class ReviewViewController {
+class ReviewViewController(private val dataController: DataController) {
     fun loadReviews(id: Int, funResponse: (reviews: Reviews) -> Unit) {
-        DataController.loadReviews(id, funResponse)
+        dataController.loadReviews(id, funResponse)
     }
 }

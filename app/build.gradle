@@ -37,6 +37,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
 
+    //coroutines
+    implementation "androidx.room:room-coroutines:2.1.0-alpha04"
+
     //room
     implementation 'android.arch.persistence.room:runtime:1.1.1'
     kapt 'android.arch.persistence.room:compiler:1.1.1'
@@ -46,6 +49,9 @@ dependencies {
 
     // recyclerview
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+
+    //koin
+    implementation 'org.koin:koin-android:1.0.1'
 
     // tests
     androidTestImplementation 'androidx.test:core:1.1.0'

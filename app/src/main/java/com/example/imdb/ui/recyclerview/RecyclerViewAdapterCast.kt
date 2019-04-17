@@ -13,12 +13,12 @@ import com.example.imdb.R
 import com.example.imdb.auxiliary.becomeInvisible
 import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.data.entity.http.Cast
-import com.example.imdb.ui.ActivityInteraction
+import com.example.imdb.ui.interfaces.IActivityInteraction
 
 class RecyclerViewAdapterCast(
     private val informationCast: MutableList<Cast>,
     private val idMovie: Int,
-    private val activityInteraction: ActivityInteraction
+    private val IActivityInteraction: IActivityInteraction
 ) : RecyclerView.Adapter<RecyclerViewAdapterCast.ViewHolder>() {
 
     private val urlImg = "https://image.tmdb.org/t/p/w300"
@@ -30,7 +30,7 @@ class RecyclerViewAdapterCast(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(informationCast[position], urlImg, imgNotFound, idMovie, activityInteraction)
+        holder.bind(informationCast[position], urlImg, imgNotFound, idMovie, IActivityInteraction)
     }
 
     fun setMovieCredit(cast: List<Cast>) {
@@ -51,7 +51,7 @@ class RecyclerViewAdapterCast(
         private val nameCast: TextView = itemView.findViewById(R.id.name_cast)
         private val tryAgain: Button = itemView.findViewById(R.id.again)
 
-        fun bind(cast: Cast, urlImg: String, imgNotFound: String, idMovie: Int, activityInteraction: ActivityInteraction) {
+        fun bind(cast: Cast, urlImg: String, imgNotFound: String, idMovie: Int, IActivityInteraction: IActivityInteraction) {
 
             if(cast.error) {
                 tryAgain.becomeVisible()
@@ -67,7 +67,7 @@ class RecyclerViewAdapterCast(
             }
 
             tryAgain.setOnClickListener {
-                activityInteraction.loadTryAgain(MovieCategory.None)
+                IActivityInteraction.loadTryAgain(MovieCategory.None)
             }
         }
 

@@ -4,10 +4,10 @@ import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.http.MovieCredit
 import com.example.imdb.data.entity.http.MovieDetail
 
-class MovieDetailViewController {
+class MovieDetailViewController(private val dataController: DataController) {
 
     fun loadMovieDetail(id: Int, funResponse: (MovieDetail) -> Unit) {
-        DataController.loadMovieDetail(id, funResponse)
+        dataController.loadMovieDetail(id, funResponse)
     }
 
     fun getDate(releaseDate: String) : String {

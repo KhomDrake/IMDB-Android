@@ -12,10 +12,11 @@ import com.example.imdb.R
 import com.example.imdb.auxiliary.becomeInvisible
 import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterReviews
+import org.koin.android.ext.android.inject
 
 class ReviewActivity : AppCompatActivity() {
 
-    private lateinit var reviewViewController: ReviewViewController
+    private val reviewViewController: ReviewViewController by inject()
     private lateinit var reviewRecyclerView: RecyclerView
     private lateinit var loadingReview: ProgressBar
     private lateinit var tryAgain: Button
@@ -27,8 +28,6 @@ class ReviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_review)
-
-        reviewViewController = ReviewViewController()
 
         tryAgain = findViewById(R.id.again)
         reviewTitle = findViewById(R.id.title_reviews)

@@ -16,13 +16,15 @@ import com.example.imdb.R
 import com.example.imdb.TAG_VINI
 import com.example.imdb.auxiliary.becomeInvisible
 import com.example.imdb.auxiliary.becomeVisible
-import com.example.imdb.ui.ActivityInteraction
+import com.example.imdb.ui.interfaces.IActivityInteraction
+import com.example.imdb.ui.interfaces.IFavorite
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
+import org.koin.android.ext.android.inject
 
-class RecommendationActivity : AppCompatActivity(), ActivityInteraction {
+class RecommendationActivity : AppCompatActivity(), IFavorite {
 
-    private lateinit var recommendationViewController: RecommendationViewController
+    private val recommendationViewController: RecommendationViewController by inject()
     private lateinit var recommendationRecyclerView: RecyclerView
     private lateinit var loadingRecommendation: ProgressBar
     private lateinit var recommendationTitle: TextView
@@ -33,8 +35,6 @@ class RecommendationActivity : AppCompatActivity(), ActivityInteraction {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recommendation)
-
-        recommendationViewController = RecommendationViewController()
 
         recommendationRecyclerView = findViewById(R.id.recommendation)
         recommendationTitle = findViewById(R.id.recommendation_title)
@@ -83,8 +83,12 @@ class RecommendationActivity : AppCompatActivity(), ActivityInteraction {
 
     override fun updateVisualMovies() { loadTryAgain(MovieCategory.Recommendation) }
 
-    private fun RecyclerView.setupAdapter(activityInteraction: ActivityInteraction, movieCategory: MovieCategory) {
-        this.adapter = RecyclerViewAdapterMovieList(mutableListOf(), activityInteraction, movieCategory)
+    override fun favoriteMovie(idMovie: Int, toFavorite: Boolean) {
+        recommendationViewController.favoriteMovie(idMovie, toFavorite)
+    }
+
+    private fun RecyclerView.setupAdapter(iFavorite: IFavorite, movieCategory: MovieCategory) {
+        this.adapter = RecyclerViewAdapterMovieList(mutableListOf(), iFavorite, movieCategory)
         this.layoutManager = LinearLayoutManager(context)
     }
 

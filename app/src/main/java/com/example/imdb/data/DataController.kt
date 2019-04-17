@@ -5,20 +5,14 @@ import com.example.imdb.MovieCategory
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.*
 import com.example.imdb.network.WebController
+import kotlinx.coroutines.runBlocking
+import org.koin.android.ext.android.inject
 
-object DataController {
-
-    private lateinit var databaseMovies: DatabaseMovies
+class DataController(private val webController: WebController, private val databaseMovies: DatabaseMovies) {
 
     private lateinit var language: String
 
-    private const val timeToBeDeprecated: Long = 5 * 60000
-
-    fun createDatabase(ctx: Context) {
-        DatabaseMovies.instance(ctx)
-        databaseMovies = DatabaseMovies.Instance!!
-        databaseMovies.setup()
-    }
+    private val timeToBeDeprecated: Long = 5 * 60000
 
     fun setupDatabase(language: String) { this.language = language }
 
@@ -32,7 +26,7 @@ object DataController {
         val movieCredit = databaseMovies.getMovieCredit(id)
 
         if(id != movieCredit.id) {
-            WebController.loadMovieCredit(id) {
+            webController.loadMovieCredit(id) {
                 databaseMovies.setCreditMovie(it, id)
                 funResponse(it)
             }
@@ -43,7 +37,7 @@ object DataController {
         val movieDetail = databaseMovies.getDetailMovie(id)
 
         if(movieDetail.id != id) {
-            WebController.loadMovieDetail(id) {
+            webController.loadMovieDetail(id) {
                 if(!it.error) databaseMovies.setMovieDetail(it)
                 funResponse(it)
             }
@@ -53,7 +47,7 @@ object DataController {
     fun loadReviews(id: Int, funResponse: (reviews: Reviews) -> Unit) {
         val reviews = databaseMovies.getMovieReviews(id)
         if(reviews.idMovie != id) {
-            WebController.loadReviews(id) {
+            webController.loadReviews(id) {
                 it.idMovie = id
                 if(it.results.isNotEmpty() && !it.results[0].error) databaseMovies.setReviews(it)
                 funResponse(it)
@@ -64,7 +58,7 @@ object DataController {
     fun loadRecommendation(id: Int, funResponse: (List<Movie>) -> Unit) {
         val recommendation = databaseMovies.getRecommendationLastMovie(id)
         if(recommendation.id != id) {
-            WebController.loadRecommendation(id) {
+            webController.loadRecommendation(id) {
                 if(it.results.isNotEmpty() && !it.results.first().error)
                     databaseMovies.setRecommendationLastMovie(Recommendation(id, it))
                 funResponse(databaseMovies.getRecommendationLastMovie(id).moviesList.results)
@@ -75,7 +69,7 @@ object DataController {
     fun loadLatest(funResponse: (movies: List<Movie>) -> Unit) {
         val latest = databaseMovies.getLatest()
         if (latest.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Latest)) {
-            WebController.loadLatest {
+            webController.loadLatest {
                 setListDatabaseMovies(listOf(it), MovieCategory.Latest)
                 returnRightResponse(funResponse, listOf(it), MovieCategory.Latest)
             }
@@ -85,7 +79,7 @@ object DataController {
     fun loadNowPlaying(funResponse: (movies: List<Movie>) -> Unit) {
         val nowPlaying = databaseMovies.getNowPlaying()
         if (nowPlaying.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.NowPlaying)) {
-            WebController.loadNowPlaying {
+            webController.loadNowPlaying {
                 setListDatabaseMovies(it.results, MovieCategory.NowPlaying)
                 returnRightResponse(funResponse, it.results, MovieCategory.NowPlaying)
             }
@@ -95,7 +89,7 @@ object DataController {
     fun loadPopular(funResponse: (movies: List<Movie>) -> Unit) {
         val popular = databaseMovies.getPopular()
         if (popular.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Popular)) {
-            WebController.loadPopular {
+            webController.loadPopular {
                 setListDatabaseMovies(it.results, MovieCategory.Popular)
                 returnRightResponse(funResponse, it.results, MovieCategory.Popular)
             }
@@ -105,7 +99,7 @@ object DataController {
     fun loadTopRated(funResponse: (movies: List<Movie>) -> Unit) {
         val topRated = databaseMovies.getTopRated()
         if (topRated.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Popular)) {
-            WebController.loadTopRated {
+            webController.loadTopRated {
                 setListDatabaseMovies(it.results, MovieCategory.TopRated)
                 returnRightResponse(funResponse, it.results, MovieCategory.TopRated)
             }
@@ -115,7 +109,7 @@ object DataController {
     fun loadUpcoming(funResponse: (movies: List<Movie>) -> Unit) {
         val upcoming = databaseMovies.getUpcoming()
         if (upcoming.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Upcoming)) {
-            WebController.loadUpcoming {
+            webController.loadUpcoming {
                 setListDatabaseMovies(it.results, MovieCategory.Upcoming)
                 returnRightResponse(funResponse, it.results, MovieCategory.Upcoming)
             }

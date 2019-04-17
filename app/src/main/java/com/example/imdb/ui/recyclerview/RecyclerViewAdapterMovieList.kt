@@ -13,13 +13,12 @@ import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.auxiliary.becomeInvisible
 import com.example.imdb.auxiliary.becomeVisible
-import com.example.imdb.data.DataController
 import com.example.imdb.data.entity.http.Movie
-import com.example.imdb.ui.ActivityInteraction
+import com.example.imdb.ui.interfaces.IFavorite
 
 class RecyclerViewAdapterMovieList(
     private val informationMovies: MutableList<Movie>,
-    private val activityInteraction: ActivityInteraction,
+    private val iFavorite: IFavorite,
     private val movieCategory: MovieCategory
 ) : RecyclerView.Adapter<RecyclerViewAdapterMovieList.ViewHolder>() {
 
@@ -33,7 +32,7 @@ class RecyclerViewAdapterMovieList(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(informationMovies[position], urlImg, imgNotFound, activityInteraction, movieCategory, plus18)
+        holder.bind(informationMovies[position], urlImg, imgNotFound, iFavorite, movieCategory, plus18)
     }
 
     fun setMovies(movies: List<Movie>) {
@@ -61,7 +60,7 @@ class RecyclerViewAdapterMovieList(
             get() = listOf(img, again, loading, title, heartEmpty, heart)
 
         fun bind(result: Movie, urlImg: String, imgNotFound: String,
-                 activityInteraction: ActivityInteraction, movieCategory: MovieCategory, plus18: String) {
+                 iFavorite: IFavorite, movieCategory: MovieCategory, plus18: String) {
 
             listToMakeInvisible.forEach { it.visibility = View.INVISIBLE }
 
@@ -69,7 +68,7 @@ class RecyclerViewAdapterMovieList(
             {
                 again.becomeVisible()
                 again.setOnClickListener {
-                    activityInteraction.loadTryAgain(movieCategory)
+                    iFavorite.loadTryAgain(movieCategory)
                 }
                 return
             }
@@ -92,18 +91,18 @@ class RecyclerViewAdapterMovieList(
 
             if(result.adult) path = plus18
 
-            img.setOnClickListener { activityInteraction.makeImageTransition(img, result.id, path) }
+            img.setOnClickListener { iFavorite.makeImageTransition(img, result.id, path) }
 
             heartEmpty.setOnClickListener {
                 showHeart()
-                DataController.favoriteMovie(result.id, true)
-                activityInteraction.updateVisualMovies()
+                iFavorite.favoriteMovie(result.id, true)
+                iFavorite.updateVisualMovies()
             }
 
             heart.setOnClickListener {
                 showEmptyHeart()
-                DataController.favoriteMovie(result.id, false)
-                activityInteraction.updateVisualMovies()
+                iFavorite.favoriteMovie(result.id, false)
+                iFavorite.updateVisualMovies()
             }
 
             Glide.with(itemView).load(path).into(img)

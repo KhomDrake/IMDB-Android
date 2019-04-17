@@ -1,9 +1,9 @@
-package com.example.imdb.ui
+package com.example.imdb.ui.interfaces
 
 import android.view.View
 import com.example.imdb.MovieCategory
 
-interface ActivityInteraction {
+interface IActivityInteraction {
 
     fun loadTryAgain(type: MovieCategory)
 

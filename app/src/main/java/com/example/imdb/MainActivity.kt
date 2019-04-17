@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.imdb.ui.home.HomeAppActivity
 import com.example.imdb.ui.mainactivity.MainActivityViewController
+import org.koin.android.ext.android.inject
 
 enum class MovieCategory {
     None,
@@ -26,14 +27,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loginButton: Button
     private lateinit var guestButton: Button
     private val messageLoginButton = "Função indisponível"
-    private lateinit var mainActivityViewController: MainActivityViewController
+    private val mainActivityViewController: MainActivityViewController by inject()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        mainActivityViewController = MainActivityViewController()
-        mainActivityViewController.createDatabase(this)
 
         loginButton = findViewById(R.id.login)
         guestButton = findViewById(R.id.guest)

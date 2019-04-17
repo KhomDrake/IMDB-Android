@@ -2,7 +2,6 @@ package com.example.imdb.ui.cast
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -10,15 +9,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
-import com.example.imdb.TAG_VINI
 import com.example.imdb.auxiliary.becomeInvisible
 import com.example.imdb.auxiliary.becomeVisible
-import com.example.imdb.ui.ActivityInteraction
+import com.example.imdb.ui.interfaces.IActivityInteraction
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterCast
+import org.koin.android.ext.android.inject
 
-class CastActivity : AppCompatActivity(), ActivityInteraction {
+class CastActivity : AppCompatActivity(), IActivityInteraction {
 
-    private lateinit var castViewController: CastViewController
+    private val castViewController: CastViewController by inject()
     private lateinit var recyclerViewCast: RecyclerView
     private lateinit var castTitle: TextView
     private lateinit var loading: ProgressBar
@@ -27,8 +26,6 @@ class CastActivity : AppCompatActivity(), ActivityInteraction {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_cast)
-
-        castViewController = CastViewController()
 
         recyclerViewCast = findViewById(R.id.movie_cast)
         castTitle = findViewById(R.id.title_reviews)

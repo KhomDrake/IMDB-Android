@@ -12,16 +12,17 @@ import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.TAG_VINI
 import com.example.imdb.auxiliary.becomeVisible
-import com.example.imdb.ui.ActivityInteraction
+import com.example.imdb.ui.interfaces.IActivityInteraction
 import com.example.imdb.ui.homemovies.HomeMoviesActivity
 import com.example.imdb.ui.hometv.HomeTvActivity
+import org.koin.android.ext.android.inject
 
-class HomeAppActivity : AppCompatActivity(), ActivityInteraction {
+class HomeAppActivity : AppCompatActivity(), IActivityInteraction {
 
     private lateinit var movie: Button
     private lateinit var tv: Button
     private lateinit var messengerNotFavorites: TextView
-    private lateinit var homeAppViewController: HomeAppViewController
+    private val homeAppViewController: HomeAppViewController by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +31,6 @@ class HomeAppActivity : AppCompatActivity(), ActivityInteraction {
         movie = findViewById(R.id.movie)
         tv = findViewById(R.id.tv)
         messengerNotFavorites = findViewById(R.id.nenhum_favorito)
-        homeAppViewController = HomeAppViewController()
 
         movie.setOnClickListener {
             val startNewActivity = Intent(this, HomeMoviesActivity::class.java)

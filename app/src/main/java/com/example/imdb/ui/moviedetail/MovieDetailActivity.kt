@@ -18,10 +18,11 @@ import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.ui.cast.CastActivity
 import com.example.imdb.ui.moviereview.ReviewActivity
 import com.example.imdb.ui.recommendation.RecommendationActivity
+import org.koin.android.ext.android.inject
 
 class MovieDetailActivity : AppCompatActivity() {
 
-    private lateinit var movieDetailViewController: MovieDetailViewController
+    private val movieDetailViewController: MovieDetailViewController by inject()
     private lateinit var progressBar: ProgressBar
     private lateinit var img: ImageView
     private lateinit var title: TextView
@@ -47,7 +48,6 @@ class MovieDetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_detail)
-        movieDetailViewController = MovieDetailViewController()
 
         progressBar = findViewById(R.id.loading)
         tryAgain = findViewById(R.id.again)

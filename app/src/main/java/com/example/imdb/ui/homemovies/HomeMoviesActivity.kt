@@ -3,7 +3,6 @@ package com.example.imdb.ui.homemovies
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
@@ -11,25 +10,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
-import com.example.imdb.TAG_VINI
-import com.example.imdb.ui.ActivityInteraction
+import com.example.imdb.ui.interfaces.IActivityInteraction
+import com.example.imdb.ui.interfaces.IFavorite
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
+import org.koin.android.ext.android.inject
 
-class HomeMoviesActivity : AppCompatActivity(), ActivityInteraction {
+class HomeMoviesActivity : AppCompatActivity(), IFavorite {
 
     private lateinit var latest: RecyclerView
     private lateinit var nowPlaying: RecyclerView
     private lateinit var popular: RecyclerView
     private lateinit var topRated: RecyclerView
     private lateinit var upcoming: RecyclerView
-    private lateinit var homeMoviesViewController: HomeMoviesViewController
+    private val homeMoviesViewController: HomeMoviesViewController by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_movies)
-
-        homeMoviesViewController = HomeMoviesViewController()
 
         latest = findViewById(R.id.latest)
         nowPlaying = findViewById(R.id.now_playing)
@@ -80,13 +78,17 @@ class HomeMoviesActivity : AppCompatActivity(), ActivityInteraction {
         loadAllCategorys()
     }
 
-    private fun RecyclerView.setupAdapter(activityInteraction: ActivityInteraction, movieCategory: MovieCategory) {
-        this.adapter = createAdapter(activityInteraction, movieCategory)
+    override fun favoriteMovie(idMovie: Int, toFavorite: Boolean) {
+        homeMoviesViewController.favoriteMovie(idMovie, toFavorite)
+    }
+
+    private fun RecyclerView.setupAdapter(iFavorite: IFavorite, movieCategory: MovieCategory) {
+        this.adapter = createAdapter(iFavorite, movieCategory)
         this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
-    private fun createAdapter(activityInteraction: ActivityInteraction, movieCategory: MovieCategory)=
-        RecyclerViewAdapterMovieList(mutableListOf(), activityInteraction, movieCategory)
+    private fun createAdapter(iFavorite: IFavorite, movieCategory: MovieCategory)=
+        RecyclerViewAdapterMovieList(mutableListOf(), iFavorite, movieCategory)
 
     private fun RecyclerView.loadCategory(category: MovieCategory) {
         homeMoviesViewController.loadMovies(this.movieAdapter, category) { this.movieAdapter.setMovies(it) }
