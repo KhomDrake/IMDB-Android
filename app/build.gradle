@@ -48,11 +48,16 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 
     // tests
-    androidTestImplementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    androidTestImplementation 'androidx.test:core:' + rootProject.coreVersion;
-    androidTestImplementation 'androidx.test:core-ktx:' + rootProject.coreVersion;
-    androidTestImplementation 'androidx.test.ext:junit:' + rootProject.extJUnitVersion;
-    androidTestImplementation 'androidx.test.ext:junit-ktx:' + rootProject.extJUnitVersion;
-    androidTestImplementation 'androidx.test:runner:' + rootProject.runnerVersion;
-    androidTestImplementation 'androidx.test.espresso:espresso-core:' + rootProject.espressoVersion;
+    androidTestImplementation 'androidx.test:core:1.1.0'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.1.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
+    androidTestImplementation 'androidx.test.ext:truth:1.1.0'
+    androidTestImplementation 'com.google.truth:truth:0.42'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-web:3.1.1'
+    androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.1.1'
 }
