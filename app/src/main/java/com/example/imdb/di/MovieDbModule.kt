@@ -1,9 +1,9 @@
-package com.example.imdb.dependencyinjection
+package com.example.imdb.di
 
 import androidx.room.Room
-import com.example.imdb.data.DataController
+import com.example.imdb.data.DataControllerProd
 import com.example.imdb.data.database.DatabaseMovies
-import com.example.imdb.network.WebController
+import com.example.imdb.network.WebControllerProd
 import com.example.imdb.ui.cast.CastViewController
 import com.example.imdb.ui.home.HomeAppViewController
 import com.example.imdb.ui.homemovies.HomeMoviesViewController
@@ -20,8 +20,8 @@ val movieDbKoinModule = module {
             "movie.db"
         ).build()
     }
-    single { WebController(get()) }
-    single { DataController(get(), get()) }
+    single { WebControllerProd(get()) }
+    single { DataControllerProd(get(), get()) }
     single { MainActivityViewController(get()) }
     single { HomeAppViewController(get()) }
     single { HomeMoviesViewController(get()) }

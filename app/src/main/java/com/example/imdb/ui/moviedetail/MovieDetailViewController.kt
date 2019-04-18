@@ -1,7 +1,6 @@
 package com.example.imdb.ui.moviedetail
 
 import com.example.imdb.data.DataController
-import com.example.imdb.data.entity.http.MovieCredit
 import com.example.imdb.data.entity.http.MovieDetail
 
 class MovieDetailViewController(private val dataController: DataController) {
