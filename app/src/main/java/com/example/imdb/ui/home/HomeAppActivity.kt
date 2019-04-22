@@ -42,11 +42,11 @@ class HomeAppActivity : AppCompatActivity(), IActivityInteraction {
             ContextCompat.startActivity(this, startNewActivity, null)
         }
 
-        val favorites = homeAppViewController.getFavorites()
+        homeAppViewController.getFavorites {
+            Log.i(TAG_VINI, it.toString())
 
-        Log.i(TAG_VINI, favorites.toString())
-
-        messengerNotFavorites.becomeVisible()
+            messengerNotFavorites.becomeVisible()
+        }
     }
 
     override fun loadTryAgain(type: MovieCategory) {

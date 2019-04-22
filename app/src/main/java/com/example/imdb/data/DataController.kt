@@ -7,7 +7,7 @@ import com.example.imdb.data.entity.http.Reviews
 
 interface DataController {
     fun setupDatabase(language: String)
-    fun getFavorites() : List<Movie>
+    fun getFavorites(response: (MutableList<Movie>) -> Unit)
     fun favoriteMovie(movieId: Int, favorite: Boolean)
     fun loadMovieCredit(id: Int, funResponse: (movieCredit: MovieCredit) -> Unit)
     fun loadMovieDetail(id: Int, funResponse: (movies: MovieDetail) -> Unit)

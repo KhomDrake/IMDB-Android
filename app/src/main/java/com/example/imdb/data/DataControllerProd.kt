@@ -4,7 +4,6 @@ import com.example.imdb.MovieCategory
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.*
 import com.example.imdb.network.WebController
-import com.example.imdb.network.WebControllerProd
 
 class DataControllerProd(private val webController: WebController, private val databaseMovies: DatabaseMovies) : DataController {
 
@@ -14,7 +13,9 @@ class DataControllerProd(private val webController: WebController, private val d
 
     override fun setupDatabase(language: String) { this.language = language }
 
-    override fun getFavorites() = databaseMovies.getFavorites()
+    override fun getFavorites(response: (MutableList<Movie>) -> Unit) {
+        databaseMovies.getFavorites(response)
+    }
 
     override fun favoriteMovie(movieId: Int, favorite: Boolean) = databaseMovies.favoriteMovie(movieId, favorite)
 
@@ -31,86 +32,118 @@ class DataControllerProd(private val webController: WebController, private val d
     }
 
     override fun loadMovieDetail(id: Int, funResponse: (movies: MovieDetail) -> Unit) {
-        val movieDetail = databaseMovies.getDetailMovie(id)
-
-        if(movieDetail.id != id) {
-            webController.loadMovieDetail(id) {
-                if(!it.error) databaseMovies.setMovieDetail(it)
-                funResponse(it)
-            }
-        } else { funResponse(movieDetail) }
+        databaseMovies.getDetailMovie(id) {
+            val movieDetail = it
+            if(movieDetail.id != id) {
+                webController.loadMovieDetail(id) {
+                    if(!it.error) databaseMovies.setMovieDetail(it)
+                    funResponse(it)
+                }
+            } else { funResponse(movieDetail) }
+        }
     }
 
     override fun loadReviews(id: Int, funResponse: (reviews: Reviews) -> Unit) {
-        val reviews = databaseMovies.getMovieReviews(id)
-        if(reviews.idMovie != id) {
-            webController.loadReviews(id) {
-                it.idMovie = id
-                if(it.results.isNotEmpty() && !it.results[0].error) databaseMovies.setReviews(it)
-                funResponse(it)
-            }
-        } else { funResponse(reviews) }
+        databaseMovies.getMovieReviews(id) {
+            val reviews = it
+            if(reviews.idMovie != id) {
+                webController.loadReviews(id) {
+                    it.idMovie = id
+                    if(it.results.isNotEmpty() && !it.results[0].error) databaseMovies.setReviews(it)
+                    funResponse(it)
+                }
+            } else { funResponse(reviews) }
+        }
     }
 
     override fun loadRecommendation(id: Int, funResponse: (List<Movie>) -> Unit) {
-        val recommendation = databaseMovies.getRecommendationLastMovie(id)
-        if(recommendation.id != id) {
-            webController.loadRecommendation(id) {
-                if(it.results.isNotEmpty() && !it.results.first().error)
-                    databaseMovies.setRecommendationLastMovie(Recommendation(id, it))
-                funResponse(databaseMovies.getRecommendationLastMovie(id).moviesList.results)
-            }
-        } else { funResponse(recommendation.moviesList.results) }
+        databaseMovies.getRecommendationLastMovie(id) {
+            val recommendation = it
+            if(recommendation.id != id) {
+                webController.loadRecommendation(id) {
+                    if(it.results.isNotEmpty() && !it.results.first().error)
+                        databaseMovies.setRecommendationLastMovie(Recommendation(id, it))
+                    databaseMovies.getRecommendationLastMovie(id) {
+                        funResponse(it.moviesList.results)
+                    }
+                }
+            } else { funResponse(recommendation.moviesList.results) }
+        }
     }
 
     override fun loadLatest(funResponse: (movies: List<Movie>) -> Unit) {
-        val latest = databaseMovies.getLatest()
-        if (latest.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Latest)) {
-            webController.loadLatest {
-                setListDatabaseMovies(listOf(it), MovieCategory.Latest)
-                returnRightResponse(funResponse, listOf(it), MovieCategory.Latest)
+        databaseMovies.getLatest {
+            val latest = it
+            isToMakeNewAPICall(latest, MovieCategory.Latest) {
+                val makeCall = it
+                if (makeCall) {
+                    webController.loadLatest {
+                        setListDatabaseMovies(listOf(it), MovieCategory.Latest)
+                        returnRightResponse(funResponse, listOf(it), MovieCategory.Latest)
+                    }
+                } else { funResponse(latest) }
             }
-        } else { funResponse(latest) }
+        }
     }
 
     override fun loadNowPlaying(funResponse: (movies: List<Movie>) -> Unit) {
-        val nowPlaying = databaseMovies.getNowPlaying()
-        if (nowPlaying.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.NowPlaying)) {
-            webController.loadNowPlaying {
-                setListDatabaseMovies(it.results, MovieCategory.NowPlaying)
-                returnRightResponse(funResponse, it.results, MovieCategory.NowPlaying)
+        databaseMovies.getNowPlaying {
+            val nowPlaying = it
+            isToMakeNewAPICall(nowPlaying, MovieCategory.NowPlaying) {
+                val makeCall = it
+                if (makeCall) {
+                    webController.loadNowPlaying {
+                        setListDatabaseMovies(it.results, MovieCategory.NowPlaying)
+                        returnRightResponse(funResponse, it.results, MovieCategory.NowPlaying)
+                    }
+                } else { funResponse(nowPlaying) }
             }
-        } else { funResponse(nowPlaying) }
+        }
     }
 
     override fun loadPopular(funResponse: (movies: List<Movie>) -> Unit) {
-        val popular = databaseMovies.getPopular()
-        if (popular.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Popular)) {
-            webController.loadPopular {
-                setListDatabaseMovies(it.results, MovieCategory.Popular)
-                returnRightResponse(funResponse, it.results, MovieCategory.Popular)
+        databaseMovies.getPopular {
+            val popular = it
+            isToMakeNewAPICall(popular, MovieCategory.Popular) {
+                val makeCall = it
+                if (makeCall) {
+                    webController.loadPopular {
+                        setListDatabaseMovies(it.results, MovieCategory.Popular)
+                        returnRightResponse(funResponse, it.results, MovieCategory.Popular)
+                    }
+                } else { funResponse(popular) }
             }
-        } else { funResponse(popular) }
+        }
     }
 
     override fun loadTopRated(funResponse: (movies: List<Movie>) -> Unit) {
-        val topRated = databaseMovies.getTopRated()
-        if (topRated.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Popular)) {
-            webController.loadTopRated {
-                setListDatabaseMovies(it.results, MovieCategory.TopRated)
-                returnRightResponse(funResponse, it.results, MovieCategory.TopRated)
+        databaseMovies.getTopRated {
+            val topRated = it
+            isToMakeNewAPICall(topRated, MovieCategory.TopRated) {
+                val makeCall = it
+                if (makeCall) {
+                    webController.loadTopRated {
+                        setListDatabaseMovies(it.results, MovieCategory.TopRated)
+                        returnRightResponse(funResponse, it.results, MovieCategory.TopRated)
+                    }
+                } else { funResponse(topRated) }
             }
-        } else { funResponse(topRated) }
+        }
     }
 
     override fun loadUpcoming(funResponse: (movies: List<Movie>) -> Unit) {
-        val upcoming = databaseMovies.getUpcoming()
-        if (upcoming.isEmptyOrInLoading() || dataIsDeprecated(MovieCategory.Upcoming)) {
-            webController.loadUpcoming {
-                setListDatabaseMovies(it.results, MovieCategory.Upcoming)
-                returnRightResponse(funResponse, it.results, MovieCategory.Upcoming)
+        databaseMovies.getUpcoming {
+            val upcoming = it
+            isToMakeNewAPICall(upcoming, MovieCategory.Upcoming) {
+                val makeCall = it
+                if (makeCall) {
+                    webController.loadUpcoming {
+                        setListDatabaseMovies(it.results, MovieCategory.Upcoming)
+                        returnRightResponse(funResponse, it.results, MovieCategory.Upcoming)
+                    }
+                } else { funResponse(upcoming) }
             }
-        } else { funResponse(upcoming) }
+        }
     }
 
     private fun setLatest(movie: Movie) = databaseMovies.setLatest(movie)
@@ -147,11 +180,11 @@ class DataControllerProd(private val webController: WebController, private val d
                                     movies: List<Movie>,
                                     movieCategory: MovieCategory) {
         when (movieCategory) {
-            MovieCategory.Latest -> if (hasError(movies)) funResponse(databaseMovies.getLatest()) else funResponse(movies)
-            MovieCategory.Upcoming -> if (hasError(movies)) funResponse(databaseMovies.getUpcoming()) else funResponse(movies)
-            MovieCategory.TopRated -> if (hasError(movies)) funResponse(databaseMovies.getTopRated()) else funResponse(movies)
-            MovieCategory.NowPlaying -> if (hasError(movies)) funResponse(databaseMovies.getNowPlaying()) else funResponse(movies)
-            MovieCategory.Popular -> if (hasError(movies)) funResponse(databaseMovies.getNowPlaying()) else funResponse(movies)
+            MovieCategory.Latest -> if (hasNoError(movies)) { databaseMovies.getLatest { funResponse(it) } } else funResponse(movies)
+            MovieCategory.Upcoming -> if (hasNoError(movies)) { databaseMovies.getUpcoming { funResponse(it) } } else funResponse(movies)
+            MovieCategory.TopRated -> if (hasNoError(movies)) { databaseMovies.getTopRated { funResponse(it) } } else funResponse(movies)
+            MovieCategory.NowPlaying -> if (hasNoError(movies)) { databaseMovies.getNowPlaying { funResponse(it) } } else funResponse(movies)
+            MovieCategory.Popular -> if (hasNoError(movies)) { databaseMovies.getPopular { funResponse(it) } } else funResponse(movies)
             else -> Unit
         }
     }
@@ -165,15 +198,14 @@ class DataControllerProd(private val webController: WebController, private val d
         return false
     }
 
-    private fun hasError(movies: List<Movie>) = movies.isNotEmpty() && !movies.first().error
+    private fun hasNoError(movies: List<Movie>) = movies.isNotEmpty() && !movies.first().error
 
-    private fun dataIsDeprecated(movieCategory: MovieCategory) = deprecatedSinceLastUpdate(movieCategory)
-
-    private fun deprecatedSinceLastUpdate(movieCategory: MovieCategory) = getCurrentTime()
-        .minus(getTimeLastUpdate(movieCategory)) > timeToBeDeprecated
-
-    private fun getTimeLastUpdate(movieCategory: MovieCategory) = databaseMovies.getLastTimeUpdateCategory(movieCategory)
+    private fun isToMakeNewAPICall(movieList: MutableList<Movie>, movieCategory: MovieCategory, response: (Boolean) -> Unit) {
+        databaseMovies.getLastTimeUpdateCategory(movieCategory) {
+            val deprecated = getCurrentTime().minus(it) > timeToBeDeprecated
+            response(movieList.isEmptyOrInLoading() || deprecated)
+        }
+    }
 
     private fun getCurrentTime() = System.currentTimeMillis()
-
 }
