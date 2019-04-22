@@ -14,6 +14,9 @@ import com.example.imdb.auxiliary.becomeInvisible
 import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.data.entity.http.Cast
 import com.example.imdb.ui.interfaces.IActivityInteraction
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class RecyclerViewAdapterCast(
     private val informationCast: MutableList<Cast>,
@@ -63,7 +66,10 @@ class RecyclerViewAdapterCast(
                 imgCast.becomeVisible()
                 nameCast.text = "${cast.name}"
                 val path = getPath(cast.profilePath, urlImg, imgNotFound)
-                Glide.with(itemView).load(path).into(imgCast)
+
+                coroutineImage {
+                    Glide.with(itemView).load(path).into(imgCast)
+                }
             }
 
             tryAgain.setOnClickListener {
@@ -73,5 +79,11 @@ class RecyclerViewAdapterCast(
 
         private fun getPath(path: String?, urlImg: String, imgNotFound: String) =
             if (path == "null" || path == "" || path == null) imgNotFound else urlImg + path
+    }
+}
+
+fun coroutineImage(response: suspend () -> Unit) {
+    GlobalScope.launch(Dispatchers.Main) {
+        response()
     }
 }

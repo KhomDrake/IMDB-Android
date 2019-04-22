@@ -49,8 +49,10 @@ class CastActivity : AppCompatActivity(), IActivityInteraction {
 
     override fun loadTryAgain(type: MovieCategory) {
         castViewController.loadCast(movieId) {
-            loading.becomeInvisible()
-            recyclerViewCast.castAdapter.setMovieCredit(it.cast)
+            this.runOnUiThread {
+                loading.becomeInvisible()
+                recyclerViewCast.castAdapter.setMovieCredit(it.cast)
+            }
         }
     }
 

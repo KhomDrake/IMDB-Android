@@ -14,6 +14,7 @@ import com.example.imdb.ui.interfaces.IActivityInteraction
 import com.example.imdb.ui.interfaces.IFavorite
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
+import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 
 class HomeMoviesActivity : AppCompatActivity(), IFavorite {
@@ -96,6 +97,4 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
 
     private val RecyclerView.movieAdapter: RecyclerViewAdapterMovieList
         get() = adapter as RecyclerViewAdapterMovieList
-
-
 }

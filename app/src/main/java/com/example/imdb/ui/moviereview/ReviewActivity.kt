@@ -60,12 +60,12 @@ class ReviewActivity : AppCompatActivity() {
         reviewViewController.loadReviews(movieID) {
             loadingReview.becomeInvisible()
 
-            if(it.results.isNotEmpty() && it.results[0].error) {
+            if (it.results.isNotEmpty() && it.results[0].error) {
                 tryAgain.becomeVisible()
             } else {
-                if(it.results.isEmpty()) noReviews.becomeVisible()
+                if (it.results.isEmpty()) noReviews.becomeVisible()
 
-                reviewRecyclerView.reviewAdapter.setReviews(it)
+                this.runOnUiThread { reviewRecyclerView.reviewAdapter.setReviews(it) }
             }
         }
     }

@@ -93,19 +93,22 @@ class RecyclerViewAdapterMovieList(
 
             img.setOnClickListener { iFavorite.makeImageTransition(img, result.id, path) }
 
-            heartEmpty.setOnClickListener {
-                showHeart()
-                iFavorite.favoriteMovie(result.id, true)
-                iFavorite.updateVisualMovies()
-            }
+            coroutineImage {
 
-            heart.setOnClickListener {
-                showEmptyHeart()
-                iFavorite.favoriteMovie(result.id, false)
-                iFavorite.updateVisualMovies()
-            }
+                heartEmpty.setOnClickListener {
+                    showHeart()
+                    iFavorite.favoriteMovie(result.id, true)
+                    iFavorite.updateVisualMovies()
+                }
 
-            Glide.with(itemView).load(path).into(img)
+                heart.setOnClickListener {
+                    showEmptyHeart()
+                    iFavorite.favoriteMovie(result.id, false)
+                    iFavorite.updateVisualMovies()
+                }
+
+                Glide.with(itemView).load(path).into(img)
+            }
         }
 
         private fun showHeart() {
