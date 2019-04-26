@@ -1,6 +1,7 @@
 package com.example.imdb.network.themoviedb
 
 import com.example.imdb.data.entity.http.*
+import kotlinx.coroutines.Deferred
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -13,60 +14,60 @@ interface TheMovieDBAPI {
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
-    ): Call<MoviesList>
+    ): Deferred<MoviesList>
 
     @GET("latest")
     fun getLatest(
         @Query("api_key") key: String,
         @Query("language") language: String
-    ): Call<Movie>
+    ): Deferred<Movie>
 
     @GET("popular")
     fun getPopular(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
-    ): Call<MoviesList>
+    ): Deferred<MoviesList>
 
     @GET("top_rated")
     fun getTopRated(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
-    ): Call<MoviesList>
+    ): Deferred<MoviesList>
 
     @GET("upcoming")
     fun getUpcoming(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
-    ): Call<MoviesList>
+    ): Deferred<MoviesList>
 
     @GET("{id}")
     fun getDetail(
         @Path("id") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ): Call<MovieDetail>
+    ): Deferred<MovieDetail>
 
     @GET("{id}/recommendations")
     fun getRecommendation(
         @Path("id") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ): Call<MoviesList>
+    ): Deferred<MoviesList>
 
     @GET("{id}/reviews")
     fun getReviews(
         @Path("id") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ): Call<Reviews>
+    ): Deferred<Reviews>
 
     @GET("{id}/credits")
     fun getMovieCredit(
         @Path("id") id: Int,
         @Query("api_key") key: String
-    ): Call<MovieCredit>
+    ): Deferred<MovieCredit>
 
 }

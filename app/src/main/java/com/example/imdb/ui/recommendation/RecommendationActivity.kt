@@ -62,10 +62,8 @@ class RecommendationActivity : AppCompatActivity(), IFavorite {
                 recommendationViewController.loadRecommendation(movieID) {
                     if (it.isEmpty()) recommendationNoFound.becomeVisible()
 
-                    this.runOnUiThread {
-                        recommendationRecyclerView.movieAdapter.setMovies(it)
-                        loadingRecommendation.becomeInvisible()
-                    }
+                    recommendationRecyclerView.movieAdapter.setMovies(it)
+                    loadingRecommendation.becomeInvisible()
                 }
             }
             else -> Log.i(TAG_VINI, "Isso não deveria acontecer")

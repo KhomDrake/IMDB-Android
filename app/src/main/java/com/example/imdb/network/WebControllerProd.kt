@@ -6,6 +6,9 @@ import com.example.imdb.auxiliary.ZERO
 import com.example.imdb.auxiliary.ZERO_DOUBLE
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -28,48 +31,57 @@ class WebControllerProd(private val databaseMovies: DatabaseMovies) : WebControl
 
 
     override fun loadLatest(funResponse: (body: Movie) -> Unit) {
-        api.getLatest(APIKEY, databaseMovies.getLanguage())
-            .enqueue(requestResponse<Movie>(funResponse, errorMovie))
+        coroutine {
+            funResponse(api.getLatest(APIKEY, databaseMovies.getLanguage()).await())
+        }
     }
 
     override fun loadNowPlaying(funResponse: (body: MoviesList) -> Unit) {
-        api.getNowPlaying(APIKEY, databaseMovies.getLanguage(), PAGE_ONE)
-            .enqueue(requestResponse<MoviesList>(funResponse, errorMovieList))
+        coroutine {
+            funResponse(api.getNowPlaying(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await())
+        }
     }
 
     override fun loadPopular(funResponse: (body: MoviesList) -> Unit) {
-        api.getPopular(APIKEY, databaseMovies.getLanguage(), PAGE_ONE)
-            .enqueue(requestResponse<MoviesList>(funResponse, errorMovieList))
+        coroutine {
+            funResponse(api.getPopular(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await())
+        }
     }
 
     override fun loadTopRated(funResponse: (body: MoviesList) -> Unit) {
-        api.getTopRated(APIKEY, databaseMovies.getLanguage(), PAGE_ONE)
-            .enqueue(requestResponse<MoviesList>(funResponse, errorMovieList))
+        coroutine {
+            funResponse(api.getTopRated(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await())
+        }
     }
 
     override fun loadUpcoming(funResponse: (body: MoviesList) -> Unit) {
-        api.getUpcoming(APIKEY, databaseMovies.getLanguage(), PAGE_ONE)
-            .enqueue(requestResponse<MoviesList>(funResponse, errorMovieList))
+        coroutine {
+            funResponse(api.getUpcoming(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await())
+        }
     }
 
     override fun loadMovieDetail(id: Int, funResponse: (body: MovieDetail) -> Unit) {
-        api.getDetail(id, APIKEY, databaseMovies.getLanguage())
-            .enqueue(requestResponse<MovieDetail>(funResponse, errorMovieDetail))
+        coroutine {
+            funResponse(api.getDetail(id, APIKEY, databaseMovies.getLanguage()).await())
+        }
     }
 
     override fun loadRecommendation(id: Int, funResponse: (body: MoviesList) -> Unit) {
-        api.getRecommendation(id, APIKEY, databaseMovies.getLanguage())
-            .enqueue(requestResponse<MoviesList>(funResponse, errorMovieList))
+        coroutine {
+            funResponse(api.getRecommendation(id, APIKEY, databaseMovies.getLanguage()).await())
+        }
     }
 
     override fun loadReviews(id: Int, funResponse: (body: Reviews) -> Unit) {
-        api.getReviews(id, APIKEY, databaseMovies.getLanguage())
-            .enqueue(requestResponse<Reviews>(funResponse, errorReviews))
+        coroutine {
+            funResponse(api.getReviews(id, APIKEY, databaseMovies.getLanguage()).await())
+        }
     }
 
     override fun loadMovieCredit(id: Int, funResponse: (body: MovieCredit) -> Unit) {
-        api.getMovieCredit(id, APIKEY)
-            .enqueue(requestResponse<MovieCredit>(funResponse, errorMovieCredit))
+        coroutine {
+            funResponse(api.getMovieCredit(id, APIKEY).await())
+        }
     }
 
     private fun <T>requestResponse(funResponse: (body: T) -> Unit, error: T?) = object : Callback<T> {
@@ -83,5 +95,9 @@ class WebControllerProd(private val databaseMovies: DatabaseMovies) : WebControl
             else
                 response.body()?.apply(funResponse)
         }
+    }
+
+    private fun coroutine(block: suspend () -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) { block() }
     }
 }

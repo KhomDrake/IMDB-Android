@@ -22,3 +22,4 @@ data class TableCast(
     val order: Int,
     val profilePath: String?
 )
+

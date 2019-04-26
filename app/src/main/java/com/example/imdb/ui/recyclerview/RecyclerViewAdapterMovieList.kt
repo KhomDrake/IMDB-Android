@@ -122,6 +122,6 @@ class RecyclerViewAdapterMovieList(
         }
 
         private fun getPath(path: String?, urlImg: String, imgNotFound: String) =
-            if (path == "null" || path == "" || path == null) imgNotFound else urlImg + path
+            if (path == null) imgNotFound else urlImg + path
     }
 }
