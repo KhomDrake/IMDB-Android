@@ -20,7 +20,7 @@ val movieDbKoinModule = module {
         Room.databaseBuilder(
             get(), DatabaseMovies::class.java,
             "movie.db"
-        ).build()
+        ).allowMainThreadQueries().build()
     }
     single { WebControllerProd(get()) as WebController }
     single { DataControllerProd(get(), get()) as DataController }

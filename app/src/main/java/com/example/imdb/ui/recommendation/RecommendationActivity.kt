@@ -16,7 +16,6 @@ import com.example.imdb.R
 import com.example.imdb.TAG_VINI
 import com.example.imdb.auxiliary.becomeInvisible
 import com.example.imdb.auxiliary.becomeVisible
-import com.example.imdb.ui.interfaces.IActivityInteraction
 import com.example.imdb.ui.interfaces.IFavorite
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
@@ -50,20 +49,22 @@ class RecommendationActivity : AppCompatActivity(), IFavorite {
 
         recommendationTitle.text = "Recommendation: $title"
 
-        loadTryAgain(MovieCategory.Recommendation)
+        loadMovies(MovieCategory.Recommendation)
     }
 
-    override fun loadTryAgain(type: MovieCategory) {
-        when(type) {
+    override fun loadMovies(type: MovieCategory) {
+        when (type) {
             MovieCategory.Recommendation -> {
                 loadingRecommendation.becomeVisible()
 
                 recommendationRecyclerView.setupAdapter(this, MovieCategory.Recommendation)
                 recommendationViewController.loadRecommendation(movieID) {
-                    if (it.isEmpty()) recommendationNoFound.becomeVisible()
+                    this.runOnUiThread {
+                        if (it.isEmpty()) recommendationNoFound.becomeVisible()
 
-                    recommendationRecyclerView.movieAdapter.setMovies(it)
-                    loadingRecommendation.becomeInvisible()
+                        recommendationRecyclerView.movieAdapter.setMovies(it)
+                        loadingRecommendation.becomeInvisible()
+                    }
                 }
             }
             else -> Log.i(TAG_VINI, "Isso não deveria acontecer")
@@ -81,7 +82,7 @@ class RecommendationActivity : AppCompatActivity(), IFavorite {
         ContextCompat.startActivity(view.context, startNewActivity, optionsCompat.toBundle())
     }
 
-    override fun updateVisualMovies() { loadTryAgain(MovieCategory.Recommendation) }
+    override fun updateVisualMovies() { loadMovies(MovieCategory.Recommendation) }
 
     override fun favoriteMovie(idMovie: Int, toFavorite: Boolean) {
         recommendationViewController.favoriteMovie(idMovie, toFavorite)

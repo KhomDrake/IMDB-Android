@@ -73,17 +73,17 @@ class RecyclerViewAdapterCast(
             }
 
             tryAgain.setOnClickListener {
-                IActivityInteraction.loadTryAgain(MovieCategory.None)
+                IActivityInteraction.loadMovies(MovieCategory.None)
+            }
+        }
+
+        private fun coroutineImage(response: suspend () -> Unit) {
+            GlobalScope.launch(Dispatchers.Main) {
+                response()
             }
         }
 
         private fun getPath(path: String?, urlImg: String, imgNotFound: String) =
             if (path == "null" || path == "" || path == null) imgNotFound else urlImg + path
-    }
-}
-
-fun coroutineImage(response: suspend () -> Unit) {
-    GlobalScope.launch(Dispatchers.Main) {
-        response()
     }
 }

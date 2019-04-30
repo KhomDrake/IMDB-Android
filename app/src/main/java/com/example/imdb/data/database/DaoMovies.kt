@@ -42,11 +42,17 @@ interface DaoMovies {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMovieDetail(movieDetail: TableMovieDetail)
 
-    @Query("UPDATE TableMovie SET favorite = :favorite where idMovie = :movieId")
-    fun favoriteMovie(movieId: Int, favorite: Boolean)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertFavorite(tableFavorite: TableFavorite)
 
-    @Query("SELECT * FROM TableMovie where TableMovie.favorite = :favorite")
-    fun getFavorite(favorite: Boolean = true): List<TableMovie>
+    @Query("DELETE FROM TableMovie where TableMovie.idMovie = :idMovie")
+    fun deleteMovie(idMovie: Int)
+
+    @Query("DELETE FROM TableFavorite where TableFavorite.idMovie = :idMovie")
+    fun deleteFavorite(idMovie: Int)
+
+    @Query("SELECT TableMovie.* FROM TableFavorite, TableMovie where TableFavorite.idMovie = TableMovie.idMovie")
+    fun getFavorite(): List<TableMovie>
 
     @Query("DELETE FROM TableMovieCategory where TableMovieCategory.idMovieList_fk = :category")
     fun deleteMovieCategory(category: Int)

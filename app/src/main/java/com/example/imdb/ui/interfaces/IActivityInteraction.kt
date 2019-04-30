@@ -5,7 +5,7 @@ import com.example.imdb.MovieCategory
 
 interface IActivityInteraction {
 
-    fun loadTryAgain(type: MovieCategory)
+    fun loadMovies(type: MovieCategory)
 
     fun makeImageTransition(view: View, movieId: Int, url: String)
 

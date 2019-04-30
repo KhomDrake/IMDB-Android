@@ -12,8 +12,6 @@ import com.example.imdb.MovieCategory
 import com.example.imdb.R
 import com.example.imdb.TAG_VINI
 import com.example.imdb.auxiliary.becomeVisible
-import com.example.imdb.data.DataController
-import com.example.imdb.data.DataControllerProd
 import com.example.imdb.ui.interfaces.IActivityInteraction
 import com.example.imdb.ui.homemovies.HomeMoviesActivity
 import com.example.imdb.ui.hometv.HomeTvActivity
@@ -50,7 +48,7 @@ class HomeAppActivity : AppCompatActivity(), IActivityInteraction {
         }
     }
 
-    override fun loadTryAgain(type: MovieCategory) {
+    override fun loadMovies(type: MovieCategory) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

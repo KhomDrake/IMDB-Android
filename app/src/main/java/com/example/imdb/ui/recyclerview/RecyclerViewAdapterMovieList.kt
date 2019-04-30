@@ -15,6 +15,9 @@ import com.example.imdb.auxiliary.becomeInvisible
 import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.data.entity.http.Movie
 import com.example.imdb.ui.interfaces.IFavorite
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class RecyclerViewAdapterMovieList(
     private val informationMovies: MutableList<Movie>,
@@ -42,7 +45,9 @@ class RecyclerViewAdapterMovieList(
         informationMovies.clear()
         informationMovies.addAll(movies)
 
-        notifyDataSetChanged()
+        coroutineImage {
+            notifyDataSetChanged()
+        }
     }
 
     override fun getItemCount() = informationMovies.count()
@@ -68,7 +73,7 @@ class RecyclerViewAdapterMovieList(
             {
                 again.becomeVisible()
                 again.setOnClickListener {
-                    iFavorite.loadTryAgain(movieCategory)
+                    iFavorite.loadMovies(movieCategory)
                 }
                 return
             }
@@ -77,8 +82,6 @@ class RecyclerViewAdapterMovieList(
                 loading.becomeVisible()
                 return
             }
-
-            if(result.favorite) showHeart() else showEmptyHeart()
 
             img.becomeVisible()
 
@@ -94,7 +97,7 @@ class RecyclerViewAdapterMovieList(
             img.setOnClickListener { iFavorite.makeImageTransition(img, result.id, path) }
 
             coroutineImage {
-
+                if(result.favorite) showHeart() else showEmptyHeart()
                 heartEmpty.setOnClickListener {
                     showHeart()
                     iFavorite.favoriteMovie(result.id, true)
@@ -121,7 +124,19 @@ class RecyclerViewAdapterMovieList(
             heart.becomeInvisible()
         }
 
+        private fun coroutineImage(response: suspend () -> Unit) {
+            GlobalScope.launch(Dispatchers.Main) {
+                response()
+            }
+        }
+
         private fun getPath(path: String?, urlImg: String, imgNotFound: String) =
             if (path == null) imgNotFound else urlImg + path
+    }
+
+    private fun coroutineImage(response: suspend () -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            response()
+        }
     }
 }

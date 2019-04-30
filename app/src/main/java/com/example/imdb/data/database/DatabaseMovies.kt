@@ -1,8 +1,10 @@
 package com.example.imdb.data.database
 
+import android.util.Log
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.imdb.MovieCategory
+import com.example.imdb.TAG_VINI
 import com.example.imdb.auxiliary.EMPTY_MOVIE_DETAIL
 import com.example.imdb.auxiliary.ZERO
 import com.example.imdb.data.entity.http.*
@@ -14,6 +16,7 @@ import kotlinx.coroutines.*
                             TableMovieDetail::class,
                             TableMoviesList::class,
                             TableReview::class,
+                            TableFavorite::class,
                             TableLastUpdateCategory::class,
                             TableCast::class,
                             TableMovieRecommendation::class,
@@ -28,7 +31,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         setup()
     }
 
-    fun setup() {
+    private fun setup() {
         coroutine {
             moviesDao().insertMovieList(TableMoviesList(MovieCategory.Latest.ordinal, 1, 1))
             moviesDao().insertMovieList(TableMoviesList(MovieCategory.NowPlaying.ordinal, 1, 1))
@@ -47,6 +50,7 @@ abstract class DatabaseMovies : RoomDatabase() {
             for (cast in creditMovieDb) {
                 creditMovie.add(Cast(cast.idCast, cast.character, cast.gender, cast.id, cast.name, cast.order, cast.profilePath, error = false))
             }
+
             response(MovieCredit(creditMovie, id))
         }
     }
@@ -85,11 +89,14 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun getRecommendationLastMovie(idMovie: Int, response: (Recommendation) -> Unit) {
         coroutine {
             val moviesDb = moviesDao().getRecommendationMovie(idMovie)
+            Log.i(TAG_VINI, "testando3 - ${moviesDb} 2.3")
             val movies = tableMoviesToMovies(moviesDb)
-            if(movies.isEmpty())
-                response(Recommendation(ZERO, MoviesList(ZERO, movies, ZERO)))
-            else
-                response(Recommendation(idMovie, MoviesList(ZERO, movies, ZERO)))
+            var recommendation = Recommendation(ZERO, MoviesList(ZERO, movies, ZERO))
+            if(movies.isNotEmpty())
+                recommendation = Recommendation(idMovie, MoviesList(ZERO, movies, ZERO))
+
+            Log.i(TAG_VINI, "testando3 - ${recommendation} 2.3")
+            response(recommendation)
         }
     }
 
@@ -147,10 +154,9 @@ abstract class DatabaseMovies : RoomDatabase() {
 
     fun setRecommendationLastMovie(recommendation: Recommendation) {
         val idMovie = recommendation.id
-
         coroutine {
             for (movie in recommendation.moviesList.results) {
-                moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult, false))
+                moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
                 moviesDao().insertMovieRecommendation(TableMovieRecommendation(idMovie + movie.id, idMovie, movie.id))
             }
         }
@@ -169,7 +175,7 @@ abstract class DatabaseMovies : RoomDatabase() {
 
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.Latest.ordinal)
-            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult, false))
+            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
             moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, MovieCategory.Latest.ordinal))
         }
     }
@@ -178,7 +184,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.NowPlaying.ordinal)
             for (movie in movies) {
-                moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult, false))
+                moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
                 moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, MovieCategory.NowPlaying.ordinal))
             }
         }
@@ -188,7 +194,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.Popular.ordinal)
             for (movie in movies) {
-                moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult, false))
+                moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
                 moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, MovieCategory.Popular.ordinal))
             }
         }
@@ -198,7 +204,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.TopRated.ordinal)
             for (movie in movies) {
-                moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult, false))
+                moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
                 moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, MovieCategory.TopRated.ordinal))
             }
         }
@@ -208,7 +214,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.Upcoming.ordinal)
             for (movie in movies) {
-                moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult, false))
+                moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
                 moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, MovieCategory.Upcoming.ordinal))
             }
         }
@@ -228,9 +234,13 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun favoriteMovie(movieId: Int, favorite: Boolean) {
+    fun favoriteMovie(movieId: Int, toFavorite: Boolean) {
         coroutine {
-            moviesDao().favoriteMovie(movieId, favorite)
+            Log.i(TAG_VINI, toFavorite.toString())
+            if(toFavorite)
+                moviesDao().insertFavorite(TableFavorite(movieId))
+            else
+                moviesDao().deleteFavorite(movieId)
         }
     }
 
@@ -244,13 +254,14 @@ abstract class DatabaseMovies : RoomDatabase() {
     private fun tableMoviesToMovies(moviesDb: List<TableMovie>) : MutableList<Movie> {
         val movies: MutableList<Movie> = mutableListOf()
         for (movie in moviesDb) {
-            movies.add(Movie(movie.idMovie, movie.originalTitle, movie.posterPath, movie.title, false, false, movie.adult, movie.favorite))
+            movies.add(Movie(movie.idMovie, movie.originalTitle, movie.posterPath, movie.title, false, false, movie.adult, false))
         }
         return movies
     }
 
     private fun coroutine(block: suspend () -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) { block() }
+        GlobalScope.launch(Dispatchers.IO) {
+            block()
+        }
     }
-
 }

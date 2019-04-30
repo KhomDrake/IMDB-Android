@@ -19,8 +19,7 @@ class WebControllerProd(private val databaseMovies: DatabaseMovies) : WebControl
 
     private val api = API().service()
 
-    private val errorMovie = Movie(ZERO, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, loading = false, error = true, adult = false,
-            favorite = false)
+    private val errorMovie = Movie(ZERO, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, loading = false, error = true, adult = false, favorite = false)
     private val errorMovieList = MoviesList(ZERO, listOf(errorMovie), ZERO)
     private val errorMovieDetail = MovieDetail(false, 0, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, ZERO,
         EMPTY_STRING, ZERO_DOUBLE, ZERO, error = true)
@@ -98,6 +97,8 @@ class WebControllerProd(private val databaseMovies: DatabaseMovies) : WebControl
     }
 
     private fun coroutine(block: suspend () -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) { block() }
+        GlobalScope.launch(Dispatchers.Main) {
+            block()
+        }
     }
 }

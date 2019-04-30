@@ -10,11 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
-import com.example.imdb.ui.interfaces.IActivityInteraction
 import com.example.imdb.ui.interfaces.IFavorite
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
-import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 
 class HomeMoviesActivity : AppCompatActivity(), IFavorite {
@@ -42,26 +40,26 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
         topRated.setupAdapter(this, MovieCategory.TopRated)
         upcoming.setupAdapter(this, MovieCategory.Upcoming)
 
-        loadAllCategorys()
+        loadAllCategories()
     }
 
-    override fun loadTryAgain(type: MovieCategory) {
+    override fun loadMovies(type: MovieCategory) {
         when(type) {
-            MovieCategory.Upcoming -> upcoming.loadCategory(type)
-            MovieCategory.NowPlaying -> nowPlaying.loadCategory(type)
-            MovieCategory.Popular -> popular.loadCategory(type)
-            MovieCategory.TopRated -> topRated.loadCategory(type)
-            MovieCategory.Latest -> latest.loadCategory(type)
+            MovieCategory.Upcoming -> upcoming.loadCategory(type, this)
+            MovieCategory.NowPlaying -> nowPlaying.loadCategory(type, this)
+            MovieCategory.Popular -> popular.loadCategory(type, this)
+            MovieCategory.TopRated -> topRated.loadCategory(type, this)
+            MovieCategory.Latest -> latest.loadCategory(type, this)
             else -> Unit
         }
     }
 
-    private fun loadAllCategorys() {
-        loadTryAgain(MovieCategory.Latest)
-        loadTryAgain(MovieCategory.NowPlaying)
-        loadTryAgain(MovieCategory.Popular)
-        loadTryAgain(MovieCategory.Upcoming)
-        loadTryAgain(MovieCategory.TopRated)
+    private fun loadAllCategories() {
+        loadMovies(MovieCategory.Latest)
+        loadMovies(MovieCategory.NowPlaying)
+        loadMovies(MovieCategory.Popular)
+        loadMovies(MovieCategory.Upcoming)
+        loadMovies(MovieCategory.TopRated)
     }
 
     override fun makeImageTransition(view: View, movieId: Int, url: String) {
@@ -76,7 +74,7 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
     }
 
     override fun updateVisualMovies() {
-        loadAllCategorys()
+        loadAllCategories()
     }
 
     override fun favoriteMovie(idMovie: Int, toFavorite: Boolean) {
@@ -91,8 +89,10 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
     private fun createAdapter(iFavorite: IFavorite, movieCategory: MovieCategory)=
         RecyclerViewAdapterMovieList(mutableListOf(), iFavorite, movieCategory)
 
-    private fun RecyclerView.loadCategory(category: MovieCategory) {
-        homeMoviesViewController.loadMovies(this.movieAdapter, category) { this.movieAdapter.setMovies(it) }
+    private fun RecyclerView.loadCategory(category: MovieCategory, appCompatActivity: AppCompatActivity) {
+        appCompatActivity.runOnUiThread {
+            homeMoviesViewController.loadMovies(this.movieAdapter, category) { this.movieAdapter.setMovies(it) }
+        }
     }
 
     private val RecyclerView.movieAdapter: RecyclerViewAdapterMovieList
