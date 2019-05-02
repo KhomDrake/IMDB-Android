@@ -1,5 +1,6 @@
 package com.example.imdb.ui.recyclerview
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
+import com.example.imdb.TAG_VINI
 import com.example.imdb.auxiliary.becomeInvisible
 import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.data.entity.http.Movie
@@ -41,6 +43,9 @@ class RecyclerViewAdapterMovieList(
     fun setMovies(movies: List<Movie>) {
         if(movies.isEmpty())
             return
+
+
+        Log.i(TAG_VINI, "Recycler $movieCategory $movies")
 
         informationMovies.clear()
         informationMovies.addAll(movies)
@@ -83,7 +88,6 @@ class RecyclerViewAdapterMovieList(
                 return
             }
 
-            img.becomeVisible()
 
             var path = getPath(result.posterPath, urlImg, imgNotFound)
 
@@ -111,6 +115,7 @@ class RecyclerViewAdapterMovieList(
                 }
 
                 Glide.with(itemView).load(path).into(img)
+                img.becomeVisible()
             }
         }
 

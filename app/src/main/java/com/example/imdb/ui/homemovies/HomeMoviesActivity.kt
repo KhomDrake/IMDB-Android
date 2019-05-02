@@ -3,6 +3,7 @@ package com.example.imdb.ui.homemovies
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
+import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.interfaces.IFavorite
 import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
@@ -45,16 +47,17 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
 
     override fun loadMovies(type: MovieCategory) {
         when(type) {
-            MovieCategory.Upcoming -> upcoming.loadCategory(type, this)
-            MovieCategory.NowPlaying -> nowPlaying.loadCategory(type, this)
-            MovieCategory.Popular -> popular.loadCategory(type, this)
-            MovieCategory.TopRated -> topRated.loadCategory(type, this)
-            MovieCategory.Latest -> latest.loadCategory(type, this)
+            MovieCategory.Upcoming -> upcoming.loadCategory(type)
+            MovieCategory.NowPlaying -> nowPlaying.loadCategory(type)
+            MovieCategory.Popular -> popular.loadCategory(type)
+            MovieCategory.TopRated -> topRated.loadCategory(type)
+            MovieCategory.Latest -> latest.loadCategory(type)
             else -> Unit
         }
     }
 
     private fun loadAllCategories() {
+        Log.i(TAG_VINI, "-----------------------------")
         loadMovies(MovieCategory.Latest)
         loadMovies(MovieCategory.NowPlaying)
         loadMovies(MovieCategory.Popular)
@@ -89,9 +92,11 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
     private fun createAdapter(iFavorite: IFavorite, movieCategory: MovieCategory)=
         RecyclerViewAdapterMovieList(mutableListOf(), iFavorite, movieCategory)
 
-    private fun RecyclerView.loadCategory(category: MovieCategory, appCompatActivity: AppCompatActivity) {
-        appCompatActivity.runOnUiThread {
-            homeMoviesViewController.loadMovies(this.movieAdapter, category) { this.movieAdapter.setMovies(it) }
+    private fun RecyclerView.loadCategory(category: MovieCategory) {
+        homeMoviesViewController.loadMovies(this.movieAdapter, category) {
+            Log.i(TAG_VINI, "response $category $it")
+            this.movieAdapter.setMovies(it)
+            Log.i(TAG_VINI, "response2 $category ")
         }
     }
 

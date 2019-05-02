@@ -1,15 +1,20 @@
 package com.example.imdb.data
 
+import android.util.Log
 import com.example.imdb.MovieCategory
+import com.example.imdb.TAG_VINI
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.*
 import com.example.imdb.network.WebController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class DataControllerProd(private val webController: WebController, private val databaseMovies: DatabaseMovies) : DataController {
 
     private lateinit var language: String
 
-    private val timeToBeDeprecated: Long = 5 * 60000
+    private val timeToBeDeprecated: Long = 5 // * 60000
 
     override fun setupDatabase(language: String) { this.language = language }
 
@@ -20,56 +25,64 @@ class DataControllerProd(private val webController: WebController, private val d
     override fun favoriteMovie(movieId: Int, toFavorite: Boolean) = databaseMovies.favoriteMovie(movieId, toFavorite)
 
     override fun loadMovieCredit(id: Int, funResponse: (movieCredit: MovieCredit) -> Unit) {
-        databaseMovies.getMovieCredit(id) {
-            val movieCredit = it
-            if(id != movieCredit.id) {
-                webController.loadMovieCredit(id) {
-                    databaseMovies.setCreditMovie(it, id)
-                    funResponse(it)
-                }
-            } else { funResponse(movieCredit) }
+        coroutine {
+            databaseMovies.getMovieCredit(id) {
+                val movieCredit = it
+                if(id != movieCredit.id) {
+                    webController.loadMovieCredit(id) {
+                        databaseMovies.setCreditMovie(it, id)
+                        funResponse(it)
+                    }
+                } else { funResponse(movieCredit) }
+            }
         }
     }
 
     override fun loadMovieDetail(id: Int, funResponse: (movies: MovieDetail) -> Unit) {
-        databaseMovies.getDetailMovie(id) {
-            val movieDetail = it
-            if(movieDetail.id != id) {
-                webController.loadMovieDetail(id) {
-                    if(!it.error) databaseMovies.setMovieDetail(it)
-                    funResponse(it)
-                }
-            } else { funResponse(movieDetail) }
+        coroutine {
+            databaseMovies.getDetailMovie(id) {
+                val movieDetail = it
+                if(movieDetail.id != id) {
+                    webController.loadMovieDetail(id) {
+                        if(!it.error) databaseMovies.setMovieDetail(it)
+                        funResponse(it)
+                    }
+                } else { funResponse(movieDetail) }
+            }
         }
     }
 
     override fun loadReviews(id: Int, funResponse: (reviews: Reviews) -> Unit) {
-        databaseMovies.getMovieReviews(id) {
-            val reviews = it
-            if(reviews.idMovie != id) {
-                webController.loadReviews(id) {
-                    it.idMovie = id
-                    if(it.results.isNotEmpty() && !it.results[0].error) databaseMovies.setReviews(it)
-                    funResponse(it)
-                }
-            } else { funResponse(reviews) }
+        coroutine {
+            databaseMovies.getMovieReviews(id) {
+                val reviews = it
+                if(reviews.idMovie != id) {
+                    webController.loadReviews(id) {
+                        it.idMovie = id
+                        if(it.results.isNotEmpty() && !it.results[0].error) databaseMovies.setReviews(it)
+                        funResponse(it)
+                    }
+                } else { funResponse(reviews) }
+            }
         }
     }
 
     override fun loadRecommendation(id: Int, funResponse: (List<Movie>) -> Unit) {
-        databaseMovies.getRecommendationLastMovie(id) {
-            val recommendation = it
-            databaseMovies.getFavorites {
-                val listFavorites = it
-                if(recommendation.id != id) {
-                    webController.loadRecommendation(id) {
-                        val moviesList = it
-                        if(moviesList.results.isNotEmpty() && !moviesList.results.first().error) {
-                            databaseMovies.setRecommendationLastMovie(Recommendation(id, moviesList))
+        coroutine {
+            databaseMovies.getRecommendationLastMovie(id) {
+                val recommendation = it
+                databaseMovies.getFavorites {
+                    val listFavorites = it
+                    if(recommendation.id != id) {
+                        webController.loadRecommendation(id) {
+                            val moviesList = it
+                            if(moviesList.results.isNotEmpty() && !moviesList.results.first().error) {
+                                databaseMovies.setRecommendationLastMovie(Recommendation(id, moviesList))
+                            }
+                            funResponse(moviesAreFavorites(moviesList.results, listFavorites))
                         }
-                        funResponse(moviesAreFavorites(moviesList.results, listFavorites))
-                    }
-                } else { funResponse(moviesAreFavorites(recommendation.moviesList.results, listFavorites)) }
+                    } else { funResponse(moviesAreFavorites(recommendation.moviesList.results, listFavorites)) }
+                }
             }
         }
     }
@@ -208,30 +221,35 @@ class DataControllerProd(private val webController: WebController, private val d
         when(movieCategory) {
             MovieCategory.Latest -> {
                 webController.loadLatest {
+                    Log.i(TAG_VINI, "web1 $it")
                     setListDatabaseMovies(listOf(it), movieCategory)
                     returnRightResponse(funResponse, listOf(it), movieCategory, favorites)
                 }
             }
             MovieCategory.Upcoming -> {
                 webController.loadUpcoming {
+                    Log.i(TAG_VINI, "web2 $it")
                     setListDatabaseMovies(it.results, movieCategory)
                     returnRightResponse(funResponse, it.results, movieCategory, favorites)
                 }
             }
             MovieCategory.TopRated -> {
                 webController.loadTopRated {
+                    Log.i(TAG_VINI, "web3 $it")
                     setListDatabaseMovies(it.results, movieCategory)
                     returnRightResponse(funResponse, it.results, movieCategory, favorites)
                 }
             }
             MovieCategory.Popular -> {
                 webController.loadPopular {
+                    Log.i(TAG_VINI, "web4 $it")
                     setListDatabaseMovies(it.results, movieCategory)
                     returnRightResponse(funResponse, it.results, movieCategory, favorites)
                 }
             }
             MovieCategory.NowPlaying -> {
                 webController.loadNowPlaying {
+                    Log.i(TAG_VINI, "web5 $it")
                     setListDatabaseMovies(it.results, movieCategory)
                     returnRightResponse(funResponse, it.results, movieCategory, favorites)
                 }
@@ -245,6 +263,8 @@ class DataControllerProd(private val webController: WebController, private val d
                                     movieCategory: MovieCategory, favorites: MutableList<Movie>) {
 
         val moviesFavorites = moviesAreFavorites(movies, favorites)
+        Log.i(TAG_VINI, "moviesFavorites $movieCategory $moviesFavorites")
+
 
         when (movieCategory) {
             MovieCategory.Latest -> if (hasNoError(moviesFavorites)) {
@@ -268,6 +288,12 @@ class DataControllerProd(private val webController: WebController, private val d
             } else funResponse(moviesFavorites)
 
             else -> Unit
+        }
+    }
+
+    private fun coroutine(block: suspend () -> Unit) {
+        GlobalScope.launch(Dispatchers.Main) {
+            block()
         }
     }
 

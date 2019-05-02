@@ -1,10 +1,8 @@
 package com.example.imdb.data.database
 
-import android.util.Log
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.imdb.MovieCategory
-import com.example.imdb.TAG_VINI
 import com.example.imdb.auxiliary.EMPTY_MOVIE_DETAIL
 import com.example.imdb.auxiliary.ZERO
 import com.example.imdb.data.entity.http.*
@@ -89,13 +87,11 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun getRecommendationLastMovie(idMovie: Int, response: (Recommendation) -> Unit) {
         coroutine {
             val moviesDb = moviesDao().getRecommendationMovie(idMovie)
-            Log.i(TAG_VINI, "testando3 - ${moviesDb} 2.3")
             val movies = tableMoviesToMovies(moviesDb)
             var recommendation = Recommendation(ZERO, MoviesList(ZERO, movies, ZERO))
             if(movies.isNotEmpty())
                 recommendation = Recommendation(idMovie, MoviesList(ZERO, movies, ZERO))
 
-            Log.i(TAG_VINI, "testando3 - ${recommendation} 2.3")
             response(recommendation)
         }
     }
@@ -236,7 +232,6 @@ abstract class DatabaseMovies : RoomDatabase() {
 
     fun favoriteMovie(movieId: Int, toFavorite: Boolean) {
         coroutine {
-            Log.i(TAG_VINI, toFavorite.toString())
             if(toFavorite)
                 moviesDao().insertFavorite(TableFavorite(movieId))
             else
