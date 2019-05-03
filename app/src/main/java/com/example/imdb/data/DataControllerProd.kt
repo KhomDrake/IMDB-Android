@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.imdb.MovieCategory
 import com.example.imdb.TAG_VINI
 import com.example.imdb.data.database.DatabaseMovies
+import com.example.imdb.data.entity.application.RightResponseMovieCategory
 import com.example.imdb.data.entity.http.*
 import com.example.imdb.network.WebController
 import kotlinx.coroutines.Dispatchers
@@ -157,32 +158,22 @@ class DataControllerProd(private val webController: WebController, private val d
         }
     }
 
-    private fun setLatest(movie: Movie) = databaseMovies.setLatest(movie)
-
-    private fun setNowPlaying(movies: List<Movie>) = databaseMovies.setNowPlaying(movies)
-
-    private fun setPopular(movies: List<Movie>) = databaseMovies.setPopular(movies)
-
-    private fun setTopRated(movies: List<Movie>) = databaseMovies.setTopRated(movies)
-
-    private fun setUpcoming(movies: List<Movie>) = databaseMovies.setUpcoming(movies)
-
     private fun setTime(movieCategory: MovieCategory) = databaseMovies.lastTimeUpdateCategory(movieCategory, getCurrentTime())
 
-    private fun setListDatabaseMovies(movies: List<Movie>, movieCategory: MovieCategory) {
+    private fun setListDatabaseMovies(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit, rightResponseMovieCategory: RightResponseMovieCategory) {
         val list: List<Movie> = if(movies.isEmpty() || movies[0].error) listOf() else movies
 
         if(list.isEmpty())
             return
 
-        setTime(movieCategory)
+        setTime(rightResponseMovieCategory.movieCategory)
 
-        when(movieCategory) {
-            MovieCategory.NowPlaying -> setNowPlaying(list)
-            MovieCategory.Popular -> setPopular(list)
-            MovieCategory.TopRated -> setTopRated(list)
-            MovieCategory.Upcoming -> setUpcoming(list)
-            MovieCategory.Latest -> setLatest(list[0])
+        when(rightResponseMovieCategory.movieCategory) {
+            MovieCategory.NowPlaying -> databaseMovies.setNowPlaying(list, returnRightResponse, rightResponseMovieCategory)
+            MovieCategory.Popular -> databaseMovies.setPopular(list, returnRightResponse, rightResponseMovieCategory)
+            MovieCategory.TopRated -> databaseMovies.setTopRated(list, returnRightResponse, rightResponseMovieCategory)
+            MovieCategory.Upcoming -> databaseMovies.setUpcoming(list, returnRightResponse, rightResponseMovieCategory)
+            MovieCategory.Latest -> databaseMovies.setLatest(list[0], returnRightResponse, rightResponseMovieCategory)
             else -> Unit
         }
     }
@@ -222,45 +213,48 @@ class DataControllerProd(private val webController: WebController, private val d
             MovieCategory.Latest -> {
                 webController.loadLatest {
                     Log.i(TAG_VINI, "web1 $it")
-                    setListDatabaseMovies(listOf(it), movieCategory)
-                    returnRightResponse(funResponse, listOf(it), movieCategory, favorites)
+                    setListDatabaseMovies(listOf(it), this::returnRightResponse,
+                        RightResponseMovieCategory(funResponse, listOf(it), movieCategory, favorites))
                 }
             }
             MovieCategory.Upcoming -> {
                 webController.loadUpcoming {
                     Log.i(TAG_VINI, "web2 $it")
-                    setListDatabaseMovies(it.results, movieCategory)
-                    returnRightResponse(funResponse, it.results, movieCategory, favorites)
+                    setListDatabaseMovies(it.results, this::returnRightResponse,
+                        RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
                 }
             }
             MovieCategory.TopRated -> {
                 webController.loadTopRated {
                     Log.i(TAG_VINI, "web3 $it")
-                    setListDatabaseMovies(it.results, movieCategory)
-                    returnRightResponse(funResponse, it.results, movieCategory, favorites)
+                    setListDatabaseMovies(it.results, this::returnRightResponse,
+                        RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
                 }
             }
             MovieCategory.Popular -> {
                 webController.loadPopular {
                     Log.i(TAG_VINI, "web4 $it")
-                    setListDatabaseMovies(it.results, movieCategory)
-                    returnRightResponse(funResponse, it.results, movieCategory, favorites)
+                    setListDatabaseMovies(it.results, this::returnRightResponse,
+                        RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
                 }
             }
             MovieCategory.NowPlaying -> {
                 webController.loadNowPlaying {
                     Log.i(TAG_VINI, "web5 $it")
-                    setListDatabaseMovies(it.results, movieCategory)
-                    returnRightResponse(funResponse, it.results, movieCategory, favorites)
+                    setListDatabaseMovies(it.results, this::returnRightResponse,
+                        RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
                 }
             }
             else -> Unit
         }
     }
 
-    private fun returnRightResponse(funResponse: (movies: List<Movie>) -> Unit,
-                                    movies: List<Movie>,
-                                    movieCategory: MovieCategory, favorites: MutableList<Movie>) {
+    private fun returnRightResponse(rightResponseMovieCategory: RightResponseMovieCategory) {
+
+        val movies = rightResponseMovieCategory.movies
+        val favorites = rightResponseMovieCategory.favorites
+        val funResponse = rightResponseMovieCategory.funResponse
+        val movieCategory = rightResponseMovieCategory.movieCategory
 
         val moviesFavorites = moviesAreFavorites(movies, favorites)
         Log.i(TAG_VINI, "moviesFavorites $movieCategory $moviesFavorites")

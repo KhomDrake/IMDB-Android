@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import com.example.imdb.MovieCategory
 import com.example.imdb.auxiliary.EMPTY_MOVIE_DETAIL
 import com.example.imdb.auxiliary.ZERO
+import com.example.imdb.data.entity.application.RightResponseMovieCategory
 import com.example.imdb.data.entity.http.*
 import com.example.imdb.data.entity.table.*
 import kotlinx.coroutines.*
@@ -165,7 +166,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun setLatest(movie: Movie) {
+    fun setLatest(movie: Movie, returnRightResponse: (RightResponseMovieCategory) -> Unit, rightResponseMovieCategory: RightResponseMovieCategory) {
         if(movie.error)
             return
 
@@ -173,46 +174,51 @@ abstract class DatabaseMovies : RoomDatabase() {
             moviesDao().deleteMovieCategory(MovieCategory.Latest.ordinal)
             moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
             moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, MovieCategory.Latest.ordinal))
+            returnRightResponse(rightResponseMovieCategory)
         }
     }
 
-    fun setNowPlaying(movies: List<Movie>) {
+    fun setNowPlaying(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit, rightResponseMovieCategory: RightResponseMovieCategory) {
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.NowPlaying.ordinal)
             for (movie in movies) {
                 moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
                 moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, MovieCategory.NowPlaying.ordinal))
             }
+            returnRightResponse(rightResponseMovieCategory)
         }
     }
 
-    fun setPopular(movies: List<Movie>) {
+    fun setPopular(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit, rightResponseMovieCategory: RightResponseMovieCategory) {
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.Popular.ordinal)
             for (movie in movies) {
                 moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
                 moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, MovieCategory.Popular.ordinal))
             }
+            returnRightResponse(rightResponseMovieCategory)
         }
     }
 
-    fun setTopRated(movies: List<Movie>) {
+    fun setTopRated(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit, rightResponseMovieCategory: RightResponseMovieCategory) {
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.TopRated.ordinal)
             for (movie in movies) {
                 moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
                 moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, MovieCategory.TopRated.ordinal))
             }
+            returnRightResponse(rightResponseMovieCategory)
         }
     }
 
-    fun setUpcoming(movies: List<Movie>) {
+    fun setUpcoming(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit, rightResponseMovieCategory: RightResponseMovieCategory) {
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.Upcoming.ordinal)
             for (movie in movies) {
                 moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
                 moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, MovieCategory.Upcoming.ordinal))
             }
+            returnRightResponse(rightResponseMovieCategory)
         }
     }
 
