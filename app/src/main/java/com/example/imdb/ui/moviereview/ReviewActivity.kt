@@ -57,14 +57,15 @@ class ReviewActivity : AppCompatActivity() {
         tryAgain.becomeInvisible()
 
         reviewViewController.loadReviews(movieID) {
-            loadingReview.becomeInvisible()
+            this.runOnUiThread {
+                loadingReview.becomeInvisible()
 
-            if (it.results.isNotEmpty() && it.results[0].error) {
-                tryAgain.becomeVisible()
-            } else {
-                if (it.results.isEmpty()) noReviews.becomeVisible()
-
-                this.runOnUiThread { reviewRecyclerView.reviewAdapter.setReviews(it) }
+                if (it.results.isNotEmpty() && it.results[0].error) {
+                    tryAgain.becomeVisible()
+                } else {
+                    if (it.results.isEmpty()) noReviews.becomeVisible()
+                    reviewRecyclerView.reviewAdapter.setReviews(it)
+                }
             }
         }
     }

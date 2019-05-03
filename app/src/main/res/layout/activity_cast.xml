@@ -32,6 +32,24 @@
             app:layout_constraintTop_toBottomOf="@+id/title_reviews"
             android:layout_marginTop="84dp"/>
 
+    <TextView
+            android:text="@string/no_cast"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/imdb_text"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textSize="56sp"
+            android:id="@+id/no_cast"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="280dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.0"/>
+
     <ProgressBar android:layout_width="278dp"
                  android:layout_height="195dp"
                  android:layout_centerInParent="true"

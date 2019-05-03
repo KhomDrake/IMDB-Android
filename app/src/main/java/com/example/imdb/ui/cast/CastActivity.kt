@@ -21,6 +21,7 @@ class CastActivity : AppCompatActivity(), IActivityInteraction {
     private lateinit var recyclerViewCast: RecyclerView
     private lateinit var castTitle: TextView
     private lateinit var loading: ProgressBar
+    private lateinit var noCast: TextView
     private var movieId: Int = -3000
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +31,7 @@ class CastActivity : AppCompatActivity(), IActivityInteraction {
         recyclerViewCast = findViewById(R.id.movie_cast)
         castTitle = findViewById(R.id.title_reviews)
         loading = findViewById(R.id.loading)
+        noCast = findViewById(R.id.no_cast)
 
         movieId = intent.getIntExtra("movieID", -1)
         val title: String = intent.getStringExtra("title")
@@ -38,6 +40,7 @@ class CastActivity : AppCompatActivity(), IActivityInteraction {
             return
 
         loading.becomeVisible()
+        noCast.becomeInvisible()
 
         castTitle.text = "Cast: $title"
 
@@ -49,8 +52,12 @@ class CastActivity : AppCompatActivity(), IActivityInteraction {
 
     override fun loadMovies(type: MovieCategory) {
         castViewController.loadCast(movieId) {
-            loading.becomeInvisible()
-            recyclerViewCast.castAdapter.setMovieCredit(it.cast)
+            this.runOnUiThread {
+                loading.becomeInvisible()
+                recyclerViewCast.castAdapter.setMovieCredit(it.cast)
+                if(it.cast.isEmpty())
+                    noCast.becomeVisible()
+            }
         }
     }
 
