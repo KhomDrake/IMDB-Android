@@ -15,7 +15,7 @@ class DataControllerProd(private val webController: WebController, private val d
 
     private lateinit var language: String
 
-    private val timeToBeDeprecated: Long = 5 // * 60000
+    private val timeToBeDeprecated: Long = 5 * 60000
 
     override fun setupDatabase(language: String) { this.language = language }
 
@@ -110,7 +110,7 @@ class DataControllerProd(private val webController: WebController, private val d
                 isToMakeAPIRequest(nowPlaying, MovieCategory.NowPlaying) {
                     val makeRequest = it
                     if (makeRequest) { responseAPI(funResponse, listFavorites, MovieCategory.NowPlaying) }
-                    else { funResponse(nowPlaying) }
+                    else { funResponse(moviesAreFavorites(nowPlaying, listFavorites)) }
                 }
             }
         }
@@ -124,7 +124,7 @@ class DataControllerProd(private val webController: WebController, private val d
                 isToMakeAPIRequest(popular, MovieCategory.Popular) {
                     val makeRequest = it
                     if (makeRequest) { responseAPI(funResponse, listFavorites, MovieCategory.Popular) }
-                    else { funResponse(popular) }
+                    else { funResponse(moviesAreFavorites(popular, listFavorites)) }
                 }
             }
         }
@@ -138,7 +138,7 @@ class DataControllerProd(private val webController: WebController, private val d
                 isToMakeAPIRequest(topRated, MovieCategory.TopRated) {
                     val makeRequest = it
                     if (makeRequest) { responseAPI(funResponse, listFavorites, MovieCategory.TopRated) }
-                    else { funResponse(topRated) }
+                    else { funResponse(moviesAreFavorites(topRated, listFavorites)) }
                 }
             }
         }
@@ -152,7 +152,7 @@ class DataControllerProd(private val webController: WebController, private val d
                 isToMakeAPIRequest(upcoming, MovieCategory.Upcoming) {
                     val makeRequest = it
                     if (makeRequest) { responseAPI(funResponse, listFavorites, MovieCategory.Upcoming) }
-                    else { funResponse(upcoming) }
+                    else { funResponse(moviesAreFavorites(upcoming, listFavorites)) }
                 }
             }
         }
@@ -212,35 +212,30 @@ class DataControllerProd(private val webController: WebController, private val d
         when(movieCategory) {
             MovieCategory.Latest -> {
                 webController.loadLatest {
-                    Log.i(TAG_VINI, "web1 $it")
                     setListDatabaseMovies(listOf(it), this::returnRightResponse,
                         RightResponseMovieCategory(funResponse, listOf(it), movieCategory, favorites))
                 }
             }
             MovieCategory.Upcoming -> {
                 webController.loadUpcoming {
-                    Log.i(TAG_VINI, "web2 $it")
                     setListDatabaseMovies(it.results, this::returnRightResponse,
                         RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
                 }
             }
             MovieCategory.TopRated -> {
                 webController.loadTopRated {
-                    Log.i(TAG_VINI, "web3 $it")
                     setListDatabaseMovies(it.results, this::returnRightResponse,
                         RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
                 }
             }
             MovieCategory.Popular -> {
                 webController.loadPopular {
-                    Log.i(TAG_VINI, "web4 $it")
                     setListDatabaseMovies(it.results, this::returnRightResponse,
                         RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
                 }
             }
             MovieCategory.NowPlaying -> {
                 webController.loadNowPlaying {
-                    Log.i(TAG_VINI, "web5 $it")
                     setListDatabaseMovies(it.results, this::returnRightResponse,
                         RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
                 }
@@ -257,8 +252,6 @@ class DataControllerProd(private val webController: WebController, private val d
         val movieCategory = rightResponseMovieCategory.movieCategory
 
         val moviesFavorites = moviesAreFavorites(movies, favorites)
-        Log.i(TAG_VINI, "moviesFavorites $movieCategory $moviesFavorites")
-
 
         when (movieCategory) {
             MovieCategory.Latest -> if (hasNoError(moviesFavorites)) {

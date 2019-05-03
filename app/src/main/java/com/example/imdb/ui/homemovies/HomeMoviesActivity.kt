@@ -57,7 +57,6 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
     }
 
     private fun loadAllCategories() {
-        Log.i(TAG_VINI, "-----------------------------")
         loadMovies(MovieCategory.Latest)
         loadMovies(MovieCategory.NowPlaying)
         loadMovies(MovieCategory.Popular)
@@ -94,9 +93,7 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
 
     private fun RecyclerView.loadCategory(category: MovieCategory) {
         homeMoviesViewController.loadMovies(this.movieAdapter, category) {
-            Log.i(TAG_VINI, "response $category $it")
             this.movieAdapter.setMovies(it)
-            Log.i(TAG_VINI, "response2 $category ")
         }
     }
 

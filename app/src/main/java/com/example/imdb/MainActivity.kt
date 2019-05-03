@@ -17,7 +17,8 @@ enum class MovieCategory {
     Popular,
     TopRated,
     Upcoming,
-    Recommendation
+    Recommendation,
+    Favorite
 }
 
 const val TAG_VINI = "vini"

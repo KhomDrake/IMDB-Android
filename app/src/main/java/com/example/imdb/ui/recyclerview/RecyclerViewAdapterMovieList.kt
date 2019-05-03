@@ -44,15 +44,10 @@ class RecyclerViewAdapterMovieList(
         if(movies.isEmpty())
             return
 
-
-        Log.i(TAG_VINI, "Recycler $movieCategory $movies")
-
         informationMovies.clear()
         informationMovies.addAll(movies)
 
-        coroutineImage {
-            notifyDataSetChanged()
-        }
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = informationMovies.count()

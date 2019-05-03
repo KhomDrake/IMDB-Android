@@ -121,8 +121,6 @@ class MovieDetailActivity : AppCompatActivity() {
 
                     viewsDetailMovie.forEach { it.becomeVisible() }
 
-                    Log.i(TAG_VINI, listOfStars.toString())
-
                     val quantStars: Int = movieDetailViewController.getQuantStars(it.voteAverage)
                     for (i in 0 until quantStars) { listOfStars[i].becomeVisible() }
 

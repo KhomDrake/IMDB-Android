@@ -136,7 +136,8 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun getFavorites(response: (MutableList<Movie>) -> Unit) {
         coroutine {
             val favoritesDb = moviesDao().getFavorite()
-            response(tableMoviesToMovies(favoritesDb))
+            val favorites = tableMoviesToMovies(favoritesDb)
+            response(favorites)
         }
     }
 
