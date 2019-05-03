@@ -60,6 +60,7 @@ dependencies {
     implementation 'org.koin:koin-android:1.0.1'
 
     // tests
+
     androidTestImplementation 'androidx.test:core:1.1.0'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.1.1'
