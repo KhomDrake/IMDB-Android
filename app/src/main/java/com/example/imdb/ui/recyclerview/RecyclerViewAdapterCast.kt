@@ -55,7 +55,6 @@ class RecyclerViewAdapterCast(
         private val tryAgain: Button = itemView.findViewById(R.id.again)
 
         fun bind(cast: Cast, urlImg: String, imgNotFound: String, idMovie: Int, IActivityInteraction: IActivityInteraction) {
-
             if(cast.error) {
                 tryAgain.becomeVisible()
                 nameCast.becomeInvisible()

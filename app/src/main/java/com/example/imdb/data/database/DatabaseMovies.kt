@@ -20,11 +20,10 @@ import kotlinx.coroutines.*
                             TableCast::class,
                             TableMovieRecommendation::class,
                             TableReviewInformation::class), version = 1)
-abstract class DatabaseMovies : RoomDatabase() {
+abstract class DatabaseMovies : RoomDatabase(), IDatabaseMovies {
 
     abstract fun moviesDao(): DaoMovies
     private val language = ""
-    fun getLanguage() = language
 
     init {
         setup()
@@ -41,7 +40,9 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun getMovieCredit(idMovie: Int, response: (MovieCredit) -> Unit)  {
+    override fun getLanguage() = language
+
+    override fun getMovieCredit(idMovie: Int, response: (MovieCredit) -> Unit)  {
         coroutine {
             val creditMovieDb = moviesDao().getMovieCreditCast(idMovie)
             val id = if(creditMovieDb.isEmpty()) 0 else idMovie
@@ -54,17 +55,17 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun getLatest(response: (MutableList<Movie>) -> Unit) = getMovies(MovieCategory.Latest, response)
+    override fun getLatest(response: (MutableList<Movie>) -> Unit) = getMovies(MovieCategory.Latest, response)
 
-    fun getNowPlaying(response: (MutableList<Movie>) -> Unit) = getMovies(MovieCategory.NowPlaying, response)
+    override fun getNowPlaying(response: (MutableList<Movie>) -> Unit) = getMovies(MovieCategory.NowPlaying, response)
 
-    fun getPopular(response: (MutableList<Movie>) -> Unit) = getMovies(MovieCategory.Popular, response)
+    override fun getPopular(response: (MutableList<Movie>) -> Unit) = getMovies(MovieCategory.Popular, response)
 
-    fun getTopRated(response: (MutableList<Movie>) -> Unit) = getMovies(MovieCategory.TopRated, response)
+    override fun getTopRated(response: (MutableList<Movie>) -> Unit) = getMovies(MovieCategory.TopRated, response)
 
-    fun getUpcoming(response: (MutableList<Movie>) -> Unit) = getMovies(MovieCategory.Upcoming, response)
+    override fun getUpcoming(response: (MutableList<Movie>) -> Unit) = getMovies(MovieCategory.Upcoming, response)
 
-    fun getDetailMovie(idMovie: Int, response: (MovieDetail) -> Unit) {
+    override fun getDetailMovie(idMovie: Int, response: (MovieDetail) -> Unit) {
         coroutine {
             val movieDetailDb = moviesDao().getMovieDetail(idMovie)
             if(movieDetailDb != null) {
@@ -85,7 +86,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun getRecommendationLastMovie(idMovie: Int, response: (Recommendation) -> Unit) {
+    override fun getRecommendationLastMovie(idMovie: Int, response: (Recommendation) -> Unit) {
         coroutine {
             val moviesDb = moviesDao().getRecommendationMovie(idMovie)
             val movies = tableMoviesToMovies(moviesDb)
@@ -97,7 +98,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun getMovieReviews(_idMovie: Int, response: (Reviews) -> Unit) {
+    override fun getMovieReviews(_idMovie: Int, response: (Reviews) -> Unit) {
         coroutine {
             val reviews = moviesDao().getMovieReviews(_idMovie)
 
@@ -126,14 +127,14 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun getLastTimeUpdateCategory(movieCategory: MovieCategory, response: (Long) -> Unit) {
+    override fun getLastTimeUpdateCategory(movieCategory: MovieCategory, response: (Long) -> Unit) {
         coroutine {
             val last = moviesDao().getLastUpdateCategory(movieCategory.ordinal)
             response(if(last != null) last.timeUpdate else System.currentTimeMillis())
         }
     }
 
-    fun getFavorites(response: (MutableList<Movie>) -> Unit) {
+    override fun getFavorites(response: (MutableList<Movie>) -> Unit) {
         coroutine {
             val favoritesDb = moviesDao().getFavorite()
             val favorites = tableMoviesToMovies(favoritesDb)
@@ -141,7 +142,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun setReviews(reviews: Reviews) {
+    override fun setReviews(reviews: Reviews) {
         coroutine {
             moviesDao().insertReviewInformation(TableReviewInformation(reviews.id, reviews.idMovie, 1, 1, 1))
             for(review in reviews.results) {
@@ -150,7 +151,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun setRecommendationLastMovie(recommendation: Recommendation) {
+    override fun setRecommendationLastMovie(recommendation: Recommendation) {
         val idMovie = recommendation.id
         coroutine {
             for (movie in recommendation.moviesList.results) {
@@ -160,14 +161,16 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun setMovieDetail(movieDetail: MovieDetail) {
+    override fun setMovieDetail(movieDetail: MovieDetail) {
         coroutine {
-            moviesDao().insertMovieDetail(TableMovieDetail(movieDetail.id, movieDetail.adult, movieDetail.id, movieDetail.overview, movieDetail.posterPath.toString(),
-                movieDetail.releaseDate, movieDetail.runtime, movieDetail.title, movieDetail.voteAverage, movieDetail.voteCount))
+            moviesDao().insertMovieDetail(TableMovieDetail(movieDetail.id, movieDetail.adult, movieDetail.id,
+                movieDetail.overview, movieDetail.posterPath.toString(), movieDetail.releaseDate, movieDetail.runtime,
+                movieDetail.title, movieDetail.voteAverage, movieDetail.voteCount))
         }
     }
 
-    fun setLatest(movie: Movie, returnRightResponse: (RightResponseMovieCategory) -> Unit, rightResponseMovieCategory: RightResponseMovieCategory) {
+    override fun setLatest(movie: Movie, returnRightResponse: (RightResponseMovieCategory) -> Unit,
+                           rightResponseMovieCategory: RightResponseMovieCategory) {
         if(movie.error)
             return
 
@@ -179,7 +182,8 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun setNowPlaying(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit, rightResponseMovieCategory: RightResponseMovieCategory) {
+    override fun setNowPlaying(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit,
+                               rightResponseMovieCategory: RightResponseMovieCategory) {
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.NowPlaying.ordinal)
             for (movie in movies) {
@@ -190,7 +194,8 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun setPopular(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit, rightResponseMovieCategory: RightResponseMovieCategory) {
+    override fun setPopular(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit,
+                            rightResponseMovieCategory: RightResponseMovieCategory) {
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.Popular.ordinal)
             for (movie in movies) {
@@ -201,7 +206,8 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun setTopRated(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit, rightResponseMovieCategory: RightResponseMovieCategory) {
+    override fun setTopRated(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit,
+                             rightResponseMovieCategory: RightResponseMovieCategory) {
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.TopRated.ordinal)
             for (movie in movies) {
@@ -212,7 +218,8 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun setUpcoming(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit, rightResponseMovieCategory: RightResponseMovieCategory) {
+    override fun setUpcoming(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit,
+                    rightResponseMovieCategory: RightResponseMovieCategory) {
         coroutine {
             moviesDao().deleteMovieCategory(MovieCategory.Upcoming.ordinal)
             for (movie in movies) {
@@ -223,21 +230,22 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun setCreditMovie(credit: MovieCredit, idMovie: Int) {
+    override fun setCreditMovie(credit: MovieCredit, idMovie: Int) {
         coroutine {
             for (cast in credit.cast) {
-                moviesDao().insertMovieCast(TableCast(cast.castId, idMovie, cast.character, cast.gender, cast.id, cast.name, cast.order, cast.profilePath))
+                moviesDao().insertMovieCast(TableCast(cast.castId, idMovie, cast.character, cast.gender,
+                    cast.id, cast.name, cast.order, cast.profilePath))
             }
         }
     }
 
-    fun lastTimeUpdateCategory(movieCategory: MovieCategory, currentTime: Long) {
+    override fun lastTimeUpdateCategory(movieCategory: MovieCategory, currentTime: Long) {
         coroutine {
             moviesDao().insertLastUpdateCategory(TableLastUpdateCategory(movieCategory.ordinal, currentTime))
         }
     }
 
-    fun favoriteMovie(movieId: Int, toFavorite: Boolean) {
+    override fun favoriteMovie(movieId: Int, toFavorite: Boolean) {
         coroutine {
             if(toFavorite)
                 moviesDao().insertFavorite(TableFavorite(movieId))

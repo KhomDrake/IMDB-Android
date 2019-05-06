@@ -1,11 +1,11 @@
 package com.example.imdb.ui.homemovies
 
 import com.example.imdb.MovieCategory
-import com.example.imdb.data.DataController
+import com.example.imdb.data.IDataController
 import com.example.imdb.data.entity.http.Movie
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
 
-class HomeMoviesViewController(private val dataController: DataController) {
+class HomeMoviesViewController(private val dataController: IDataController) {
     private val loading: Movie =
         Movie(0, "", "", "", loading = true, error = false, adult = false, favorite = false)
 

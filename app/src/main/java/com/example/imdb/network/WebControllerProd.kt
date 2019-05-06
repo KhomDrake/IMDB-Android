@@ -5,6 +5,7 @@ import com.example.imdb.auxiliary.PAGE_ONE
 import com.example.imdb.auxiliary.ZERO
 import com.example.imdb.auxiliary.ZERO_DOUBLE
 import com.example.imdb.data.database.DatabaseMovies
+import com.example.imdb.data.database.IDatabaseMovies
 import com.example.imdb.data.entity.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -14,7 +15,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.lang.Exception
 
-class WebControllerProd(private val databaseMovies: DatabaseMovies) : WebController {
+class WebControllerProd(private val databaseMovies: IDatabaseMovies) : WebController {
 
     private val APIKEY = "ed84e9c8c38d4d0a8f3adaa5ba324145"
 
