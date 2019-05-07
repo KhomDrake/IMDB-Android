@@ -5,8 +5,8 @@ import com.example.imdb.data.IDataController
 import com.example.imdb.data.DataController
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.database.IDatabaseMovies
+import com.example.imdb.network.IWebController
 import com.example.imdb.network.WebController
-import com.example.imdb.network.WebControllerProd
 import com.example.imdb.ui.cast.CastViewController
 import com.example.imdb.ui.home.HomeAppViewController
 import com.example.imdb.ui.homemovies.HomeMoviesViewController
@@ -23,7 +23,7 @@ val movieDbKoinModule = module {
             "movie.db"
         ).build() as IDatabaseMovies
     }
-    single { WebControllerProd(get()) as WebController }
+    single { WebController(get()) as IWebController }
     single { DataController(get(), get()) as IDataController }
     single { MainActivityViewController(get()) }
     single { HomeAppViewController(get()) }

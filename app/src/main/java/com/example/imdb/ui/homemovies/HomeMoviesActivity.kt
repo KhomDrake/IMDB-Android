@@ -83,6 +83,14 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
         homeMoviesViewController.favoriteMovie(idMovie, toFavorite)
     }
 
+    override fun updateVisualMovie(idMovie: Int, toFavorite: Boolean) {
+        val recyclers = listOf(upcoming, nowPlaying, popular, topRated, latest)
+        recyclers.forEach {
+            val position = it.movieAdapter.getMoviePosition(idMovie)
+            it.movieAdapter.favoriteMovie(position, toFavorite)
+        }
+    }
+
     private fun RecyclerView.setupAdapter(iFavorite: IFavorite, movieCategory: MovieCategory) {
         this.adapter = createAdapter(iFavorite, movieCategory)
         this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)

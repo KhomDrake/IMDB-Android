@@ -47,7 +47,27 @@ class RecyclerViewAdapterMovieList(
         informationMovies.clear()
         informationMovies.addAll(movies)
 
-        notifyDataSetChanged()
+        coroutineImage {
+            notifyDataSetChanged()
+        }
+    }
+
+    fun getMoviePosition(idMovie: Int) : Int {
+        var position = -1
+        for (i in 0 until informationMovies.count()) {
+            if(informationMovies[i].id == idMovie) position = i
+        }
+        return position
+    }
+
+    fun favoriteMovie(position: Int, toFavorite: Boolean) {
+        if(position < 0)
+            return
+        Log.i(TAG_VINI, "--------------------")
+        Log.i(TAG_VINI, "asd ${informationMovies[position]}")
+        informationMovies[position].favorite = toFavorite
+        Log.i(TAG_VINI, "asd2 ${informationMovies[position]}")
+        notifyItemChanged(position)
     }
 
     override fun getItemCount() = informationMovies.count()
@@ -100,13 +120,13 @@ class RecyclerViewAdapterMovieList(
                 heartEmpty.setOnClickListener {
                     showHeart()
                     iFavorite.favoriteMovie(result.id, true)
-                    iFavorite.updateVisualMovies()
+                    iFavorite.updateVisualMovie(result.id, true)
                 }
 
                 heart.setOnClickListener {
                     showEmptyHeart()
                     iFavorite.favoriteMovie(result.id, false)
-                    iFavorite.updateVisualMovies()
+                    iFavorite.updateVisualMovie(result.id, false)
                 }
 
                 Glide.with(itemView).load(path).into(img)

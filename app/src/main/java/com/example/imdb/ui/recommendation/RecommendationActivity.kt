@@ -88,6 +88,11 @@ class RecommendationActivity : AppCompatActivity(), IFavorite {
         recommendationViewController.favoriteMovie(idMovie, toFavorite)
     }
 
+    override fun updateVisualMovie(idMovie: Int, toFavorite: Boolean) {
+        val position = recommendationRecyclerView.movieAdapter.getMoviePosition(idMovie)
+        recommendationRecyclerView.movieAdapter.favoriteMovie(position, toFavorite)
+    }
+
     private fun RecyclerView.setupAdapter(iFavorite: IFavorite, movieCategory: MovieCategory) {
         this.adapter = RecyclerViewAdapterMovieList(mutableListOf(), iFavorite, movieCategory)
         this.layoutManager = LinearLayoutManager(context)

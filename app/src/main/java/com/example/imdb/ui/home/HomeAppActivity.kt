@@ -81,6 +81,11 @@ class HomeAppActivity : AppCompatActivity(), IFavorite {
     }
 
     override fun favoriteMovie(idMovie: Int, toFavorite: Boolean) {
+        val position = favoritesRecyclerView.favoriteAdapter.getMoviePosition(idMovie)
+        favoritesRecyclerView.favoriteAdapter.favoriteMovie(position, toFavorite)
+    }
+
+    override fun updateVisualMovie(idMovie: Int, toFavorite: Boolean) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

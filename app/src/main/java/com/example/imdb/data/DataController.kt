@@ -1,16 +1,15 @@
 package com.example.imdb.data
 
 import com.example.imdb.MovieCategory
-import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.database.IDatabaseMovies
 import com.example.imdb.data.entity.application.RightResponseMovieCategory
 import com.example.imdb.data.entity.http.*
-import com.example.imdb.network.WebController
+import com.example.imdb.network.IWebController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class DataController(private val webController: WebController, private val databaseMovies: IDatabaseMovies) : IDataController {
+class DataController(private val IWebController: IWebController, private val databaseMovies: IDatabaseMovies) : IDataController {
 
     private lateinit var language: String
 
@@ -29,7 +28,7 @@ class DataController(private val webController: WebController, private val datab
             databaseMovies.getMovieCredit(id) {
                 val movieCredit = it
                 if(id != movieCredit.id) {
-                    webController.loadMovieCredit(id) {
+                    IWebController.loadMovieCredit(id) {
                         databaseMovies.setCreditMovie(it, id)
                         funResponse(it)
                     }
@@ -43,7 +42,7 @@ class DataController(private val webController: WebController, private val datab
             databaseMovies.getDetailMovie(id) {
                 val movieDetail = it
                 if(movieDetail.id != id) {
-                    webController.loadMovieDetail(id) {
+                    IWebController.loadMovieDetail(id) {
                         if(!it.error) databaseMovies.setMovieDetail(it)
                         funResponse(it)
                     }
@@ -57,7 +56,7 @@ class DataController(private val webController: WebController, private val datab
             databaseMovies.getMovieReviews(id) {
                 val reviews = it
                 if(reviews.idMovie != id) {
-                    webController.loadReviews(id) {
+                    IWebController.loadReviews(id) {
                         it.idMovie = id
                         if(it.results.isNotEmpty() && !it.results[0].error) databaseMovies.setReviews(it)
                         funResponse(it)
@@ -74,7 +73,7 @@ class DataController(private val webController: WebController, private val datab
                 databaseMovies.getFavorites {
                     val listFavorites = it
                     if(recommendation.id != id) {
-                        webController.loadRecommendation(id) {
+                        IWebController.loadRecommendation(id) {
                             val moviesList = it
                             if(moviesList.results.isNotEmpty() && !moviesList.results.first().error) {
                                 databaseMovies.setRecommendationLastMovie(Recommendation(id, moviesList))
@@ -210,31 +209,31 @@ class DataController(private val webController: WebController, private val datab
     private fun responseAPI(funResponse: (movies: List<Movie>) -> Unit, favorites: MutableList<Movie>, movieCategory: MovieCategory) {
         when(movieCategory) {
             MovieCategory.Latest -> {
-                webController.loadLatest {
+                IWebController.loadLatest {
                     setListDatabaseMovies(listOf(it), this::returnRightResponse,
                         RightResponseMovieCategory(funResponse, listOf(it), movieCategory, favorites))
                 }
             }
             MovieCategory.Upcoming -> {
-                webController.loadUpcoming {
+                IWebController.loadUpcoming {
                     setListDatabaseMovies(it.results, this::returnRightResponse,
                         RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
                 }
             }
             MovieCategory.TopRated -> {
-                webController.loadTopRated {
+                IWebController.loadTopRated {
                     setListDatabaseMovies(it.results, this::returnRightResponse,
                         RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
                 }
             }
             MovieCategory.Popular -> {
-                webController.loadPopular {
+                IWebController.loadPopular {
                     setListDatabaseMovies(it.results, this::returnRightResponse,
                         RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
                 }
             }
             MovieCategory.NowPlaying -> {
-                webController.loadNowPlaying {
+                IWebController.loadNowPlaying {
                     setListDatabaseMovies(it.results, this::returnRightResponse,
                         RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
                 }
