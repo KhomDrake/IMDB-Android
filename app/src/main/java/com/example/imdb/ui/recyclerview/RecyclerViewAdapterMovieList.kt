@@ -4,10 +4,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.MovieCategory
@@ -43,6 +40,10 @@ class RecyclerViewAdapterMovieList(
     fun setMovies(movies: List<Movie>) {
         if(movies.isEmpty())
             return
+
+        movies.forEach {
+            Log.i(TAG_VINI, it.toString())
+        }
 
         informationMovies.clear()
         informationMovies.addAll(movies)

@@ -47,8 +47,8 @@ dependencies {
     implementation "androidx.room:room-coroutines:2.1.0-alpha04"
 
     //room
-    implementation 'androidx.room:room-runtime:2.0.0-beta01'
-    kapt 'androidx.room:room-compiler:2.0.0-beta01'
+    implementation 'androidx.room:room-runtime:2.1.0-alpha07'
+    kapt 'androidx.room:room-compiler:2.1.0-alpha07'
 
     // glide
     implementation 'com.github.bumptech.glide:glide:4.8.0'
@@ -57,7 +57,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 
     //koin
-    implementation 'org.koin:koin-android:1.0.1'
+    implementation 'org.koin:koin-android:1.0.2'
 
     // tests
 
@@ -65,11 +65,12 @@ dependencies {
     testImplementation 'androidx.test:runner:1.1.1'
     testImplementation 'androidx.test:rules:1.1.1'
     testImplementation 'androidx.test.ext:junit:1.1.0'
-    testImplementation "io.mockk:mockk:1.9.3"
     testImplementation 'androidx.test.ext:truth:1.1.0'
+    testImplementation "io.mockk:mockk:1.9.3"
 
     androidTestImplementation 'androidx.test:core:1.1.0'
     androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation "io.mockk:mockk-android:1.9.2"
     androidTestImplementation 'androidx.test:rules:1.1.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.0'
     androidTestImplementation 'androidx.test.ext:truth:1.1.0'
@@ -80,5 +81,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-web:3.1.1'
     androidTestImplementation 'androidx.test.espresso.idling:idling-concurrent:3.1.1'
-    androidTestImplementation 'org.mockito:mockito-core:2.21.0'
 }

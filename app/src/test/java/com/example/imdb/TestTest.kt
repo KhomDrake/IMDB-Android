@@ -1,5 +1,6 @@
 package com.example.imdb
 
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.imdb.auxiliary.EMPTY_STRING
 import com.example.imdb.auxiliary.ZERO
 import com.example.imdb.data.DataController
@@ -13,6 +14,8 @@ import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+
 
 class TestTest {
 
