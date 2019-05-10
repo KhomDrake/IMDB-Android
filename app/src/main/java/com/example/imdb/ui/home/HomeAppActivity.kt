@@ -3,20 +3,24 @@ package com.example.imdb.ui.home
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
+import com.example.imdb.TAG_VINI
 import com.example.imdb.auxiliary.becomeInvisible
 import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.ui.homemovies.HomeMoviesActivity
 import com.example.imdb.ui.hometv.HomeTvActivity
 import com.example.imdb.ui.interfaces.IFavorite
+import com.example.imdb.ui.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.recyclerview.RecyclerViewAdapterMovieList
 import org.koin.android.ext.android.inject
 
@@ -41,8 +45,6 @@ class HomeAppActivity : AppCompatActivity(), IFavorite {
 
         messengerNotFavorites.becomeInvisible()
 
-        loadingFavorite.becomeVisible()
-
         movie.setOnClickListener {
             val startNewActivity = Intent(this, HomeMoviesActivity::class.java)
             ContextCompat.startActivity(this, startNewActivity, null)
@@ -54,39 +56,53 @@ class HomeAppActivity : AppCompatActivity(), IFavorite {
         }
 
         favoritesRecyclerView.setupAdapter(this, MovieCategory.Favorite)
+    }
 
+    override fun onStart() {
+        super.onStart()
+        loadingFavorite.becomeVisible()
+        loadFavorite()
+    }
+
+    private fun loadFavorite() {
         homeAppViewController.getFavorites {
             this.runOnUiThread {
                 if(it.isEmpty())
                     messengerNotFavorites.becomeVisible()
+                else
+                    messengerNotFavorites.becomeInvisible()
 
                 it.forEach { it.favorite = true }
 
-                loadingFavorite.becomeVisible()
+                loadingFavorite.becomeInvisible()
                 favoritesRecyclerView.favoriteAdapter.setMovies(it)
             }
         }
     }
 
     override fun loadMovies(type: MovieCategory) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if(type == MovieCategory.Favorite) loadFavorite()
     }
 
     override fun makeImageTransition(view: View, movieId: Int, url: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun updateVisualMovies() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val startNewActivity = Intent(view.context, MovieDetailActivity::class.java)
+        val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+            this,
+            view,
+            view.transitionName)
+        startNewActivity.putExtra("movieID", movieId)
+        startNewActivity.putExtra("url", url)
+        ContextCompat.startActivity(view.context, startNewActivity, optionsCompat.toBundle())
     }
 
     override fun favoriteMovie(idMovie: Int, toFavorite: Boolean) {
-        val position = favoritesRecyclerView.favoriteAdapter.getMoviePosition(idMovie)
-        favoritesRecyclerView.favoriteAdapter.favoriteMovie(position, toFavorite)
+        homeAppViewController.favoriteMovie(idMovie, toFavorite)
     }
 
     override fun updateVisualMovie(idMovie: Int, toFavorite: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val position = favoritesRecyclerView.favoriteAdapter.getMoviePosition(idMovie)
+        favoritesRecyclerView.favoriteAdapter.removeMovie(position)
+        if(favoritesRecyclerView.favoriteAdapter.hasNoFavorites()) messengerNotFavorites.becomeVisible()
     }
 
     private fun RecyclerView.setupAdapter(iFavorite: IFavorite, movieCategory: MovieCategory) {

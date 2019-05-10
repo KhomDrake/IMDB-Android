@@ -1,6 +1,5 @@
 package com.example.imdb.ui.recyclerview
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.MovieCategory
 import com.example.imdb.R
-import com.example.imdb.TAG_VINI
 import com.example.imdb.auxiliary.becomeInvisible
 import com.example.imdb.auxiliary.becomeVisible
 import com.example.imdb.data.entity.http.Movie
@@ -41,10 +39,6 @@ class RecyclerViewAdapterMovieList(
         if(movies.isEmpty())
             return
 
-        movies.forEach {
-            Log.i(TAG_VINI, it.toString())
-        }
-
         informationMovies.clear()
         informationMovies.addAll(movies)
 
@@ -64,11 +58,13 @@ class RecyclerViewAdapterMovieList(
     fun favoriteMovie(position: Int, toFavorite: Boolean) {
         if(position < 0)
             return
-        Log.i(TAG_VINI, "--------------------")
-        Log.i(TAG_VINI, "asd ${informationMovies[position]}")
         informationMovies[position].favorite = toFavorite
-        Log.i(TAG_VINI, "asd2 ${informationMovies[position]}")
         notifyItemChanged(position)
+    }
+
+    fun removeMovie(position: Int) {
+        informationMovies.removeAt(position)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = informationMovies.count()
@@ -160,4 +156,6 @@ class RecyclerViewAdapterMovieList(
             response()
         }
     }
+
+    fun hasNoFavorites() = informationMovies.isEmpty()
 }

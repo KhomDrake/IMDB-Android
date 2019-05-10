@@ -63,8 +63,6 @@ class CastActivity : AppCompatActivity(), IActivityInteraction {
 
     override fun makeImageTransition(view: View, movieId: Int, url: String) = Unit
 
-    override fun updateVisualMovies() = Unit
-
     private val RecyclerView.castAdapter: RecyclerViewAdapterCast
         get() = adapter as RecyclerViewAdapterCast
 }

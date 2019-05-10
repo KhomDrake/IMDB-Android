@@ -4,7 +4,6 @@ import androidx.room.Room
 import com.example.imdb.data.IDataController
 import com.example.imdb.data.DataController
 import com.example.imdb.data.database.DatabaseMovies
-import com.example.imdb.data.database.IDatabaseMovies
 import com.example.imdb.network.IWebController
 import com.example.imdb.network.WebController
 import com.example.imdb.ui.cast.CastViewController
@@ -21,7 +20,7 @@ val movieDbKoinModule = module {
         Room.databaseBuilder(
             get(), DatabaseMovies::class.java,
             "movie.db"
-        ).build() as IDatabaseMovies
+        ).build()
     }
     single { WebController(get()) as IWebController }
     single { DataController(get(), get()) as IDataController }

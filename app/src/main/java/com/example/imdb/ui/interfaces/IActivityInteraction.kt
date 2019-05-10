@@ -8,6 +8,4 @@ interface IActivityInteraction {
     fun loadMovies(type: MovieCategory)
 
     fun makeImageTransition(view: View, movieId: Int, url: String)
-
-    fun updateVisualMovies()
 }

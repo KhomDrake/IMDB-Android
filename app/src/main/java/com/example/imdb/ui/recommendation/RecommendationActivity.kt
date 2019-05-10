@@ -41,14 +41,16 @@ class RecommendationActivity : AppCompatActivity(), IFavorite {
         loadingRecommendation = findViewById(R.id.loading_recommendation)
 
         recommendationNoFound.becomeInvisible()
+    }
 
+    override fun onStart() {
+        super.onStart()
         title = intent.getStringExtra("title")
         movieID = intent.getIntExtra("movieID", -3000)
         if(movieID < 0)
             return
 
         recommendationTitle.text = "Recommendation: $title"
-
         loadMovies(MovieCategory.Recommendation)
     }
 
@@ -81,8 +83,6 @@ class RecommendationActivity : AppCompatActivity(), IFavorite {
         startNewActivity.putExtra("url", url)
         ContextCompat.startActivity(view.context, startNewActivity, optionsCompat.toBundle())
     }
-
-    override fun updateVisualMovies() { loadMovies(MovieCategory.Recommendation) }
 
     override fun favoriteMovie(idMovie: Int, toFavorite: Boolean) {
         recommendationViewController.favoriteMovie(idMovie, toFavorite)

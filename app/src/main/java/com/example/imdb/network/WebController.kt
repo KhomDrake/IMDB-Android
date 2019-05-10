@@ -4,14 +4,14 @@ import com.example.imdb.auxiliary.EMPTY_STRING
 import com.example.imdb.auxiliary.PAGE_ONE
 import com.example.imdb.auxiliary.ZERO
 import com.example.imdb.auxiliary.ZERO_DOUBLE
-import com.example.imdb.data.database.IDatabaseMovies
+import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class WebController(private val databaseMovies: IDatabaseMovies) : IWebController {
+class WebController(private val databaseMovies: DatabaseMovies) : IWebController {
 
     private val APIKEY = "ed84e9c8c38d4d0a8f3adaa5ba324145"
 
