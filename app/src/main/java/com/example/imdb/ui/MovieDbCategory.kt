@@ -1,4 +1,4 @@
-package com.example.imdb
+package com.example.imdb.ui
 
 enum class MovieDbCategory {
     None,

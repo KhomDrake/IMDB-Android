@@ -5,13 +5,13 @@ import com.example.imdb.data.entity.http.movie.*
 
 interface IWebController {
 
-    fun loadLatest(funResponse: (body: Movie) -> Unit)
-    fun loadNowPlaying(funResponse: (body: MoviesList) -> Unit)
-    fun loadPopular(funResponse: (body: MoviesList) -> Unit)
-    fun loadTopRated(funResponse: (body: MoviesList) -> Unit)
-    fun loadUpcoming(funResponse: (body: MoviesList) -> Unit)
-    fun loadMovieDetail(id: Int, funResponse: (body: MovieDetail) -> Unit)
-    fun loadRecommendation(id: Int, funResponse: (body: MoviesList) -> Unit)
-    fun loadReviews(id: Int, funResponse: (body: Reviews) -> Unit)
-    fun loadMovieCredit(id: Int, funResponse: (body: MovieCredit) -> Unit)
+    suspend fun loadLatest() : Movie
+    suspend fun loadNowPlaying() : Movi
+    suspend fun loadPopular()
+    suspend fun loadTopRated()
+    suspend fun loadUpcoming()
+    suspend fun loadMovieDetail(id: Int)
+    suspend fun loadRecommendation(id: Int)
+    suspend fun loadReviews(id: Int)
+    suspend fun loadMovieCredit(id: Int) : MovieCredit
 }

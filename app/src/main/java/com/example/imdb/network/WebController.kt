@@ -56,67 +56,65 @@ class WebController(private val databaseMovies: DatabaseMovies) : IWebController
     private val errorMovieCredit = MovieCredit(listOf(errorCast), ZERO)
 
 
-    override fun loadLatest(funResponse: (body: Movie) -> Unit) {
+    override fun loadLatest() {
         coroutine {
             try { funResponse(api.getLatestMovie(APIKEY, databaseMovies.getLanguage()).await()) }
             catch (e: Exception) { funResponse(errorMovie) }
         }
     }
 
-    override fun loadNowPlaying(funResponse: (body: MoviesList) -> Unit) {
+    override fun loadNowPlaying() {
         coroutine {
             try { funResponse(api.getNowPlayingMovie(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await()) }
             catch (e: Exception) { funResponse(errorMovieList) }
         }
     }
 
-    override fun loadPopular(funResponse: (body: MoviesList) -> Unit) {
+    override fun loadPopular() {
         coroutine {
             try { funResponse(api.getPopularMovie(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await()) }
             catch (e: Exception) { funResponse(errorMovieList) }
         }
     }
 
-    override fun loadTopRated(funResponse: (body: MoviesList) -> Unit) {
+    override fun loadTopRated() {
         coroutine {
             try { funResponse(api.getTopRatedMovie(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await()) }
             catch (e: Exception) { funResponse(errorMovieList) }
         }
     }
 
-    override fun loadUpcoming(funResponse: (body: MoviesList) -> Unit) {
+    override fun loadUpcoming() {
         coroutine {
             try { funResponse(api.getUpcomingMovie(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await()) }
             catch (e: Exception) { funResponse(errorMovieList) }
         }
     }
 
-    override fun loadMovieDetail(id: Int, funResponse: (body: MovieDetail) -> Unit) {
+    override fun loadMovieDetail(id: Int) {
         coroutine {
             try { funResponse(api.getDetailMovie(id, APIKEY, databaseMovies.getLanguage()).await()) }
             catch (e: Exception) { funResponse(errorMovieDetail) }
         }
     }
 
-    override fun loadRecommendation(id: Int, funResponse: (body: MoviesList) -> Unit) {
+    override fun loadRecommendation(id: Int) {
         coroutine {
             try { funResponse(api.getRecommendationMovie(id, APIKEY, databaseMovies.getLanguage()).await()) }
             catch (e: Exception) { funResponse(errorMovieList) }
         }
     }
 
-    override fun loadReviews(id: Int, funResponse: (body: Reviews) -> Unit) {
-        coroutine {
-            try { funResponse(api.getReviewsMovie(id, APIKEY, databaseMovies.getLanguage()).await()) }
-            catch (e: Exception) { funResponse(errorReviews) }
-        }
+    override suspend fun loadReviews(id: Int) {
+        try { funResponse(api.getReviewsMovie(id, APIKEY, databaseMovies.getLanguage()).await()) }
+        catch (e: Exception) { funResponse(errorReviews) }
     }
 
-    override fun loadMovieCredit(id: Int, funResponse: (body: MovieCredit) -> Unit) {
-        coroutine {
-            try { funResponse(api.getMovieCredit(id, APIKEY).await()) }
-            catch (e: Exception) { funResponse(errorMovieCredit) }
-        }
+    override suspend fun loadMovieCredit(id: Int) : MovieCredit {
+            try {
+                return api.getMovieCredit(id, APIKEY).await()
+            }
+            catch (e: Exception) { return errorMovieCredit }
     }
 
     private fun coroutine(block: suspend () -> Unit) {

@@ -1,6 +1,6 @@
 package com.example.imdb.data
 
-import com.example.imdb.MovieDbCategory
+import com.example.imdb.ui.MovieDbCategory
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.application.RightResponseMovieCategory
 import com.example.imdb.data.entity.http.Reviews
@@ -26,9 +26,9 @@ class DataController(private val webController: IWebController, private val data
 
     override fun loadMovieCredit(id: Int, funResponse: (movieCredit: MovieCredit) -> Unit) {
         coroutine {
-            databaseMovies.getMovieCredit(id) {
-                val movieCredit = it
-                if(id != movieCredit.id) {
+            val movieCredit = databaseMovies.getMovieCredit(id)
+            if(id != movieCredit.id) {
+                webController.loadMovieCredit(id)
                     webController.loadMovieCredit(id) {
                         databaseMovies.setCreditMovie(it, id)
                         funResponse(it)

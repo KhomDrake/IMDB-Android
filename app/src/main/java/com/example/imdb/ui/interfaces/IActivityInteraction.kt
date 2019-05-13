@@ -1,7 +1,7 @@
 package com.example.imdb.ui.interfaces
 
 import android.view.View
-import com.example.imdb.MovieDbCategory
+import com.example.imdb.ui.MovieDbCategory
 
 interface IActivityInteraction {
 
