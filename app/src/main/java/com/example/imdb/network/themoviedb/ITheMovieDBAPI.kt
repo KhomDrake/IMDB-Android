@@ -7,7 +7,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface TheMovieDBAPI {
+interface ITheMovieDBAPI {
 
 
     @GET("movie/now_playing")

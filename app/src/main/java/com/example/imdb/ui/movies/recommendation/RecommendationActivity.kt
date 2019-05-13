@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.ui.MovieDbCategory
 import com.example.imdb.R
 import com.example.imdb.TAG_VINI
-import com.example.imdb.auxiliary.becomeInvisible
-import com.example.imdb.auxiliary.becomeVisible
+import com.example.imdb.becomeInvisible
+import com.example.imdb.becomeVisible
 import com.example.imdb.ui.interfaces.IFavorite
 import com.example.imdb.ui.movies.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.movies.recyclerview.RecyclerViewAdapterMovieList

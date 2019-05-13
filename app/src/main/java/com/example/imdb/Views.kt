@@ -1,4 +1,4 @@
-package com.example.imdb.auxiliary
+package com.example.imdb
 
 import android.view.View
 

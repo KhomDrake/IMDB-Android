@@ -1,7 +1,6 @@
 package com.example.imdb.ui.movies.homemovies
 
 import com.example.imdb.ui.MovieDbCategory
-import com.example.imdb.data.IDataController
 import com.example.imdb.data.entity.http.movie.Movie
 import com.example.imdb.ui.movies.recyclerview.RecyclerViewAdapterMovieList
 

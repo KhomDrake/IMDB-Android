@@ -1,11 +1,9 @@
 package com.example.imdb.di
 
 import androidx.room.Room
-import com.example.imdb.data.IDataController
-import com.example.imdb.data.DataController
+import com.example.imdb.data.Repository
 import com.example.imdb.data.database.DatabaseMovies
-import com.example.imdb.network.IWebController
-import com.example.imdb.network.WebController
+import com.example.imdb.network.API
 import com.example.imdb.ui.movies.cast.CastViewController
 import com.example.imdb.ui.home.HomeAppViewController
 import com.example.imdb.ui.movies.homemovies.HomeMoviesViewController
@@ -22,8 +20,8 @@ val movieDbKoinModule = module {
             "movie.db"
         ).build()
     }
-    single { WebController(get()) as IWebController }
-    single { DataController(get(), get()) as IDataController }
+    single { API(get()) as IWebController }
+    single { Repository(get(), get()) as IDataController }
     single { MainActivityViewController(get()) }
     single { HomeAppViewController(get()) }
     single { HomeMoviesViewController(get()) }

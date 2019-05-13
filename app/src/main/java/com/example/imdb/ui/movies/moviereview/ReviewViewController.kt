@@ -1,6 +1,5 @@
 package com.example.imdb.ui.movies.moviereview
 
-import com.example.imdb.data.IDataController
 import com.example.imdb.data.entity.http.Reviews
 
 class ReviewViewController(private val dataController: IDataController) {

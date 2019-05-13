@@ -4,7 +4,6 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import com.example.imdb.data.IDataController
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.movie.Movie
 import com.example.imdb.ui.movies.homemovies.HomeMoviesActivity
@@ -113,7 +112,7 @@ class HomeMoviesTest : AcceptanceTest<HomeMoviesActivity>(HomeMoviesActivity::cl
 //            listOf(
 //                module(override = true) {
 //                    single { databaseMovies }
-//                    single { WebController(get()) as IWebController }
+//                    single { API(get()) as IWebController }
 //                    single { dataControllerMock }
 //                    single { MainActivityViewController(get()) }
 //                    single { HomeAppViewController(get()) }

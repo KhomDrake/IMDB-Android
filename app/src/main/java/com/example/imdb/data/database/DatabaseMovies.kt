@@ -3,9 +3,8 @@ package com.example.imdb.data.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.imdb.ui.MovieDbCategory
-import com.example.imdb.auxiliary.EMPTY_MOVIE_DETAIL
-import com.example.imdb.auxiliary.ZERO
-import com.example.imdb.data.entity.application.RightResponseMovieCategory
+import com.example.imdb.EMPTY_MOVIE_DETAIL
+import com.example.imdb.ZERO
 import com.example.imdb.data.entity.http.Review
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
@@ -55,15 +54,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         return MovieCredit(creditMovie, id)
     }
 
-    fun getLatest() = getMovies(MovieDbCategory.MovieLatest)
-
-    fun getNowPlaying() = getMovies(MovieDbCategory.MovieNowPlaying)
-
-    fun getPopular() = getMovies(MovieDbCategory.MoviePopular)
-
-    fun getTopRated() = getMovies(MovieDbCategory.MovieTopRated)
-
-    fun getUpcoming() = getMovies(MovieDbCategory.MovieUpcoming)
+    fun getCategory(movieDbCategory: MovieDbCategory) = getMovies(movieDbCategory)
 
     fun getDetailMovie(idMovie: Int) : MovieDetail {
         val movieDetailDb = moviesDao().getMovieDetail(idMovie)
@@ -80,9 +71,7 @@ abstract class DatabaseMovies : RoomDatabase() {
                 movieDetailDb.voteCount,
                 false
             )
-        } else {
-            EMPTY_MOVIE_DETAIL
-        }
+        } else { EMPTY_MOVIE_DETAIL }
     }
 
     fun getRecommendationLastMovie(idMovie: Int) : Recommendation {
@@ -135,8 +124,7 @@ abstract class DatabaseMovies : RoomDatabase() {
 
     fun getFavorites() : List<Movie> {
         val favoritesDb = moviesDao().getFavorite()
-        val favorites = tableMoviesToMovies(favoritesDb)
-        return favorites
+        return tableMoviesToMovies(favoritesDb)
     }
 
     fun setReviews(reviews: Reviews) {
@@ -146,7 +134,9 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun setRecommendationLastMovie(recommendation: Recommendation) {
+    fun setRecommendationMovie(recommendation: Recommendation) {
+        if(recommendation.moviesList.results.isNotEmpty() && recommendation.moviesList.results.first().error) return
+
         val idMovie = recommendation.id
         for (movie in recommendation.moviesList.results) {
             moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
@@ -155,14 +145,15 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setMovieDetail(movieDetail: MovieDetail) {
+        if(movieDetail.error) return
+
         moviesDao().insertMovieDetail(TableMovieDetail(movieDetail.id, movieDetail.adult, movieDetail.id,
             movieDetail.overview, movieDetail.posterPath.toString(), movieDetail.releaseDate, movieDetail.runtime,
             movieDetail.title, movieDetail.voteAverage, movieDetail.voteCount))
     }
 
     fun setMovie(movies: List<Movie>, movieDbCategory: MovieDbCategory) {
-        if(movies.first().error)
-            return
+        if(movies.first().error) return
 
         moviesDao().deleteMovieCategory(movieDbCategory.ordinal)
         movies.forEach {
@@ -173,6 +164,8 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setCreditMovie(credit: MovieCredit, idMovie: Int) {
+        if(credit.castMovie.isNotEmpty() && credit.castMovie.first().error) return
+
         for (cast in credit.castMovie) {
             moviesDao().insertMovieCast(TableCast(cast.castId, idMovie, cast.character, cast.gender,
                 cast.id, cast.name, cast.order, cast.profilePath))
@@ -191,7 +184,6 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     private fun setup() {
-
         val listOfMovieDbCategory = listOf(MovieDbCategory.MovieLatest.ordinal,
             MovieDbCategory.MovieNowPlaying.ordinal,
             MovieDbCategory.MoviePopular.ordinal,
