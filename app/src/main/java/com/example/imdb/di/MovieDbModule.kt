@@ -20,8 +20,8 @@ val movieDbKoinModule = module {
             "movie.db"
         ).build()
     }
-    single { API(get()) as IWebController }
-    single { Repository(get(), get()) as IDataController }
+    single { API(get()) }
+    single { Repository(get(), get()) }
     single { MainActivityViewController(get()) }
     single { HomeAppViewController(get()) }
     single { HomeMoviesViewController(get()) }

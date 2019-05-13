@@ -1,8 +1,9 @@
 package com.example.imdb.data
 
+import android.util.Log
+import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.MovieDbCategory
 import com.example.imdb.data.database.DatabaseMovies
-import com.example.imdb.data.entity.application.RightResponseMovieCategory
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
 import com.example.imdb.network.API
@@ -53,7 +54,7 @@ class Repository(private val webController: API, private val databaseMovies: Dat
     fun loadReviews(id: Int, funResponse: (reviews: Reviews) -> Unit) {
         coroutine {
             val movieReviews = databaseMovies.getMovieReviews(id)
-            if(movieReviews.id != id) {
+            if(movieReviews.idMovie != id) {
                 val movieReviewsAPI = webController.loadReviews(id)
                 databaseMovies.setReviews(movieReviewsAPI)
                 funResponse(movieReviewsAPI)
@@ -73,7 +74,7 @@ class Repository(private val webController: API, private val databaseMovies: Dat
         }
     }
 
-    private fun loadMovieCategory(movieDbCategory: MovieDbCategory, funResponse: (movies: List<Movie>) -> Unit) {
+    fun loadMovieCategory(movieDbCategory: MovieDbCategory, funResponse: (movies: List<Movie>) -> Unit) {
         coroutine {
             val movies = databaseMovies.getCategory(movieDbCategory)
             val favorites = databaseMovies.getFavorites()
@@ -83,12 +84,15 @@ class Repository(private val webController: API, private val databaseMovies: Dat
                 databaseMovies.setMovie(listMovieAPI.results, movieDbCategory)
                 if(listMovieAPI.results.isNotEmpty() && listMovieAPI.results.first().error) {
                     funResponse(databaseMovies.getCategory(movieDbCategory))
-                } else { funResponse(listMovieAPI.results) }
+                } else {
+                    setLastTimeUpdateCategory(movieDbCategory)
+                    funResponse(listMovieAPI.results)
+                }
             } else { funResponse(moviesAreFavorites(movies, favorites)) }
         }
     }
 
-    private fun setTime(movieDbCategory: MovieDbCategory) = databaseMovies.lastTimeUpdateCategory(movieDbCategory, getCurrentTime())
+    private fun setLastTimeUpdateCategory(movieDbCategory: MovieDbCategory) = databaseMovies.lastTimeUpdateCategory(movieDbCategory, getCurrentTime())
 
     private fun List<Movie>.isEmptyOrInLoading(): Boolean {
         for (movie in this) if (movie.loading) return true
@@ -118,9 +122,8 @@ class Repository(private val webController: API, private val databaseMovies: Dat
     }
 
     private fun coroutine(block: suspend () -> Unit) {
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.IO) {
             block()
         }
     }
-
 }

@@ -1,11 +1,12 @@
 package com.example.imdb.ui.movies.moviedetail
 
+import com.example.imdb.data.Repository
 import com.example.imdb.data.entity.http.movie.MovieDetail
 
-class MovieDetailViewController(private val dataController: IDataController) {
+class MovieDetailViewController(private val repository: Repository) {
 
     fun loadMovieDetail(id: Int, funResponse: (MovieDetail) -> Unit) {
-        dataController.loadMovieDetail(id, funResponse)
+        repository.loadMovieDetail(id, funResponse)
     }
 
     fun getDate(releaseDate: String) : String {

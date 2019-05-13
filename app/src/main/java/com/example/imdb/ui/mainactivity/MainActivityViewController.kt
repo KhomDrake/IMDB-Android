@@ -1,9 +1,10 @@
 package com.example.imdb.ui.mainactivity
 
+import com.example.imdb.data.Repository
 import java.util.Locale
 
-class MainActivityViewController(dataController: IDataController) {
+class MainActivityViewController(repository: Repository) {
     init {
-        dataController.setupDatabase(Locale.getDefault().toLanguageTag())
+        repository.setupDatabase(Locale.getDefault().toLanguageTag())
     }
 }

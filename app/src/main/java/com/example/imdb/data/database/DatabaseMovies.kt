@@ -1,14 +1,19 @@
 package com.example.imdb.data.database
 
+import android.util.Log
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.imdb.ui.MovieDbCategory
 import com.example.imdb.EMPTY_MOVIE_DETAIL
+import com.example.imdb.TAG_VINI
 import com.example.imdb.ZERO
 import com.example.imdb.data.entity.http.Review
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
 import com.example.imdb.data.entity.table.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @Database(entities = [
     TableMovie::class,
@@ -128,7 +133,9 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setReviews(reviews: Reviews) {
-        moviesDao().insertReviewInformation(TableReviewInformation(reviews.id, reviews.idMovie, 1, 1, 1))
+        Log.i(TAG_VINI, reviews.id.toString())
+        Log.i(TAG_VINI, reviews.idMovie.toString())
+        moviesDao().insertReviewInformation(TableReviewInformation(reviews.id, reviews.id, 1, 1, 1))
         for(review in reviews.results) {
             moviesDao().insertReview(TableReview(0, review.author, review.content, review.url, reviews.id))
         }
@@ -159,7 +166,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         movies.forEach {
             val movie = it
             moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
-            moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, MovieDbCategory.MovieLatest.ordinal))
+            moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, movieDbCategory.ordinal))
         }
     }
 
@@ -191,8 +198,10 @@ abstract class DatabaseMovies : RoomDatabase() {
             MovieDbCategory.MovieUpcoming.ordinal,
             MovieDbCategory.MovieRecommendation.ordinal)
 
-        listOfMovieDbCategory.forEach {
-            moviesDao().insertMovieList(TableMoviesList(it, 1, 1))
+        coroutine {
+            listOfMovieDbCategory.forEach {
+                moviesDao().insertMovieList(TableMoviesList(it, 1, 1))
+            }
         }
     }
 
@@ -218,5 +227,11 @@ abstract class DatabaseMovies : RoomDatabase() {
             )
         }
         return movies.toList()
+    }
+
+    private fun coroutine(block: suspend () -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            block()
+        }
     }
 }

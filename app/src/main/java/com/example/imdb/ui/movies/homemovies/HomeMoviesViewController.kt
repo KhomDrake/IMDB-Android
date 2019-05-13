@@ -1,10 +1,11 @@
 package com.example.imdb.ui.movies.homemovies
 
+import com.example.imdb.data.Repository
 import com.example.imdb.ui.MovieDbCategory
 import com.example.imdb.data.entity.http.movie.Movie
 import com.example.imdb.ui.movies.recyclerview.RecyclerViewAdapterMovieList
 
-class HomeMoviesViewController(private val dataController: IDataController) {
+class HomeMoviesViewController(private val repository: Repository) {
     private val loading: Movie =
         Movie(
             0,
@@ -18,20 +19,13 @@ class HomeMoviesViewController(private val dataController: IDataController) {
         )
 
     fun loadMovies(adapterMovieList: RecyclerViewAdapterMovieList,
-                   dbCategory: MovieDbCategory,
+                   movieDbCategory: MovieDbCategory,
                    funResponse: (movies: List<Movie>) -> Unit) {
         adapterMovieList.setMovies(mutableListOf(loading))
-        when (dbCategory) {
-            MovieDbCategory.MovieLatest -> dataController.loadLatest(funResponse)
-            MovieDbCategory.MovieNowPlaying -> dataController.loadNowPlaying(funResponse)
-            MovieDbCategory.MoviePopular -> dataController.loadPopular(funResponse)
-            MovieDbCategory.MovieTopRated -> dataController.loadTopRated(funResponse)
-            MovieDbCategory.MovieUpcoming -> dataController.loadUpcoming(funResponse)
-            else -> Unit
-        }
+        repository.loadMovieCategory(movieDbCategory, funResponse)
     }
 
     fun favoriteMovie(idMovie: Int, toFavorite: Boolean) {
-        dataController.favoriteMovie(idMovie, toFavorite)
+        repository.favoriteMovie(idMovie, toFavorite)
     }
 }
