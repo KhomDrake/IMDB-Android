@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imdb.ui.MovieDbCategory
 import com.example.imdb.R
-import com.example.imdb.becomeInvisible
-import com.example.imdb.becomeVisible
+import com.example.imdb.ui.becomeInvisible
+import com.example.imdb.ui.becomeVisible
 import com.example.imdb.data.entity.http.movie.CastMovie
 import com.example.imdb.ui.interfaces.IActivityInteraction
 import kotlinx.coroutines.Dispatchers

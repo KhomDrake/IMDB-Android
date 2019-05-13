@@ -1,4 +1,4 @@
-package com.example.imdb
+package com.example.imdb.ui
 
 import com.example.imdb.data.entity.http.movie.MovieDetail
 

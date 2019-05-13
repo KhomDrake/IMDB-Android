@@ -4,6 +4,8 @@ import com.example.imdb.data.Repository
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.movie.Movie
 import com.example.imdb.network.API
+import com.example.imdb.ui.EMPTY_STRING
+import com.example.imdb.ui.ZERO
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk

@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.imdb.ui.MovieDbCategory
-import com.example.imdb.EMPTY_MOVIE_DETAIL
+import com.example.imdb.ui.EMPTY_MOVIE_DETAIL
 import com.example.imdb.TAG_VINI
-import com.example.imdb.ZERO
+import com.example.imdb.ui.ZERO
 import com.example.imdb.data.entity.http.Review
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
@@ -76,14 +76,20 @@ abstract class DatabaseMovies : RoomDatabase() {
                 movieDetailDb.voteCount,
                 false
             )
-        } else { EMPTY_MOVIE_DETAIL }
+        } else {
+            EMPTY_MOVIE_DETAIL
+        }
     }
 
     fun getRecommendationLastMovie(idMovie: Int) : Recommendation {
         val moviesDb = moviesDao().getRecommendationMovie(idMovie)
         val movies = tableMoviesToMovies(moviesDb)
         return if(movies.isEmpty())
-                Recommendation(ZERO, MoviesList(ZERO, movies, ZERO))
+                Recommendation(
+                    ZERO, MoviesList(
+                        ZERO, movies,
+                        ZERO
+                    ))
             else
                 Recommendation(idMovie, MoviesList(ZERO, movies, ZERO))
     }

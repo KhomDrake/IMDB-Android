@@ -13,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.imdb.R
-import com.example.imdb.becomeInvisible
-import com.example.imdb.becomeVisible
+import com.example.imdb.ui.becomeInvisible
+import com.example.imdb.ui.becomeVisible
 import com.example.imdb.ui.movies.cast.CastActivity
 import com.example.imdb.ui.movies.moviereview.ReviewActivity
 import com.example.imdb.ui.movies.recommendation.RecommendationActivity

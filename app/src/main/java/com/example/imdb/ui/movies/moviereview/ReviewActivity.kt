@@ -8,8 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.R
-import com.example.imdb.becomeInvisible
-import com.example.imdb.becomeVisible
+import com.example.imdb.ui.becomeInvisible
+import com.example.imdb.ui.becomeVisible
 import com.example.imdb.ui.movies.recyclerview.RecyclerViewAdapterReviews
 import org.koin.android.ext.android.inject
 
