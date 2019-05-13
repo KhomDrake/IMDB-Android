@@ -1,6 +1,7 @@
 package com.example.imdb.network
 
-import com.example.imdb.data.entity.http.*
+import com.example.imdb.data.entity.http.Reviews
+import com.example.imdb.data.entity.http.movie.*
 
 interface IWebController {
 

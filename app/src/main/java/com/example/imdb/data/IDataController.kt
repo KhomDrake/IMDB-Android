@@ -1,8 +1,8 @@
 package com.example.imdb.data
 
-import com.example.imdb.data.entity.http.Movie
-import com.example.imdb.data.entity.http.MovieCredit
-import com.example.imdb.data.entity.http.MovieDetail
+import com.example.imdb.data.entity.http.movie.Movie
+import com.example.imdb.data.entity.http.movie.MovieCredit
+import com.example.imdb.data.entity.http.movie.MovieDetail
 import com.example.imdb.data.entity.http.Reviews
 
 interface IDataController {

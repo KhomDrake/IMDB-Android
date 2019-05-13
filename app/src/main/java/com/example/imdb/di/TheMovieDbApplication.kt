@@ -6,7 +6,6 @@ import org.koin.android.ext.android.startKoin
 class TheMovieDbApplication : Application() {
     override fun onCreate() {
         super.onCreate()
-        startKoin (this, listOf(movieDbKoinModule))
+        startKoin(this, listOf(movieDbKoinModule))
     }
-
 }

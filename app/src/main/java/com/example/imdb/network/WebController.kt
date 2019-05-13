@@ -5,7 +5,9 @@ import com.example.imdb.auxiliary.PAGE_ONE
 import com.example.imdb.auxiliary.ZERO
 import com.example.imdb.auxiliary.ZERO_DOUBLE
 import com.example.imdb.data.database.DatabaseMovies
-import com.example.imdb.data.entity.http.*
+import com.example.imdb.data.entity.http.Review
+import com.example.imdb.data.entity.http.Reviews
+import com.example.imdb.data.entity.http.movie.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -17,68 +19,95 @@ class WebController(private val databaseMovies: DatabaseMovies) : IWebController
 
     private val api = API().service()
 
-    private val errorMovie = Movie(ZERO, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, loading = false, error = true, adult = false, favorite = false)
+    private val errorMovie = Movie(
+        ZERO,
+        EMPTY_STRING,
+        EMPTY_STRING,
+        EMPTY_STRING,
+        loading = false,
+        error = true,
+        adult = false,
+        favorite = false
+    )
     private val errorMovieList = MoviesList(ZERO, listOf(errorMovie), ZERO)
-    private val errorMovieDetail = MovieDetail(false, 0, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, ZERO,
-        EMPTY_STRING, ZERO_DOUBLE, ZERO, error = true)
-    private val errorReview = Review(EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, error = true)
-    private val errorReviews = Reviews(ZERO, ZERO, listOf(errorReview), ZERO, ZERO, ZERO)
-    private val errorCast = Cast(ZERO, EMPTY_STRING, ZERO, ZERO, EMPTY_STRING, ZERO, EMPTY_STRING, error = true)
+    private val errorMovieDetail = MovieDetail(
+        false, 0, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, ZERO,
+        EMPTY_STRING, ZERO_DOUBLE, ZERO, error = true
+    )
+    private val errorReview = Review(
+        EMPTY_STRING,
+        EMPTY_STRING,
+        EMPTY_STRING,
+        EMPTY_STRING,
+        error = true
+    )
+    private val errorReviews =
+        Reviews(ZERO, ZERO, listOf(errorReview), ZERO, ZERO, ZERO)
+    private val errorCast = CastMovie(
+        ZERO,
+        EMPTY_STRING,
+        ZERO,
+        ZERO,
+        EMPTY_STRING,
+        ZERO,
+        EMPTY_STRING,
+        error = true
+    )
     private val errorMovieCredit = MovieCredit(listOf(errorCast), ZERO)
 
 
     override fun loadLatest(funResponse: (body: Movie) -> Unit) {
         coroutine {
-            try { funResponse(api.getLatest(APIKEY, databaseMovies.getLanguage()).await()) }
+            try { funResponse(api.getLatestMovie(APIKEY, databaseMovies.getLanguage()).await()) }
             catch (e: Exception) { funResponse(errorMovie) }
         }
     }
 
     override fun loadNowPlaying(funResponse: (body: MoviesList) -> Unit) {
         coroutine {
-            try { funResponse(api.getNowPlaying(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await()) }
+            try { funResponse(api.getNowPlayingMovie(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await()) }
             catch (e: Exception) { funResponse(errorMovieList) }
         }
     }
 
     override fun loadPopular(funResponse: (body: MoviesList) -> Unit) {
         coroutine {
-            try { funResponse(api.getPopular(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await()) }
+            try { funResponse(api.getPopularMovie(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await()) }
             catch (e: Exception) { funResponse(errorMovieList) }
         }
     }
 
     override fun loadTopRated(funResponse: (body: MoviesList) -> Unit) {
         coroutine {
-            try { funResponse(api.getTopRated(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await()) }
+            try { funResponse(api.getTopRatedMovie(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await()) }
             catch (e: Exception) { funResponse(errorMovieList) }
         }
     }
 
     override fun loadUpcoming(funResponse: (body: MoviesList) -> Unit) {
         coroutine {
-            try { funResponse(api.getUpcoming(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await()) }
+            try { funResponse(api.getUpcomingMovie(APIKEY, databaseMovies.getLanguage(), PAGE_ONE).await()) }
             catch (e: Exception) { funResponse(errorMovieList) }
         }
     }
 
     override fun loadMovieDetail(id: Int, funResponse: (body: MovieDetail) -> Unit) {
         coroutine {
-            try { funResponse(api.getDetail(id, APIKEY, databaseMovies.getLanguage()).await()) }
+            try { funResponse(api.getDetailMovie(id, APIKEY, databaseMovies.getLanguage()).await()) }
             catch (e: Exception) { funResponse(errorMovieDetail) }
         }
     }
 
     override fun loadRecommendation(id: Int, funResponse: (body: MoviesList) -> Unit) {
         coroutine {
-            try { funResponse(api.getRecommendation(id, APIKEY, databaseMovies.getLanguage()).await()) }
+            try { funResponse(api.getRecommendationMovie(id, APIKEY, databaseMovies.getLanguage()).await()) }
             catch (e: Exception) { funResponse(errorMovieList) }
         }
     }
 
     override fun loadReviews(id: Int, funResponse: (body: Reviews) -> Unit) {
         coroutine {
-            try { funResponse(api.getReviews(id, APIKEY, databaseMovies.getLanguage()).await()) }
+            try { funResponse(api.getReviewsMovie(id, APIKEY, databaseMovies.getLanguage()).await()) }
             catch (e: Exception) { funResponse(errorReviews) }
         }
     }

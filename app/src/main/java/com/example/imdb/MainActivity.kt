@@ -10,17 +10,6 @@ import com.example.imdb.ui.home.HomeAppActivity
 import com.example.imdb.ui.mainactivity.MainActivityViewController
 import org.koin.android.ext.android.inject
 
-enum class MovieCategory {
-    None,
-    Latest,
-    NowPlaying,
-    Popular,
-    TopRated,
-    Upcoming,
-    Recommendation,
-    Favorite
-}
-
 const val TAG_VINI = "vini"
 
 class MainActivity : AppCompatActivity() {
@@ -29,7 +18,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var guestButton: Button
     private val messageLoginButton = "Função indisponível"
     private val mainActivityViewController: MainActivityViewController by inject()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,3 +36,4 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
+

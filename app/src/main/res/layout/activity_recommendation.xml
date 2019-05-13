@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/imdb_background"
-        tools:context=".ui.recommendation.RecommendationActivity">
+        tools:context=".ui.movies.recommendation.RecommendationActivity">
 
     <TextView
             tools:text="Recommendation: Arrival"

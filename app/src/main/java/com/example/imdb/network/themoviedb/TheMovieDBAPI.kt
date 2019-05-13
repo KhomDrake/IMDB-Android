@@ -1,73 +1,143 @@
 package com.example.imdb.network.themoviedb
 
-import com.example.imdb.data.entity.http.*
+import com.example.imdb.data.entity.http.Reviews
+import com.example.imdb.data.entity.http.movie.*
 import kotlinx.coroutines.Deferred
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TheMovieDBAPI {
 
-    @GET("now_playing")
-    fun getNowPlaying(
+
+    @GET("movie/now_playing")
+    fun getNowPlayingMovie(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
     ): Deferred<MoviesList>
 
-    @GET("latest")
-    fun getLatest(
+    @GET("movie/latest")
+    fun getLatestMovie(
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<Movie>
 
-    @GET("popular")
-    fun getPopular(
+    @GET("movie/popular")
+    fun getPopularMovie(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
     ): Deferred<MoviesList>
 
-    @GET("top_rated")
-    fun getTopRated(
+    @GET("movie/top_rated")
+    fun getTopRatedMovie(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
     ): Deferred<MoviesList>
 
-    @GET("upcoming")
-    fun getUpcoming(
+    @GET("movie/upcoming")
+    fun getUpcomingMovie(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
     ): Deferred<MoviesList>
 
-    @GET("{id}")
-    fun getDetail(
+    @GET("movie/{id}")
+    fun getDetailMovie(
         @Path("id") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<MovieDetail>
 
-    @GET("{id}/recommendations")
-    fun getRecommendation(
+    @GET("movie/{id}/recommendations")
+    fun getRecommendationMovie(
         @Path("id") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<MoviesList>
 
-    @GET("{id}/reviews")
-    fun getReviews(
+    @GET("movie/{id}/reviews")
+    fun getReviewsMovie(
         @Path("id") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<Reviews>
 
-    @GET("{id}/credits")
+    @GET("movie/{id}/credits")
     fun getMovieCredit(
         @Path("id") id: Int,
         @Query("api_key") key: String
     ): Deferred<MovieCredit>
+
+
+    // 89386
+
+    @GET("tv/{id}")
+    fun getTvDetail(
+        @Path("id") id: Int,
+        @Query("api_key") key: String,
+        @Query("language") language: String
+    ) : Deferred<Any>
+
+    @GET("tv/{id}/credits")
+    fun getTvCredit(
+        @Path("id") id: Int,
+        @Query("api_key") key: String,
+        @Query("language") language: String
+    ) : Deferred<Any>
+
+    @GET("tv/{id}/recommendations")
+    fun getTvRecommendation(
+        @Path("id") id: Int,
+        @Query("api_key") key: String,
+        @Query("language") language: String
+    ) : Deferred<Any>
+
+    @GET("tv/{id}/reviews")
+    fun getTvReview(
+        @Path("id") id: Int,
+        @Query("api_key") key: String,
+        @Query("language") language: String
+    ) : Deferred<Any>
+
+    @GET("tv/airing_today")
+    fun getAiringTodayTV(
+        @Query("api_key") key: String,
+        @Query("language") language: String,
+        @Query("page") p: Int = 1
+    ): Deferred<Any>
+
+    @GET("tv/latest")
+    fun getLatestTV(
+        @Query("api_key") key: String,
+        @Query("language") language: String
+    ): Deferred<Any>
+
+    @GET("tv/on_the_air")
+    fun getOnTheAir(
+        @Query("api_key") key: String,
+        @Query("language") language: String,
+        @Query("page") p: Int = 1
+    ): Deferred<Any>
+
+    @GET("tv/popular")
+    fun getPopularTV(
+        @Query("api_key") key: String,
+        @Query("language") language: String,
+        @Query("page") p: Int = 1
+    ): Deferred<Any>
+
+    @GET("tv/upcoming")
+    fun getTopRatedTV(
+        @Query("api_key") key: String,
+        @Query("language") language: String,
+        @Query("page") p: Int = 1
+    ): Deferred<Any>
+
+
+
+
 
 }

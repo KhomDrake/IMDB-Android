@@ -1,9 +1,10 @@
 package com.example.imdb.data
 
-import com.example.imdb.MovieCategory
+import com.example.imdb.MovieDbCategory
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.application.RightResponseMovieCategory
-import com.example.imdb.data.entity.http.*
+import com.example.imdb.data.entity.http.Reviews
+import com.example.imdb.data.entity.http.movie.*
 import com.example.imdb.network.IWebController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -76,7 +77,12 @@ class DataController(private val webController: IWebController, private val data
                         webController.loadRecommendation(id) {
                             val moviesList = it
                             if(moviesList.results.isNotEmpty() && !moviesList.results.first().error) {
-                                databaseMovies.setRecommendationLastMovie(Recommendation(id, moviesList))
+                                databaseMovies.setRecommendationLastMovie(
+                                    Recommendation(
+                                        id,
+                                        moviesList
+                                    )
+                                )
                             }
                             funResponse(moviesAreFavorites(moviesList.results, listFavorites))
                         }
@@ -91,9 +97,9 @@ class DataController(private val webController: IWebController, private val data
             val latest = it
             databaseMovies.getFavorites {
                 val listFavorites = it
-                isToMakeAPIRequest(latest, MovieCategory.Latest) {
+                isToMakeAPIRequest(latest, MovieDbCategory.MovieLatest) {
                     val makeRequest = it
-                    if (makeRequest) { responseAPI(funResponse, listFavorites, MovieCategory.Latest) }
+                    if (makeRequest) { responseAPI(funResponse, listFavorites, MovieDbCategory.MovieLatest) }
                     else { funResponse(moviesAreFavorites(latest, listFavorites)) }
                 }
             }
@@ -105,9 +111,9 @@ class DataController(private val webController: IWebController, private val data
             val nowPlaying = it
             databaseMovies.getFavorites {
                 val listFavorites = it
-                isToMakeAPIRequest(nowPlaying, MovieCategory.NowPlaying) {
+                isToMakeAPIRequest(nowPlaying, MovieDbCategory.MovieNowPlaying) {
                     val makeRequest = it
-                    if (makeRequest) { responseAPI(funResponse, listFavorites, MovieCategory.NowPlaying) }
+                    if (makeRequest) { responseAPI(funResponse, listFavorites, MovieDbCategory.MovieNowPlaying) }
                     else { funResponse(moviesAreFavorites(nowPlaying, listFavorites)) }
                 }
             }
@@ -119,9 +125,9 @@ class DataController(private val webController: IWebController, private val data
             val popular = it
             databaseMovies.getFavorites {
                 val listFavorites = it
-                isToMakeAPIRequest(popular, MovieCategory.Popular) {
+                isToMakeAPIRequest(popular, MovieDbCategory.MoviePopular) {
                     val makeRequest = it
-                    if (makeRequest) { responseAPI(funResponse, listFavorites, MovieCategory.Popular) }
+                    if (makeRequest) { responseAPI(funResponse, listFavorites, MovieDbCategory.MoviePopular) }
                     else { funResponse(moviesAreFavorites(popular, listFavorites)) }
                 }
             }
@@ -133,9 +139,9 @@ class DataController(private val webController: IWebController, private val data
             val topRated = it
             databaseMovies.getFavorites {
                 val listFavorites = it
-                isToMakeAPIRequest(topRated, MovieCategory.TopRated) {
+                isToMakeAPIRequest(topRated, MovieDbCategory.MovieTopRated) {
                     val makeRequest = it
-                    if (makeRequest) { responseAPI(funResponse, listFavorites, MovieCategory.TopRated) }
+                    if (makeRequest) { responseAPI(funResponse, listFavorites, MovieDbCategory.MovieTopRated) }
                     else { funResponse(moviesAreFavorites(topRated, listFavorites)) }
                 }
             }
@@ -147,16 +153,16 @@ class DataController(private val webController: IWebController, private val data
             val upcoming = it
             databaseMovies.getFavorites {
                 val listFavorites = it
-                isToMakeAPIRequest(upcoming, MovieCategory.Upcoming) {
+                isToMakeAPIRequest(upcoming, MovieDbCategory.MovieUpcoming) {
                     val makeRequest = it
-                    if (makeRequest) { responseAPI(funResponse, listFavorites, MovieCategory.Upcoming) }
+                    if (makeRequest) { responseAPI(funResponse, listFavorites, MovieDbCategory.MovieUpcoming) }
                     else { funResponse(moviesAreFavorites(upcoming, listFavorites)) }
                 }
             }
         }
     }
 
-    private fun setTime(movieCategory: MovieCategory) = databaseMovies.lastTimeUpdateCategory(movieCategory, getCurrentTime())
+    private fun setTime(movieDbCategory: MovieDbCategory) = databaseMovies.lastTimeUpdateCategory(movieDbCategory, getCurrentTime())
 
     private fun setListDatabaseMovies(movies: List<Movie>, returnRightResponse: (RightResponseMovieCategory) -> Unit, rightResponseMovieCategory: RightResponseMovieCategory) {
         val list: List<Movie> = if(movies.isEmpty() || movies[0].error) listOf() else movies
@@ -164,14 +170,14 @@ class DataController(private val webController: IWebController, private val data
         if(list.isEmpty())
             return
 
-        setTime(rightResponseMovieCategory.movieCategory)
+        setTime(rightResponseMovieCategory.movieDbCategory)
 
-        when(rightResponseMovieCategory.movieCategory) {
-            MovieCategory.NowPlaying -> databaseMovies.setNowPlaying(list, returnRightResponse, rightResponseMovieCategory)
-            MovieCategory.Popular -> databaseMovies.setPopular(list, returnRightResponse, rightResponseMovieCategory)
-            MovieCategory.TopRated -> databaseMovies.setTopRated(list, returnRightResponse, rightResponseMovieCategory)
-            MovieCategory.Upcoming -> databaseMovies.setUpcoming(list, returnRightResponse, rightResponseMovieCategory)
-            MovieCategory.Latest -> databaseMovies.setLatest(list[0], returnRightResponse, rightResponseMovieCategory)
+        when(rightResponseMovieCategory.movieDbCategory) {
+            MovieDbCategory.MovieNowPlaying -> databaseMovies.setNowPlaying(list, returnRightResponse, rightResponseMovieCategory)
+            MovieDbCategory.MoviePopular -> databaseMovies.setPopular(list, returnRightResponse, rightResponseMovieCategory)
+            MovieDbCategory.MovieTopRated -> databaseMovies.setTopRated(list, returnRightResponse, rightResponseMovieCategory)
+            MovieDbCategory.MovieUpcoming -> databaseMovies.setUpcoming(list, returnRightResponse, rightResponseMovieCategory)
+            MovieDbCategory.MovieLatest -> databaseMovies.setLatest(list[0], returnRightResponse, rightResponseMovieCategory)
             else -> Unit
         }
     }
@@ -187,8 +193,8 @@ class DataController(private val webController: IWebController, private val data
 
     private fun hasNoError(movies: List<Movie>) = movies.isNotEmpty() && !movies.first().error
 
-    private fun isToMakeAPIRequest(movieList: MutableList<Movie>, movieCategory: MovieCategory, response: (Boolean) -> Unit) {
-        databaseMovies.getLastTimeUpdateCategory(movieCategory) {
+    private fun isToMakeAPIRequest(movieList: MutableList<Movie>, movieDbCategory: MovieDbCategory, response: (Boolean) -> Unit) {
+        databaseMovies.getLastTimeUpdateCategory(movieDbCategory) {
             val deprecated = getCurrentTime().minus(it) > timeToBeDeprecated
             response(movieList.isEmptyOrInLoading() || deprecated)
         }
@@ -206,36 +212,36 @@ class DataController(private val webController: IWebController, private val data
         return movies
     }
 
-    private fun responseAPI(funResponse: (movies: List<Movie>) -> Unit, favorites: MutableList<Movie>, movieCategory: MovieCategory) {
-        when(movieCategory) {
-            MovieCategory.Latest -> {
+    private fun responseAPI(funResponse: (movies: List<Movie>) -> Unit, favorites: MutableList<Movie>, movieDbCategory: MovieDbCategory) {
+        when(movieDbCategory) {
+            MovieDbCategory.MovieLatest -> {
                 webController.loadLatest {
                     setListDatabaseMovies(listOf(it), this::returnRightResponse,
-                        RightResponseMovieCategory(funResponse, listOf(it), movieCategory, favorites))
+                        RightResponseMovieCategory(funResponse, listOf(it), movieDbCategory, favorites))
                 }
             }
-            MovieCategory.Upcoming -> {
+            MovieDbCategory.MovieUpcoming -> {
                 webController.loadUpcoming {
                     setListDatabaseMovies(it.results, this::returnRightResponse,
-                        RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
+                        RightResponseMovieCategory(funResponse, it.results, movieDbCategory, favorites))
                 }
             }
-            MovieCategory.TopRated -> {
+            MovieDbCategory.MovieTopRated -> {
                 webController.loadTopRated {
                     setListDatabaseMovies(it.results, this::returnRightResponse,
-                        RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
+                        RightResponseMovieCategory(funResponse, it.results, movieDbCategory, favorites))
                 }
             }
-            MovieCategory.Popular -> {
+            MovieDbCategory.MoviePopular -> {
                 webController.loadPopular {
                     setListDatabaseMovies(it.results, this::returnRightResponse,
-                        RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
+                        RightResponseMovieCategory(funResponse, it.results, movieDbCategory, favorites))
                 }
             }
-            MovieCategory.NowPlaying -> {
+            MovieDbCategory.MovieNowPlaying -> {
                 webController.loadNowPlaying {
                     setListDatabaseMovies(it.results, this::returnRightResponse,
-                        RightResponseMovieCategory(funResponse, it.results, movieCategory, favorites))
+                        RightResponseMovieCategory(funResponse, it.results, movieDbCategory, favorites))
                 }
             }
             else -> Unit
@@ -247,28 +253,28 @@ class DataController(private val webController: IWebController, private val data
         val movies = rightResponseMovieCategory.movies
         val favorites = rightResponseMovieCategory.favorites
         val funResponse = rightResponseMovieCategory.funResponse
-        val movieCategory = rightResponseMovieCategory.movieCategory
+        val movieCategory = rightResponseMovieCategory.movieDbCategory
 
         val moviesFavorites = moviesAreFavorites(movies, favorites)
 
         when (movieCategory) {
-            MovieCategory.Latest -> if (hasNoError(moviesFavorites)) {
+            MovieDbCategory.MovieLatest -> if (hasNoError(moviesFavorites)) {
                 databaseMovies.getLatest { funResponse(moviesAreFavorites(it, favorites)) }
             } else funResponse(moviesFavorites)
 
-            MovieCategory.Upcoming -> if (hasNoError(moviesFavorites)) {
+            MovieDbCategory.MovieUpcoming -> if (hasNoError(moviesFavorites)) {
                 databaseMovies.getUpcoming { funResponse(moviesAreFavorites(it, favorites)) }
             } else funResponse(moviesFavorites)
 
-            MovieCategory.TopRated -> if (hasNoError(moviesFavorites)) {
+            MovieDbCategory.MovieTopRated -> if (hasNoError(moviesFavorites)) {
                 databaseMovies.getTopRated { funResponse(moviesAreFavorites(it, favorites)) }
             } else funResponse(moviesFavorites)
 
-            MovieCategory.NowPlaying -> if (hasNoError(moviesFavorites)) {
+            MovieDbCategory.MovieNowPlaying -> if (hasNoError(moviesFavorites)) {
                 databaseMovies.getNowPlaying { funResponse(moviesAreFavorites(it, favorites)) }
             } else funResponse(moviesFavorites)
 
-            MovieCategory.Popular -> if (hasNoError(moviesFavorites)) {
+            MovieDbCategory.MoviePopular -> if (hasNoError(moviesFavorites)) {
                 databaseMovies.getPopular { funResponse(moviesAreFavorites(it, favorites)) }
             } else funResponse(moviesFavorites)
 

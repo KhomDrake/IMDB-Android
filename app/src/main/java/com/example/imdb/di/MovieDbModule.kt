@@ -6,13 +6,13 @@ import com.example.imdb.data.DataController
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.network.IWebController
 import com.example.imdb.network.WebController
-import com.example.imdb.ui.cast.CastViewController
+import com.example.imdb.ui.movies.cast.CastViewController
 import com.example.imdb.ui.home.HomeAppViewController
-import com.example.imdb.ui.homemovies.HomeMoviesViewController
+import com.example.imdb.ui.movies.homemovies.HomeMoviesViewController
 import com.example.imdb.ui.mainactivity.MainActivityViewController
-import com.example.imdb.ui.moviedetail.MovieDetailViewController
-import com.example.imdb.ui.moviereview.ReviewViewController
-import com.example.imdb.ui.recommendation.RecommendationViewController
+import com.example.imdb.ui.movies.moviedetail.MovieDetailViewController
+import com.example.imdb.ui.movies.moviereview.ReviewViewController
+import com.example.imdb.ui.movies.recommendation.RecommendationViewController
 import org.koin.dsl.module.module
 
 val movieDbKoinModule = module {

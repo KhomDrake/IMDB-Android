@@ -1,12 +1,10 @@
 package com.example.imdb
 
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.imdb.auxiliary.EMPTY_STRING
 import com.example.imdb.auxiliary.ZERO
 import com.example.imdb.data.DataController
-import com.example.imdb.data.IDataController
 import com.example.imdb.data.database.DatabaseMovies
-import com.example.imdb.data.entity.http.Movie
+import com.example.imdb.data.entity.http.movie.Movie
 import com.example.imdb.network.WebController
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -14,14 +12,22 @@ import io.mockk.mockk
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 
 
 class TestTest {
 
     private lateinit var database: DatabaseMovies
     private lateinit var webController: WebController
-    private val movie = Movie(ZERO, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING, loading = false, error = true, adult = false, favorite = false)
+    private val movie = Movie(
+        ZERO,
+        EMPTY_STRING,
+        EMPTY_STRING,
+        EMPTY_STRING,
+        loading = false,
+        error = true,
+        adult = false,
+        favorite = false
+    )
 
     @Before
     fun `wddas`() {

@@ -14,5 +14,4 @@ abstract class AcceptanceTest<T : Activity>(clazz: Class<T>) {
 
     @Rule @JvmField
     val testRule: ActivityTestRule<T> = IntentsTestRule(clazz)
-
 }

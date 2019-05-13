@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:background="@color/imdb_background"
         android:layout_height="match_parent"
-        tools:context=".ui.homemovies.HomeMoviesActivity">
+        tools:context=".ui.movies.homemovies.HomeMoviesActivity">
 
     <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
