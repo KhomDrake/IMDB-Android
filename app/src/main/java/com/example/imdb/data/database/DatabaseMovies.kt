@@ -188,7 +188,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun favoriteMovie(movieId: Int, toFavorite: Boolean) =
         if(toFavorite) moviesDao().insertFavorite(TableFavorite(movieId)) else moviesDao().deleteFavorite(movieId)
 
-    private fun setup() {
+    fun setup() {
         val listOfMovieDbCategory = listOf(MovieDbCategory.MovieLatest.ordinal,
             MovieDbCategory.MovieNowPlaying.ordinal,
             MovieDbCategory.MoviePopular.ordinal,
@@ -197,9 +197,7 @@ abstract class DatabaseMovies : RoomDatabase() {
             MovieDbCategory.MovieRecommendation.ordinal)
 
         coroutine {
-            listOfMovieDbCategory.forEach {
-                moviesDao().insertMovieList(TableMoviesList(it, 1, 1))
-            }
+            listOfMovieDbCategory.forEach { moviesDao().insertMovieList(TableMoviesList(it, 1, 1)) }
         }
     }
 

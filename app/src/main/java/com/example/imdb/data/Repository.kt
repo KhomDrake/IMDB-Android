@@ -17,6 +17,8 @@ class Repository(private val webController: API, private val databaseMovies: Dat
 
     private val timeToBeDeprecated: Long = 5 * 60000
 
+    init { databaseMovies.setup() }
+
     fun setupDatabase(language: String) { this.language = language }
 
     fun getFavorites(response: (List<Movie>) -> Unit) {
