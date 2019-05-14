@@ -26,7 +26,7 @@ class MovieDetailViewController(private val repository: Repository) {
 
     fun getVoteCount(voteCount: Int) = if(voteCount == 0) "Vote Count: Unknown" else "Vote Count: $voteCount"
 
-    fun getQuantStars(voteAverage: Double) = Math.round(Math.round(voteAverage)/2.0).toInt()
+    fun getQuantityStars(voteAverage: Double) = Math.round(Math.round(voteAverage)/2.0).toInt()
 
     fun getMovieTitle(title: String) = if(title.isBlank() || title.isEmpty()) "Title: Unknown" else
         "Title: $title"

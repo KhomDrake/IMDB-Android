@@ -11,6 +11,7 @@ import com.example.imdb.ui.MovieDbCategory
 import com.example.imdb.R
 import com.example.imdb.ui.becomeInvisible
 import com.example.imdb.ui.becomeVisible
+import com.example.imdb.ui.becomeVisibleOrInvisible
 import com.example.imdb.ui.interfaces.IActivityInteraction
 import com.example.imdb.ui.movies.recyclerview.RecyclerViewAdapterCast
 import org.koin.android.ext.android.inject
@@ -55,8 +56,7 @@ class CastActivity : AppCompatActivity(), IActivityInteraction {
             this.runOnUiThread {
                 loading.becomeInvisible()
                 recyclerViewCast.castAdapter.setMovieCredit(it.castMovie)
-                if(it.castMovie.isEmpty())
-                    noCast.becomeVisible()
+                noCast.becomeVisibleOrInvisible(it.castMovie.isEmpty())
             }
         }
     }

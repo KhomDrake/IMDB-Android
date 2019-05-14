@@ -8,19 +8,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 class TheMovieDBAPI {
 
     private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("https://api.themoviedb.org/3/")
+        .baseUrl("https://apiTheMovieDB.themoviedb.org/3/")
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    private var aDefault: ITheMovieDBAPI? = null
+    private var apiTheMovieDB: ITheMovieDBAPI? = null
 
     fun service(): ITheMovieDBAPI {
-        if (aDefault == null) {
-            aDefault = retrofit.create(ITheMovieDBAPI::class.java)
+        if (apiTheMovieDB == null) {
+            apiTheMovieDB = retrofit.create(ITheMovieDBAPI::class.java)
         }
 
-        return aDefault!!
+        return apiTheMovieDB!!
     }
 
 }

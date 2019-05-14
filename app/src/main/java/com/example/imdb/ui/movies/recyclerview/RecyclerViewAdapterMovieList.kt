@@ -36,15 +36,12 @@ class RecyclerViewAdapterMovieList(
     }
 
     fun setMovies(movies: List<Movie>) {
-        if(movies.isEmpty())
-            return
+        if(movies.isEmpty()) return
 
         informationMovies.clear()
         informationMovies.addAll(movies)
 
-        coroutineImage {
-            notifyDataSetChanged()
-        }
+        coroutineImage { notifyDataSetChanged() }
     }
 
     fun getMoviePosition(idMovie: Int) : Int {
@@ -89,9 +86,7 @@ class RecyclerViewAdapterMovieList(
             if(result.error)
             {
                 again.becomeVisible()
-                again.setOnClickListener {
-                    iFavorite.loadMovies(movieDbCategory)
-                }
+                again.setOnClickListener { iFavorite.loadMovies(movieDbCategory) }
                 return
             }
 
@@ -141,21 +136,15 @@ class RecyclerViewAdapterMovieList(
             heart.becomeInvisible()
         }
 
-        private fun coroutineImage(response: suspend () -> Unit) {
-            GlobalScope.launch(Dispatchers.Main) {
-                response()
-            }
-        }
-
         private fun getPath(path: String?, urlImg: String, imgNotFound: String) =
             if (path == null) imgNotFound else urlImg + path
     }
 
-    private fun coroutineImage(response: suspend () -> Unit) {
-        GlobalScope.launch(Dispatchers.Main) {
-            response()
-        }
-    }
-
     fun hasNoFavorites() = informationMovies.isEmpty()
+
+    companion object {
+        fun coroutineImage(response: suspend () -> Unit) = GlobalScope.launch(Dispatchers.Main) { response() }
+    }
 }
+
+

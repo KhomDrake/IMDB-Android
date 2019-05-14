@@ -16,6 +16,7 @@ import com.example.imdb.R
 import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.becomeInvisible
 import com.example.imdb.ui.becomeVisible
+import com.example.imdb.ui.becomeVisibleOrInvisible
 import com.example.imdb.ui.interfaces.IFavorite
 import com.example.imdb.ui.movies.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.movies.recyclerview.RecyclerViewAdapterMovieList
@@ -62,7 +63,7 @@ class RecommendationActivity : AppCompatActivity(), IFavorite {
                 recommendationRecyclerView.setupAdapter(this, MovieDbCategory.MovieRecommendation)
                 recommendationViewController.loadRecommendation(movieID) {
                     this.runOnUiThread {
-                        if (it.isEmpty()) recommendationNoFound.becomeVisible()
+                        recommendationNoFound.becomeVisibleOrInvisible(isToBeVisible = it.isEmpty())
 
                         recommendationRecyclerView.movieAdapter.setMovies(it)
                         loadingRecommendation.becomeInvisible()

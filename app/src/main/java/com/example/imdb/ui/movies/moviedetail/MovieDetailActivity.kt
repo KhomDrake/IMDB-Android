@@ -42,8 +42,6 @@ class MovieDetailActivity : AppCompatActivity() {
         get() = listOf(title, runtime, releaseDate, voteCount, overView, overViewText, recommendation, review, cast)
 
     private lateinit var listOfStars: List<ImageView>
-//    private val listOfStars: List<ImageView>
-//        get() = listOf(findViewById(R.id.first_star),findViewById(R.id.second_star),findViewById(R.id.third_star),findViewById(R.id.fourth_star),findViewById(R.id.fifth_star))
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -119,7 +117,7 @@ class MovieDetailActivity : AppCompatActivity() {
 
                     viewsDetailMovie.forEach { it.becomeVisible() }
 
-                    val quantStars: Int = movieDetailViewController.getQuantStars(it.voteAverage)
+                    val quantStars: Int = movieDetailViewController.getQuantityStars(it.voteAverage)
                     for (i in 0 until quantStars) { listOfStars[i].becomeVisible() }
 
                     titleText = it.title

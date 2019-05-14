@@ -15,6 +15,7 @@ import com.example.imdb.ui.MovieDbCategory
 import com.example.imdb.R
 import com.example.imdb.ui.becomeInvisible
 import com.example.imdb.ui.becomeVisible
+import com.example.imdb.ui.becomeVisibleOrInvisible
 import com.example.imdb.ui.movies.homemovies.HomeMoviesActivity
 import com.example.imdb.ui.tv.hometv.HomeTvActivity
 import com.example.imdb.ui.interfaces.IFavorite
@@ -65,13 +66,8 @@ class HomeAppActivity : AppCompatActivity(), IFavorite {
     private fun loadFavorite() {
         homeAppViewController.getFavorites {
             this.runOnUiThread {
-                if(it.isEmpty())
-                    messengerNotFavorites.becomeVisible()
-                else
-                    messengerNotFavorites.becomeInvisible()
-
+                messengerNotFavorites.becomeVisibleOrInvisible(isToBeVisible = it.isEmpty())
                 it.forEach { it.favorite = true }
-
                 loadingFavorite.becomeInvisible()
                 favoritesRecyclerView.favoriteAdapter.setMovies(it)
             }

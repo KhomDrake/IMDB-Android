@@ -37,8 +37,7 @@ class RecyclerViewAdapterCast(
     }
 
     fun setMovieCredit(castMovie: List<CastMovie>) {
-        if(castMovie.isEmpty())
-            return
+        if(castMovie.isEmpty()) return
 
         informationCastMovie.clear()
         informationCastMovie.addAll(castMovie)

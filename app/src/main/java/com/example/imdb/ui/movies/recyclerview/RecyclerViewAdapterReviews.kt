@@ -29,7 +29,7 @@ class RecyclerViewAdapterReviews (
     fun setReviews(reviews: Reviews) {
         idMovie = reviews.id
         informationReview.clear()
-        informationReview.addAll(reviews.results)
+        informationReview.addAll(reviews.reviews)
         notifyDataSetChanged()
     }
 

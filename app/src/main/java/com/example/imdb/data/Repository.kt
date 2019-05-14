@@ -102,8 +102,6 @@ class Repository(private val webController: API, private val databaseMovies: Dat
         return false
     }
 
-    private fun hasNoError(movies: List<Movie>) = movies.isNotEmpty() && !movies.first().error
-
     private fun isToMakeAPIRequest(movieList: List<Movie>, movieDbCategory: MovieDbCategory) : Boolean {
         val lastTime = databaseMovies.getLastTimeUpdateCategory(movieDbCategory)
         val deprecated = getCurrentTime().minus(lastTime) > timeToBeDeprecated

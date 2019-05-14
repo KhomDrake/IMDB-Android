@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.R
 import com.example.imdb.ui.becomeInvisible
 import com.example.imdb.ui.becomeVisible
+import com.example.imdb.ui.becomeVisibleOrInvisible
 import com.example.imdb.ui.movies.recyclerview.RecyclerViewAdapterReviews
 import org.koin.android.ext.android.inject
 
@@ -60,10 +61,10 @@ class ReviewActivity : AppCompatActivity() {
             this.runOnUiThread {
                 loadingReview.becomeInvisible()
 
-                if (it.results.isNotEmpty() && it.results[0].error) {
+                if (it.reviews.isNotEmpty() && it.reviews[0].error) {
                     tryAgain.becomeVisible()
                 } else {
-                    if (it.results.isEmpty()) noReviews.becomeVisible()
+                    noReviews.becomeVisibleOrInvisible(isToBeVisible = it.reviews.isEmpty())
                     reviewRecyclerView.reviewAdapter.setReviews(it)
                 }
             }

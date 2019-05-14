@@ -4,6 +4,7 @@ import com.example.imdb.data.entity.http.movie.MovieDetail
 
 const val EMPTY_STRING = ""
 const val ZERO = 0
+const val ONE = 1
 const val PAGE_ONE = 1
 const val ZERO_DOUBLE = 0.0
 val EMPTY_MOVIE_DETAIL = MovieDetail(

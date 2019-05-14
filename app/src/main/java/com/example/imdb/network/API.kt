@@ -107,9 +107,7 @@ class API(private val databaseMovies: DatabaseMovies) {
     }
 
     suspend fun loadMovieCredit(id: Int) : MovieCredit {
-            try {
-                return api.getMovieCredit(id, APIKEY).await()
-            }
-            catch (e: Exception) { return errorMovieCredit }
+        return try { api.getMovieCredit(id, APIKEY).await() }
+            catch (e: Exception) { errorMovieCredit }
     }
 }

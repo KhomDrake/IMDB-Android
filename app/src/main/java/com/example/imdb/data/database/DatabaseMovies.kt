@@ -3,14 +3,12 @@ package com.example.imdb.data.database
 import android.util.Log
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.imdb.ui.MovieDbCategory
-import com.example.imdb.ui.EMPTY_MOVIE_DETAIL
 import com.example.imdb.TAG_VINI
-import com.example.imdb.ui.ZERO
 import com.example.imdb.data.entity.http.Review
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
 import com.example.imdb.data.entity.table.*
+import com.example.imdb.ui.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -139,11 +137,9 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setReviews(reviews: Reviews) {
-        Log.i(TAG_VINI, reviews.id.toString())
-        Log.i(TAG_VINI, reviews.idMovie.toString())
-        moviesDao().insertReviewInformation(TableReviewInformation(reviews.id, reviews.id, 1, 1, 1))
-        for(review in reviews.results) {
-            moviesDao().insertReview(TableReview(0, review.author, review.content, review.url, reviews.id))
+        moviesDao().insertReviewInformation(TableReviewInformation(reviews.id, reviews.id, PAGE_ONE, PAGE_ONE, ONE))
+        reviews.reviews.forEach {
+            moviesDao().insertReview(TableReview(0, it.author, it.content, it.url, reviews.id))
         }
     }
 
@@ -151,9 +147,9 @@ abstract class DatabaseMovies : RoomDatabase() {
         if(recommendation.moviesList.results.isNotEmpty() && recommendation.moviesList.results.first().error) return
 
         val idMovie = recommendation.id
-        for (movie in recommendation.moviesList.results) {
-            moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
-            moviesDao().insertMovieRecommendation(TableMovieRecommendation(idMovie + movie.id, idMovie, movie.id))
+        recommendation.moviesList.results.forEach {
+            moviesDao().insertMovie(TableMovie(it.id, it.originalTitle, it.posterPath, it.title, it.adult))
+            moviesDao().insertMovieRecommendation(TableMovieRecommendation(idMovie + it.id, idMovie, it.id))
         }
     }
 
@@ -179,9 +175,9 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun setCreditMovie(credit: MovieCredit, idMovie: Int) {
         if(credit.castMovie.isNotEmpty() && credit.castMovie.first().error) return
 
-        for (cast in credit.castMovie) {
-            moviesDao().insertMovieCast(TableCast(cast.castId, idMovie, cast.character, cast.gender,
-                cast.id, cast.name, cast.order, cast.profilePath))
+        credit.castMovie.forEach {
+            moviesDao().insertMovieCast(TableCast(it.castId, idMovie, it.character, it.gender,
+                it.id, it.name, it.order, it.profilePath))
         }
     }
 
@@ -189,12 +185,8 @@ abstract class DatabaseMovies : RoomDatabase() {
         moviesDao().insertLastUpdateCategory(TableLastUpdateCategory(movieDbCategory.ordinal, currentTime))
     }
 
-    fun favoriteMovie(movieId: Int, toFavorite: Boolean) {
-        if(toFavorite)
-            moviesDao().insertFavorite(TableFavorite(movieId))
-        else
-            moviesDao().deleteFavorite(movieId)
-    }
+    fun favoriteMovie(movieId: Int, toFavorite: Boolean) =
+        if(toFavorite) moviesDao().insertFavorite(TableFavorite(movieId)) else moviesDao().deleteFavorite(movieId)
 
     private fun setup() {
         val listOfMovieDbCategory = listOf(MovieDbCategory.MovieLatest.ordinal,
@@ -236,7 +228,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     private fun coroutine(block: suspend () -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
+        GlobalScope.launch(Dispatchers.Default) {
             block()
         }
     }
