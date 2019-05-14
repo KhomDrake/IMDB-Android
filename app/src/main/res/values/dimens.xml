@@ -1,4 +1,6 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="size_title_home_movies">26sp</dimen>
+    <dimen name="medium_text">16sp</dimen>
+    <dimen name="the_movie_db_text_small">14sp</dimen>
 </resources>

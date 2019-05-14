@@ -5,10 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -36,12 +33,11 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var tryAgain: Button
     private lateinit var overViewText: TextView
     private lateinit var titleText: String
+    private lateinit var ratingStars: RatingBar
     private var movieID: Int = -3000
 
     private val viewsDetailMovie: List<View>
-        get() = listOf(title, runtime, releaseDate, voteCount, overView, overViewText, recommendation, review, cast)
-
-    private lateinit var listOfStars: List<ImageView>
+        get() = listOf(title, runtime, releaseDate, voteCount, overView, overViewText, recommendation, review, cast, ratingStars)
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,23 +46,22 @@ class MovieDetailActivity : AppCompatActivity() {
 
         progressBar = findViewById(R.id.loading)
         tryAgain = findViewById(R.id.again)
-        img = findViewById(R.id.postImg)
+        img = findViewById(R.id.posterImage)
         title = findViewById(R.id.movie_title)
         runtime = findViewById(R.id.runtime)
         releaseDate = findViewById(R.id.releasedate)
         overView = findViewById(R.id.overview)
-        voteCount = findViewById(R.id.votecount)
+        voteCount = findViewById(R.id.vote_count)
         recommendation = findViewById(R.id.recommendations)
+        ratingStars = findViewById(R.id.rateStars)
         review = findViewById(R.id.reviews)
         overViewText = findViewById(R.id.overview_text)
         cast = findViewById(R.id.cast)
 
-        listOfStars = listOf(findViewById(R.id.first_star), findViewById(R.id.second_star), findViewById(R.id.third_star),
-        findViewById(R.id.fourth_star), findViewById(R.id.fifth_star))
+        ratingStars.isEnabled = false
 
         tryAgain.becomeInvisible()
         viewsDetailMovie.forEach { it.becomeInvisible() }
-        listOfStars.forEach { it.becomeInvisible() }
 
         img.becomeVisible()
         progressBar.becomeVisible()
@@ -118,7 +113,7 @@ class MovieDetailActivity : AppCompatActivity() {
                     viewsDetailMovie.forEach { it.becomeVisible() }
 
                     val quantStars: Int = movieDetailViewController.getQuantityStars(it.voteAverage)
-                    for (i in 0 until quantStars) { listOfStars[i].becomeVisible() }
+                    ratingStars.rating = quantStars.toFloat()
 
                     titleText = it.title
 

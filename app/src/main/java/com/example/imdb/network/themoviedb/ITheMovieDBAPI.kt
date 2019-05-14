@@ -11,7 +11,7 @@ interface ITheMovieDBAPI {
 
 
     @GET("movie/now_playing")
-    fun getNowPlayingMovie(
+     fun getNowPlayingMovie(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1

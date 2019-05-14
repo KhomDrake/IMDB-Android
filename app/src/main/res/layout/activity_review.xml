@@ -72,7 +72,7 @@
             android:layout_height="58dp"
             android:text="@string/try_again"
             android:textSize="@dimen/size_title_home_movies"
-            android:background="@color/imdb_background_text3"
+            android:background="@drawable/button2_movie_db"
             android:textColor="@color/imdb_text"
             app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/again"

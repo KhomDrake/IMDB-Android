@@ -6,4 +6,9 @@
         <item name="colorPrimaryDark">@color/imdb</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <style name="RatingBarMovie" parent="Theme.AppCompat">
+        <item name="colorControlNormal">#4Dfcfcfc</item>
+        <item name="colorControlActivated">#00cc96</item>
+    </style>
 </resources>

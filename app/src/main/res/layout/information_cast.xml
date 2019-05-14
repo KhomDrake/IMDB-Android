@@ -44,7 +44,7 @@
             android:layout_height="89dp"
             android:text="@string/try_again"
             android:textColor="@color/imdb_text"
-            android:background="@color/imdb_background_text3"
+            android:background="@drawable/button2_movie_db"
             app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/again"
             android:textSize="30sp"
