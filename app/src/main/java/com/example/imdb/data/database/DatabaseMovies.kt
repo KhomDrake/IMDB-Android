@@ -1,9 +1,7 @@
 package com.example.imdb.data.database
 
-import android.util.Log
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.imdb.TAG_VINI
 import com.example.imdb.data.entity.http.Review
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
@@ -137,6 +135,8 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setReviews(reviews: Reviews) {
+        if(reviews.reviews.isNullOrEmpty() || reviews.reviews.first().error) return
+
         moviesDao().insertReviewInformation(TableReviewInformation(reviews.id, reviews.id, PAGE_ONE, PAGE_ONE, ONE))
         reviews.reviews.forEach {
             moviesDao().insertReview(TableReview(0, it.author, it.content, it.url, reviews.id))
@@ -144,7 +144,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setRecommendationMovie(recommendation: Recommendation) {
-        if(recommendation.moviesList.results.isNotEmpty() && recommendation.moviesList.results.first().error) return
+        if(recommendation.moviesList.results.isNullOrEmpty() || recommendation.moviesList.results.first().error) return
 
         val idMovie = recommendation.id
         recommendation.moviesList.results.forEach {
@@ -162,7 +162,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setMovie(movies: List<Movie>, movieDbCategory: MovieDbCategory) {
-        if(movies.first().error) return
+        if(movies.isEmpty() || movies.first().error) return
 
         moviesDao().deleteMovieCategory(movieDbCategory.ordinal)
         movies.forEach {
@@ -173,7 +173,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setCreditMovie(credit: MovieCredit, idMovie: Int) {
-        if(credit.castMovie.isNotEmpty() && credit.castMovie.first().error) return
+        if(credit.castMovie.isNullOrEmpty() || credit.castMovie.first().error) return
 
         credit.castMovie.forEach {
             moviesDao().insertMovieCast(TableCast(it.castId, idMovie, it.character, it.gender,

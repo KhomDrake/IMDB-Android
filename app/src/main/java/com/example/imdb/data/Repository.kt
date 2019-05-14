@@ -56,6 +56,7 @@ class Repository(private val webController: API, private val databaseMovies: Dat
             val movieReviews = databaseMovies.getMovieReviews(id)
             if(movieReviews.idMovie != id) {
                 val movieReviewsAPI = webController.loadReviews(id)
+                Log.i(TAG_VINI, movieReviewsAPI.toString())
                 databaseMovies.setReviews(movieReviewsAPI)
                 funResponse(movieReviewsAPI)
             }  else { funResponse(movieReviews) }

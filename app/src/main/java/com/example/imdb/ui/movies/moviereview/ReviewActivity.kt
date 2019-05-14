@@ -61,10 +61,10 @@ class ReviewActivity : AppCompatActivity() {
             this.runOnUiThread {
                 loadingReview.becomeInvisible()
 
-                if (it.reviews.isNotEmpty() && it.reviews[0].error) {
+                if (it.reviews.isNullOrEmpty().not() && it.reviews[0].error) {
                     tryAgain.becomeVisible()
                 } else {
-                    noReviews.becomeVisibleOrInvisible(isToBeVisible = it.reviews.isEmpty())
+                    noReviews.becomeVisibleOrInvisible(isToBeVisible = it.reviews.isNullOrEmpty())
                     reviewRecyclerView.reviewAdapter.setReviews(it)
                 }
             }

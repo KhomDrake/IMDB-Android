@@ -125,7 +125,11 @@ class MovieDetailActivity : AppCompatActivity() {
                     title.text = movieDetailViewController.getMovieTitle(titleText)
                     runtime.text = runtimeText
                     releaseDate.text = date
-                    overViewText.text = overView
+                    var a = ""
+                    for(i in 0 until 10) {
+                        a += overView
+                    }
+                    overViewText.text = a
                     voteCount.text = voteCountText
 
                     progressBar.becomeInvisible()
