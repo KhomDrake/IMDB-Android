@@ -23,14 +23,10 @@
         <activity android:name=".ui.home.HomeAppActivity"/>
         <activity android:name="com.example.imdb.ui.movies.moviereview.ReviewActivity"/>
         <activity android:name="com.example.imdb.ui.movies.recommendation.RecommendationActivity"/>
-        <activity
-                android:name="com.example.imdb.ui.movies.moviedetail.MovieDetailActivity"
-                android:theme="@style/AppTheme">
-        </activity>
+        <activity android:name="com.example.imdb.ui.movies.moviedetail.MovieDetailActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
