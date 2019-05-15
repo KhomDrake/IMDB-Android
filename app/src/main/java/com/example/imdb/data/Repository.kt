@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class Repository(private val webController: API, private val databaseMovies: DatabaseMovies) {
+class Repository(private val api: API, private val databaseMovies: DatabaseMovies) {
 
     private lateinit var language: String
 
@@ -35,7 +35,7 @@ class Repository(private val webController: API, private val databaseMovies: Dat
         coroutine {
             val movieCredit = databaseMovies.getMovieCredit(id)
             if(id != movieCredit.id) {
-                val movieCreditAPI = webController.loadMovieCredit(id)
+                val movieCreditAPI = api.loadMovieCredit(id)
                 databaseMovies.setCreditMovie(movieCreditAPI, id)
                 funResponse(movieCreditAPI)
             } else { funResponse(movieCredit) }
@@ -46,7 +46,7 @@ class Repository(private val webController: API, private val databaseMovies: Dat
         coroutine {
             val movieDetail = databaseMovies.getDetailMovie(id)
             if(movieDetail.id != id) {
-                val movieDetailAPI = webController.loadMovieDetail(id)
+                val movieDetailAPI = api.loadMovieDetail(id)
                 databaseMovies.setMovieDetail(movieDetailAPI)
                 funResponse(movieDetailAPI)
             } else { funResponse(movieDetail) }
@@ -57,7 +57,7 @@ class Repository(private val webController: API, private val databaseMovies: Dat
         coroutine {
             val movieReviews = databaseMovies.getMovieReviews(id)
             if(movieReviews.idMovie != id) {
-                val movieReviewsAPI = webController.loadReviews(id)
+                val movieReviewsAPI = api.loadReviews(id)
                 Log.i(TAG_VINI, movieReviewsAPI.toString())
                 databaseMovies.setReviews(movieReviewsAPI)
                 funResponse(movieReviewsAPI)
@@ -70,7 +70,7 @@ class Repository(private val webController: API, private val databaseMovies: Dat
             val recommendation = databaseMovies.getRecommendationLastMovie(id)
             val favorites = databaseMovies.getFavorites()
             if(recommendation.id != id) {
-                val recommendationAPI = webController.loadRecommendation(id)
+                val recommendationAPI = api.loadRecommendation(id)
                 databaseMovies.setRecommendationMovie(Recommendation(id, recommendationAPI))
                 funResponse(moviesAreFavorites(recommendationAPI.results, favorites))
             } else { funResponse(moviesAreFavorites(recommendation.moviesList.results, favorites)) }
@@ -83,7 +83,7 @@ class Repository(private val webController: API, private val databaseMovies: Dat
             val favorites = databaseMovies.getFavorites()
             val isToMake = isToMakeAPIRequest(movies, movieDbCategory)
             if(isToMake) {
-                val listMovieAPI = webController.loadCategory(movieDbCategory)
+                val listMovieAPI = api.loadCategory(movieDbCategory)
                 databaseMovies.setMovie(listMovieAPI.results, movieDbCategory)
                 if(listMovieAPI.results.isNotEmpty() && listMovieAPI.results.first().error) {
                     funResponse(databaseMovies.getCategory(movieDbCategory))
