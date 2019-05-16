@@ -13,20 +13,20 @@ import com.example.imdb.ui.movies.moviereview.ReviewViewController
 import com.example.imdb.ui.movies.recommendation.RecommendationViewController
 import org.koin.dsl.module.module
 
-val movieDbKoinModule = module {
-    single(override = false) {
+val movieDbKoinModule = module(override = false) {
+    single {
         Room.databaseBuilder(
             get(), DatabaseMovies::class.java,
             "movie.db"
         ).build()
     }
-    single(override = false) { API(get()) }
-    single(override = false) { Repository(get(), get()) }
-    single(override = false) { MainActivityViewController(get()) }
-    single(override = false) { HomeAppViewController(get()) }
-    single(override = false) { HomeMoviesViewController(get()) }
-    single(override = false) { MovieDetailViewController(get()) }
-    single(override = false) { RecommendationViewController(get()) }
-    single(override = false) { ReviewViewController(get()) }
-    single(override = false) { CastViewController(get()) }
+    single { API(get()) }
+    single { Repository(get(), get()) }
+    single { MainActivityViewController(get()) }
+    single { HomeAppViewController(get()) }
+    single { HomeMoviesViewController(get()) }
+    single { MovieDetailViewController(get()) }
+    single { RecommendationViewController(get()) }
+    single { ReviewViewController(get()) }
+    single { CastViewController(get()) }
 }

@@ -1,38 +1,30 @@
 package com.example.imdb
 
-import android.app.Application
-import androidx.test.core.app.ApplicationProvider
+import android.content.Intent
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import com.example.imdb.data.Repository
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.movie.Movie
+import com.example.imdb.data.entity.http.movie.MoviesList
 import com.example.imdb.network.API
 import com.example.imdb.ui.MovieDbCategory
-import com.example.imdb.ui.home.HomeAppViewController
-import com.example.imdb.ui.mainactivity.MainActivityViewController
-import com.example.imdb.ui.movies.cast.CastViewController
+import com.example.imdb.ui.ZERO
 import com.example.imdb.ui.movies.homemovies.HomeMoviesActivity
-import com.example.imdb.ui.movies.homemovies.HomeMoviesViewController
-import com.example.imdb.ui.movies.moviedetail.MovieDetailViewController
-import com.example.imdb.ui.movies.moviereview.ReviewViewController
-import com.example.imdb.ui.movies.recommendation.RecommendationViewController
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import io.mockk.verifyOrder
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.koin.android.ext.android.startKoin
 import org.koin.dsl.module.module
 import org.koin.standalone.StandAloneContext.loadKoinModules
 
 class HomeMoviesTest : AcceptanceTest<HomeMoviesActivity>(HomeMoviesActivity::class.java) {
 
-    private val databaseMoviesMock: DatabaseMovies = mockk()
+    private val databaseMoviesMock: DatabaseMovies = mockk(relaxed = true)
     private val apiMock: API = mockk()
 
     private val movie1 = Movie(
@@ -89,40 +81,65 @@ class HomeMoviesTest : AcceptanceTest<HomeMoviesActivity>(HomeMoviesActivity::cl
     @Before
     fun setup() {
 
+//        every { databaseMoviesMock.getCategory(any()) } returns listOf(movie1, movie2, movie3)
         every { databaseMoviesMock.getCategory(MovieDbCategory.MovieNowPlaying) } returns listOf(movie1, movie2, movie3)
         every { databaseMoviesMock.getCategory(MovieDbCategory.MovieUpcoming) } returns listOf(movie2, movie4, movie5)
         every { databaseMoviesMock.getCategory(MovieDbCategory.MovieTopRated) } returns listOf(movie3, movie4, movie5)
         every { databaseMoviesMock.getCategory(MovieDbCategory.MovieLatest) } returns listOf(movie4, movie3, movie4)
         every { databaseMoviesMock.getCategory(MovieDbCategory.MoviePopular) } returns listOf(movie1, movie3, movie5)
+        every { databaseMoviesMock.setup() } returns Unit
+//        every { databaseMoviesMock.setMovie(any(), any()) } returns Unit
         every { databaseMoviesMock.getFavorites() } returns listOf(movie3)
-        every { databaseMoviesMock.getLastTimeUpdateCategory(any()) } returns System.currentTimeMillis()
+        every { databaseMoviesMock.getLastTimeUpdateCategory(MovieDbCategory.MoviePopular) } returns 0L
+        every { databaseMoviesMock.getLastTimeUpdateCategory(MovieDbCategory.MovieLatest) } returns System.currentTimeMillis()
+        every { databaseMoviesMock.getLastTimeUpdateCategory(MovieDbCategory.MovieTopRated) } returns 10000000000000L
+        every { databaseMoviesMock.getLastTimeUpdateCategory(MovieDbCategory.MovieNowPlaying) } returns System.currentTimeMillis()
+        every { databaseMoviesMock.getLastTimeUpdateCategory(MovieDbCategory.MovieUpcoming) } returns System.currentTimeMillis()
 
-//        coroutine {
-//            every { apiMock.loadCategory(MovieDbCategory.MovieNowPlaying) } returns MoviesList(ZERO, listOf(movie1, movie2, movie3), ZERO)
-//            every { apiMock.loadCategory(MovieDbCategory.MovieUpcoming) } returns MoviesList(ZERO, listOf(movie2, movie3, movie5), ZERO)
-//            every { apiMock.loadCategory(MovieDbCategory.MovieTopRated) } returns MoviesList(ZERO, listOf(movie1, movie2, movie5), ZERO)
-//            every { apiMock.loadCategory(MovieDbCategory.MovieLatest) } returns MoviesList(ZERO, listOf(movie1, movie4, movie3), ZERO)
-//            every { apiMock.loadCategory(MovieDbCategory.MoviePopular) } returns MoviesList(ZERO, listOf(movie5, movie2, movie4), ZERO)
-//        }
+//        coEvery { apiMock.loadCategory(MovieDbCategory.MovieNowPlaying) } returns MoviesList(
+//            ZERO,
+//            listOf(movie1, movie2, movie3),
+//            ZERO
+//        )
+//        coEvery { apiMock.loadCategory(MovieDbCategory.MovieUpcoming) } returns MoviesList(
+//            ZERO,
+//            listOf(movie2, movie3, movie5),
+//            ZERO
+//        )
+//        coEvery { apiMock.loadCategory(MovieDbCategory.MovieTopRated) } returns MoviesList(
+//            ZERO,
+//            listOf(movie1, movie2, movie5),
+//            ZERO
+//        )
+//        coEvery { apiMock.loadCategory(MovieDbCategory.MovieLatest) } returns MoviesList(
+//            ZERO,
+//            listOf(movie1, movie4, movie3),
+//            ZERO
+//        )
+//        coEvery { apiMock.loadCategory(MovieDbCategory.MoviePopular) } returns MoviesList(
+//            ZERO,
+//            listOf(movie5, movie2, movie4),
+//            ZERO
+//        )
 
         val moduleMock = listOf(
             module(override = true) {
                 single { databaseMoviesMock }
+//                single { apiMock }
             }
         )
-
         loadKoinModules(moduleMock)
+        testRule.launchActivity(Intent())
+    }
+
+    @After
+    fun tearDown() {
+        testRule.finishActivity()
     }
 
     @Test
     fun guestIsVisible() {
         Thread.sleep(10000)
         onView(withId(R.id.title_latest)).check(matches(isDisplayed()))
-    }
-
-    private fun coroutine(block: suspend () -> Unit) {
-        GlobalScope.launch(Dispatchers.IO) {
-            block()
-        }
     }
 }

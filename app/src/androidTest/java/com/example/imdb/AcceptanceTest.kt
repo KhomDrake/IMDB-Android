@@ -13,5 +13,5 @@ import org.junit.runner.RunWith
 abstract class AcceptanceTest<T : Activity>(clazz: Class<T>) {
 
     @Rule @JvmField
-    val testRule: ActivityTestRule<T> = IntentsTestRule(clazz)
+    val testRule: ActivityTestRule<T> = IntentsTestRule(clazz, false, false)
 }

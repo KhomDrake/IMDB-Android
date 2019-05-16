@@ -1,7 +1,9 @@
 package com.example.imdb.data.database
 
+import android.util.Log
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.example.imdb.TAG_VINI
 import com.example.imdb.data.entity.http.Review
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
@@ -162,7 +164,10 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setMovie(movies: List<Movie>, movieDbCategory: MovieDbCategory) {
-        if(movies.isEmpty() || movies.first().error) return
+
+        Log.i(TAG_VINI, movies.toString())
+
+        if(movies.isNullOrEmpty() || movies.first().error) return
 
         moviesDao().deleteMovieCategory(movieDbCategory.ordinal)
         movies.forEach {
@@ -188,7 +193,7 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun favoriteMovie(movieId: Int, toFavorite: Boolean) =
         if(toFavorite) moviesDao().insertFavorite(TableFavorite(movieId)) else moviesDao().deleteFavorite(movieId)
 
-    fun setup() {
+    open fun setup() {
         val listOfMovieDbCategory = listOf(MovieDbCategory.MovieLatest.ordinal,
             MovieDbCategory.MovieNowPlaying.ordinal,
             MovieDbCategory.MoviePopular.ordinal,
@@ -201,14 +206,18 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
+    var s = 1
     private fun getMovies(movieDbCategory: MovieDbCategory) : List<Movie> {
+        Log.i(TAG_VINI, s.toString())
+        s++
         val moviesDb = moviesDao().getMoviesListAndMovie(movieDbCategory.ordinal)
+        Log.i(TAG_VINI, moviesDb.toString())
         return tableMoviesToMovies(moviesDb)
     }
 
     private fun tableMoviesToMovies(moviesDb: List<TableMovie>) : List<Movie> {
         val movies: MutableList<Movie> = mutableListOf()
-        for (movie in moviesDb) {
+        for (movie: TableMovie in moviesDb) {
             movies.add(
                 Movie(
                     movie.idMovie,
@@ -222,6 +231,7 @@ abstract class DatabaseMovies : RoomDatabase() {
                 )
             )
         }
+        mutableListOf<Movie>().toList()
         return movies.toList()
     }
 
