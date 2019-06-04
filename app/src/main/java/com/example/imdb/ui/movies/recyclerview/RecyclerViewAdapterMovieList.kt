@@ -27,7 +27,7 @@ class RecyclerViewAdapterMovieList(
     private val plus18 = "http://diarionews.com.br/wp-content/uploads/2018/02/18-logo-1.png"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.information_movies, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.information_entertainment, parent, false)
         return ViewHolder(view)
     }
 
