@@ -8,6 +8,7 @@ import com.example.imdb.ui.movies.cast.CastViewController
 import com.example.imdb.ui.home.HomeAppViewController
 import com.example.imdb.ui.movies.homemovies.HomeMoviesViewController
 import com.example.imdb.ui.mainactivity.MainActivityViewController
+import com.example.imdb.ui.movies.castdetail.CastDetailViewController
 import com.example.imdb.ui.movies.moviedetail.MovieDetailViewController
 import com.example.imdb.ui.movies.moviereview.ReviewViewController
 import com.example.imdb.ui.movies.recommendation.RecommendationViewController
@@ -29,4 +30,5 @@ val movieDbKoinModule = module(override = false) {
     single { RecommendationViewController(get()) }
     single { ReviewViewController(get()) }
     single { CastViewController(get()) }
+    single { CastDetailViewController(get()) }
 }

@@ -3,6 +3,7 @@ package com.example.imdb.ui.movies.homemovies
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
@@ -98,6 +99,7 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
 
     private fun RecyclerView.loadCategory(movieDbCategory: MovieDbCategory) {
         homeMoviesViewController.loadMovies(this.movieAdapter, movieDbCategory) {
+            Log.i("test", it.count().toString())
             this.movieAdapter.setMovies(it)
         }
     }

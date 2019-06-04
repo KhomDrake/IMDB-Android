@@ -15,18 +15,28 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             tools:ignore="GoogleAppIndexingWarning">
-        <uses-library android:name="android.test.runner"
-                      android:required="false"/>
-        <activity android:name="com.example.imdb.ui.movies.cast.CastActivity"/>
-        <activity android:name="com.example.imdb.ui.tv.hometv.HomeTvActivity"/>
-        <activity android:name="com.example.imdb.ui.movies.homemovies.HomeMoviesActivity"/>
+        <activity android:name=".ui.movies.castdetail.CastDetailActivity">
+        </activity>
+
+        <uses-library
+                android:name="android.test.runner"
+                android:required="false"/>
+
+        <activity android:name=".ui.movies.cast.CastActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.tv.hometv.HomeTvActivity"/>
+        <activity android:name=".ui.movies.homemovies.HomeMoviesActivity"/>
         <activity android:name=".ui.home.HomeAppActivity"/>
-        <activity android:name="com.example.imdb.ui.movies.moviereview.ReviewActivity"/>
-        <activity android:name="com.example.imdb.ui.movies.recommendation.RecommendationActivity"/>
-        <activity android:name="com.example.imdb.ui.movies.moviedetail.MovieDetailActivity"/>
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.movies.moviereview.ReviewActivity"/>
+        <activity android:name=".ui.movies.recommendation.RecommendationActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ui.movies.moviedetail.MovieDetailActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>

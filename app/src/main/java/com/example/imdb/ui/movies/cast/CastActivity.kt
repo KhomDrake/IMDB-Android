@@ -2,6 +2,7 @@ package com.example.imdb.ui.movies.cast
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.imdb.ui.MovieDbCategory
 import com.example.imdb.R
+import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.becomeInvisible
 import com.example.imdb.ui.becomeVisible
 import com.example.imdb.ui.becomeVisibleOrInvisible
@@ -54,6 +56,7 @@ class CastActivity : AppCompatActivity(), IActivityInteraction {
     override fun loadMovies(type: MovieDbCategory) {
         castViewController.loadCast(movieId) {
             this.runOnUiThread {
+                Log.i(TAG_VINI, it.toString())
                 loading.becomeInvisible()
                 recyclerViewCast.castAdapter.setMovieCredit(it.castMovie)
                 noCast.becomeVisibleOrInvisible(it.castMovie.isEmpty())

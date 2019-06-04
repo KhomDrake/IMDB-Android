@@ -208,10 +208,7 @@ abstract class DatabaseMovies : RoomDatabase() {
 
     var s = 1
     private fun getMovies(movieDbCategory: MovieDbCategory) : List<Movie> {
-        Log.i(TAG_VINI, s.toString())
-        s++
         val moviesDb = moviesDao().getMoviesListAndMovie(movieDbCategory.ordinal)
-        Log.i(TAG_VINI, moviesDb.toString())
         return tableMoviesToMovies(moviesDb)
     }
 

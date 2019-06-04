@@ -3,19 +3,27 @@ package com.example.imdb
 import android.content.Intent
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import com.example.imdb.data.Repository
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.movie.Movie
 import com.example.imdb.data.entity.http.movie.MoviesList
 import com.example.imdb.network.API
 import com.example.imdb.ui.MovieDbCategory
 import com.example.imdb.ui.ZERO
+import com.example.imdb.ui.home.HomeAppViewController
+import com.example.imdb.ui.mainactivity.MainActivityViewController
+import com.example.imdb.ui.movies.cast.CastViewController
+import com.example.imdb.ui.movies.castdetail.CastDetailViewController
 import com.example.imdb.ui.movies.homemovies.HomeMoviesActivity
+import com.example.imdb.ui.movies.homemovies.HomeMoviesViewController
+import com.example.imdb.ui.movies.moviedetail.MovieDetailViewController
+import com.example.imdb.ui.movies.moviereview.ReviewViewController
+import com.example.imdb.ui.movies.recommendation.RecommendationViewController
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verifyOrder
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -96,40 +104,48 @@ class HomeMoviesTest : AcceptanceTest<HomeMoviesActivity>(HomeMoviesActivity::cl
         every { databaseMoviesMock.getLastTimeUpdateCategory(MovieDbCategory.MovieNowPlaying) } returns System.currentTimeMillis()
         every { databaseMoviesMock.getLastTimeUpdateCategory(MovieDbCategory.MovieUpcoming) } returns System.currentTimeMillis()
 
-//        coEvery { apiMock.loadCategory(MovieDbCategory.MovieNowPlaying) } returns MoviesList(
-//            ZERO,
-//            listOf(movie1, movie2, movie3),
-//            ZERO
-//        )
-//        coEvery { apiMock.loadCategory(MovieDbCategory.MovieUpcoming) } returns MoviesList(
-//            ZERO,
-//            listOf(movie2, movie3, movie5),
-//            ZERO
-//        )
-//        coEvery { apiMock.loadCategory(MovieDbCategory.MovieTopRated) } returns MoviesList(
-//            ZERO,
-//            listOf(movie1, movie2, movie5),
-//            ZERO
-//        )
-//        coEvery { apiMock.loadCategory(MovieDbCategory.MovieLatest) } returns MoviesList(
-//            ZERO,
-//            listOf(movie1, movie4, movie3),
-//            ZERO
-//        )
-//        coEvery { apiMock.loadCategory(MovieDbCategory.MoviePopular) } returns MoviesList(
-//            ZERO,
-//            listOf(movie5, movie2, movie4),
-//            ZERO
-//        )
-
-        val moduleMock = listOf(
-            module(override = true) {
-                single { databaseMoviesMock }
-//                single { apiMock }
-            }
+        coEvery { apiMock.loadCategory(MovieDbCategory.MovieNowPlaying) } returns MoviesList(
+            ZERO,
+            listOf(movie1, movie2, movie3),
+            ZERO
         )
-        loadKoinModules(moduleMock)
+        coEvery { apiMock.loadCategory(MovieDbCategory.MovieUpcoming) } returns MoviesList(
+            ZERO,
+            listOf(movie2, movie3, movie5),
+            ZERO
+        )
+        coEvery { apiMock.loadCategory(MovieDbCategory.MovieTopRated) } returns MoviesList(
+            ZERO,
+            listOf(movie1, movie2, movie5),
+            ZERO
+        )
+        coEvery { apiMock.loadCategory(MovieDbCategory.MovieLatest) } returns MoviesList(
+            ZERO,
+            listOf(movie1, movie4, movie3),
+            ZERO
+        )
+        coEvery { apiMock.loadCategory(MovieDbCategory.MoviePopular) } returns MoviesList(
+            ZERO,
+            listOf(movie5, movie2, movie4),
+            ZERO
+        )
+
+        loadKoinModules(listOf(module(override = true) {
+            single { databaseMoviesMock }
+            single { apiMock }
+//            single { API(get()) }
+            single { Repository(get(), get()) }
+            single { MainActivityViewController(get()) }
+            single { HomeAppViewController(get()) }
+            single { HomeMoviesViewController(get()) }
+            single { MovieDetailViewController(get()) }
+            single { RecommendationViewController(get()) }
+            single { ReviewViewController(get()) }
+            single { CastViewController(get()) }
+            single { CastDetailViewController(get()) }
+        }))
         testRule.launchActivity(Intent())
+
     }
 
     @After
@@ -140,6 +156,6 @@ class HomeMoviesTest : AcceptanceTest<HomeMoviesActivity>(HomeMoviesActivity::cl
     @Test
     fun guestIsVisible() {
         Thread.sleep(10000)
-        onView(withId(R.id.title_latest)).check(matches(isDisplayed()))
+        onView(withId(R.id.title_latest)).check(matches(ViewMatchers.withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
     }
 }

@@ -85,7 +85,6 @@ class Repository(private val api: API, private val databaseMovies: DatabaseMovie
             if(isToMake) {
                 val listMovieAPI = api.loadCategory(movieDbCategory)
                 Log.i(TAG_VINI, "asdlkaldjsakljal")
-                databaseMovies.setMovie(listMovieAPI.results, movieDbCategory)
                 if(listMovieAPI.results.isNotEmpty() && listMovieAPI.results.first().error) {
                     funResponse(databaseMovies.getCategory(movieDbCategory))
                 } else {

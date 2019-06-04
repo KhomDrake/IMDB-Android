@@ -1,5 +1,7 @@
 package com.example.imdb.ui.movies.homemovies
 
+import android.util.Log
+import com.example.imdb.TAG_VINI
 import com.example.imdb.data.Repository
 import com.example.imdb.ui.MovieDbCategory
 import com.example.imdb.data.entity.http.movie.Movie
