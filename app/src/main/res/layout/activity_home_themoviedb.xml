@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="@drawable/background_screens"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+            android:text="@string/title_home"
+            android:layout_width="match_parent"
+            android:textColor="@color/imdb_text"
+            android:background="@color/imdb_background_text2"
+            android:textAlignment="center"
+            android:textSize="54sp"
+            android:layout_height="88dp"
+            android:id="@+id/title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="1dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="1dp"/>
+
+    <TextView android:layout_width="match_parent"
+              android:layout_height="77dp"
+              android:background="@color/imdb_background_text2"
+              app:layout_constraintStart_toStartOf="parent"
+              android:layout_marginTop="84dp"
+              app:layout_constraintTop_toTopOf="parent"
+              app:layout_constraintEnd_toEndOf="parent"
+              android:layout_marginEnd="1dp"
+              android:layout_marginStart="1dp"
+              android:id="@+id/textView3"/>
+    <Button
+            android:text="@string/go_to_movie_button"
+            android:textSize="16sp"
+            android:background="@drawable/button2_movie_db"
+            android:textColor="@color/imdb_text"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/movie"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="100dp"
+            app:layout_constraintTop_toTopOf="parent"/>
+    <Button
+            android:text="@string/go_to_tv_button"
+            android:textSize="16sp"
+            android:background="@drawable/button2_movie_db"
+            android:textColor="@color/imdb_text"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv"
+            app:layout_constraintEnd_toEndOf="@+id/textView3"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="100dp"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/nenhum_favorito"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="36sp"
+            android:textColor="@color/imdb_title"
+            android:textAlignment="center"
+            android:text="@string/no_favorites_yet"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintVertical_bias="0.564"/>
+
+    <ProgressBar android:layout_width="200dp" android:layout_height="200dp"
+                 android:indeterminate="true"
+                 android:id="@+id/loading_favorites"
+                 app:layout_constraintEnd_toEndOf="parent"
+                 android:layout_marginEnd="8dp"
+                 app:layout_constraintStart_toStartOf="parent"
+                 android:layout_marginStart="8dp"
+                 app:layout_constraintHorizontal_bias="0.497"
+                 android:layout_marginTop="220dp"
+                 app:layout_constraintTop_toTopOf="parent"
+                 android:layout_marginBottom="8dp"
+                 app:layout_constraintBottom_toBottomOf="parent"
+                 app:layout_constraintVertical_bias="0.0"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/favorites"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="170dp"
+            app:layout_constraintTop_toTopOf="@+id/title">
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
