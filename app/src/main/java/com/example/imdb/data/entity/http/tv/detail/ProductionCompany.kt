@@ -1,9 +1,9 @@
-package com.example.imdb.data.entity.http.tv
+package com.example.imdb.data.entity.http.tv.detail
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Network(
+data class ProductionCompany(
     val id: Int,
     @SerializedName("logo_path")
     val logoPath: String,

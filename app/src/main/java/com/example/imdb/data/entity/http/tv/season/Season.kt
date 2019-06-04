@@ -1,4 +1,4 @@
-package com.example.imdb.data.entity.http.tv
+package com.example.imdb.data.entity.http.tv.season
 
 
 import com.google.gson.annotations.SerializedName
@@ -6,8 +6,9 @@ import com.google.gson.annotations.SerializedName
 data class Season(
     @SerializedName("air_date")
     val airDate: String,
-    @SerializedName("episode_count")
-    val episodeCount: Int,
+    val episodes: List<Episode>,
+    @SerializedName("_id")
+    val _id: String,
     val id: Int,
     val name: String,
     val overview: String,

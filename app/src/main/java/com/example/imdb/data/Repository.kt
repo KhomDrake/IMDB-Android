@@ -56,7 +56,7 @@ class Repository(private val api: API, private val databaseMovies: DatabaseMovie
     fun loadReviews(id: Int, funResponse: (reviews: Reviews) -> Unit) {
         coroutine {
             val movieReviews = databaseMovies.getMovieReviews(id)
-            if(movieReviews.idMovie != id) {
+            if(movieReviews.idReviewed != id) {
                 val movieReviewsAPI = api.loadReviews(id)
                 Log.i(TAG_VINI, movieReviewsAPI.toString())
                 databaseMovies.setReviews(movieReviewsAPI)

@@ -1,9 +1,9 @@
-package com.example.imdb.data.entity.http.tv
+package com.example.imdb.data.entity.http.tv.detail
 
 
 import com.google.gson.annotations.SerializedName
 
-data class TVDetail(
+data class TvDetail(
     @SerializedName("backdrop_path")
     val backdropPath: String,
     @SerializedName("created_by")
@@ -46,7 +46,7 @@ data class TVDetail(
     val status: String,
     val type: String,
     @SerializedName("vote_average")
-    val voteAverage: Double,
+    val voteAverage: Int,
     @SerializedName("vote_count")
     val voteCount: Int
 )

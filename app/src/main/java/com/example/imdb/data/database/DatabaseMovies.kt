@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.imdb.TAG_VINI
+import com.example.imdb.data.entity.http.Cast
 import com.example.imdb.data.entity.http.Review
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
@@ -39,10 +40,10 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun getMovieCredit(idMovie: Int) : MovieCredit {
         val creditMovieDb = moviesDao().getMovieCreditCast(idMovie)
         val id = if(creditMovieDb.isEmpty()) 0 else idMovie
-        val creditMovie = mutableListOf<CastMovie>()
+        val creditMovie = mutableListOf<Cast>()
         for (cast in creditMovieDb) {
             creditMovie.add(
-                CastMovie(
+                Cast(
                     cast.idCast,
                     cast.character,
                     cast.gender,
@@ -139,9 +140,9 @@ abstract class DatabaseMovies : RoomDatabase() {
     fun setReviews(reviews: Reviews) {
         if(reviews.reviews.isNullOrEmpty() || reviews.reviews.first().error) return
 
-        moviesDao().insertReviewInformation(TableReviewInformation(reviews.id, reviews.id, PAGE_ONE, PAGE_ONE, ONE))
+        moviesDao().insertReviewInformation(TableReviewInformation(reviews.idReview, reviews.idReview, PAGE_ONE, PAGE_ONE, ONE))
         reviews.reviews.forEach {
-            moviesDao().insertReview(TableReview(0, it.author, it.content, it.url, reviews.id))
+            moviesDao().insertReview(TableReview(0, it.author, it.content, it.url, reviews.idReview))
         }
     }
 
@@ -178,9 +179,9 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     fun setCreditMovie(credit: MovieCredit, idMovie: Int) {
-        if(credit.castMovie.isNullOrEmpty() || credit.castMovie.first().error) return
+        if(credit.cast.isNullOrEmpty() || credit.cast.first().error) return
 
-        credit.castMovie.forEach {
+        credit.cast.forEach {
             moviesDao().insertMovieCast(TableCast(it.castId, idMovie, it.character, it.gender,
                 it.id, it.name, it.order, it.profilePath))
         }
