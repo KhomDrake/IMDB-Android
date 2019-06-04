@@ -1,4 +1,4 @@
-package com.example.imdb.data.entity.http.tv
+package com.example.imdb.data.entity.http.tv.detail
 
 
 import com.google.gson.annotations.SerializedName
@@ -18,7 +18,7 @@ data class NextEpisodeToAir(
     @SerializedName("show_id")
     val showId: Int,
     @SerializedName("still_path")
-    val stillPath: Any,
+    val stillPath: String,
     @SerializedName("vote_average")
     val voteAverage: Int,
     @SerializedName("vote_count")

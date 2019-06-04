@@ -12,14 +12,14 @@ import com.example.imdb.ui.MovieDbCategory
 import com.example.imdb.R
 import com.example.imdb.ui.becomeInvisible
 import com.example.imdb.ui.becomeVisible
-import com.example.imdb.data.entity.http.movie.CastMovie
+import com.example.imdb.data.entity.http.Cast
 import com.example.imdb.ui.interfaces.IActivityInteraction
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class RecyclerViewAdapterCast(
-    private val informationCastMovie: MutableList<CastMovie>,
+    private val informationCast: MutableList<Cast>,
     private val idMovie: Int,
     private val IActivityInteraction: IActivityInteraction
 ) : RecyclerView.Adapter<RecyclerViewAdapterCast.ViewHolder>() {
@@ -33,19 +33,19 @@ class RecyclerViewAdapterCast(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(informationCastMovie[position], urlImg, imgNotFound, idMovie, IActivityInteraction)
+        holder.bind(informationCast[position], urlImg, imgNotFound, idMovie, IActivityInteraction)
     }
 
-    fun setMovieCredit(castMovie: List<CastMovie>) {
-        if(castMovie.isEmpty()) return
+    fun setMovieCredit(cast: List<Cast>) {
+        if(cast.isEmpty()) return
 
-        informationCastMovie.clear()
-        informationCastMovie.addAll(castMovie)
+        informationCast.clear()
+        informationCast.addAll(cast)
 
         notifyDataSetChanged()
     }
 
-    override fun getItemCount() = informationCastMovie.count()
+    override fun getItemCount() = informationCast.count()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -53,8 +53,8 @@ class RecyclerViewAdapterCast(
         private val nameCast: TextView = itemView.findViewById(R.id.name_cast)
         private val tryAgain: Button = itemView.findViewById(R.id.again)
 
-        fun bind(castMovie: CastMovie, urlImg: String, imgNotFound: String, idMovie: Int, IActivityInteraction: IActivityInteraction) {
-            if(castMovie.error) {
+        fun bind(cast: Cast, urlImg: String, imgNotFound: String, idMovie: Int, IActivityInteraction: IActivityInteraction) {
+            if(cast.error) {
                 tryAgain.becomeVisible()
                 nameCast.becomeInvisible()
                 imgCast.becomeInvisible()
@@ -62,8 +62,8 @@ class RecyclerViewAdapterCast(
                 tryAgain.becomeInvisible()
                 nameCast.becomeVisible()
                 imgCast.becomeVisible()
-                nameCast.text = "${castMovie.name}"
-                val path = getPath(castMovie.profilePath, urlImg, imgNotFound)
+                nameCast.text = "${cast.name}"
+                val path = getPath(cast.profilePath, urlImg, imgNotFound)
 
                 coroutineImage {
                     Glide.with(itemView).load(path).into(imgCast)

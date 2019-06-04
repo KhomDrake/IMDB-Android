@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(foreignKeys = arrayOf(
         ForeignKey(entity = TableMovie::class,
-        parentColumns = arrayOf("idMovie"),
+        parentColumns = arrayOf("idReviewed"),
         childColumns = arrayOf("idMovieCredit_fk"),
         onDelete = ForeignKey.CASCADE)
     )

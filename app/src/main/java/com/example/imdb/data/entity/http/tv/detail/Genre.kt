@@ -1,4 +1,4 @@
-package com.example.imdb.data.entity.http.tv
+package com.example.imdb.data.entity.http.tv.detail
 
 
 data class Genre(

@@ -42,30 +42,30 @@ interface ITheMovieDBAPI {
         @Query("page") p: Int = 1
     ): Deferred<MoviesList>
 
-    @GET("movie/{id}")
+    @GET("movie/{idReview}")
     fun getDetailMovie(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<MovieDetail>
 
-    @GET("movie/{id}/recommendations")
+    @GET("movie/{idReview}/recommendations")
     fun getRecommendationMovie(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<MoviesList>
 
-    @GET("movie/{id}/reviews")
+    @GET("movie/{idReview}/reviews")
     fun getReviewsMovie(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<Reviews>
 
-    @GET("movie/{id}/credits")
+    @GET("movie/{idReview}/credits")
     fun getMovieCredit(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Query("api_key") key: String
     ): Deferred<MovieCredit>
 
@@ -105,73 +105,73 @@ interface ITheMovieDBAPI {
         @Query("page") p: Int = 1
     ): Deferred<Any>
 
-    @GET("tv/{id}")
+    @GET("tv/{idReview}")
     fun getTvDetail(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{id}/credits")
+    @GET("tv/{idReview}/credits")
     fun getTvCredit(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{id}/recommendations")
+    @GET("tv/{idReview}/recommendations")
     fun getTvRecommendation(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{id}/reviews")
+    @GET("tv/{idReview}/reviews")
     fun getTvReview(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{id}/episode_groups")
+    @GET("tv/{idReview}/episode_groups")
     fun getTvEpisodeGroups(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{id}/screened_theatrically")
+    @GET("tv/{idReview}/screened_theatrically")
     fun getTvScreenedThreatrically(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{id}/similar")
+    @GET("tv/{idReview}/similar")
     fun getTvSimilar(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{id}/translations")
+    @GET("tv/{idReview}/translations")
     fun getTvTranslations(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{id}/season/{season}")
+    @GET("tv/{idReview}/season/{season}")
     fun getTvSeason(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Path("season") season: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{id}/season/{season}/episode/{episode}")
+    @GET("tv/{idReview}/season/{season}/episode/{episode}")
     fun getTvSeasonEpisode(
-        @Path("id") id: Int,
+        @Path("idReview") id: Int,
         @Path("season") season: Int,
         @Path("episode") episode: Int,
         @Query("api_key") key: String,

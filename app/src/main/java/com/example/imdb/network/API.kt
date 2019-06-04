@@ -5,6 +5,7 @@ import com.example.imdb.ui.PAGE_ONE
 import com.example.imdb.ui.ZERO
 import com.example.imdb.ui.ZERO_DOUBLE
 import com.example.imdb.data.database.DatabaseMovies
+import com.example.imdb.data.entity.http.Cast
 import com.example.imdb.data.entity.http.Review
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
@@ -54,7 +55,7 @@ class API(private val databaseMovies: DatabaseMovies) {
             ZERO,
             ZERO
         )
-    private val errorCast = CastMovie(
+    private val errorCast = Cast(
         ZERO,
         EMPTY_STRING,
         ZERO,

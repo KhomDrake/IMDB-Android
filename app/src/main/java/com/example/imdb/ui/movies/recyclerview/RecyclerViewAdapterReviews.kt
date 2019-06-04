@@ -27,7 +27,7 @@ class RecyclerViewAdapterReviews (
     override fun getItemCount() = informationReview.count()
 
     fun setReviews(reviews: Reviews) {
-        idMovie = reviews.id
+        idMovie = reviews.idReview
         informationReview.clear()
         informationReview.addAll(reviews.reviews)
         notifyDataSetChanged()

@@ -45,7 +45,7 @@ class CastActivity : AppCompatActivity(), IActivityInteraction {
         loading.becomeVisible()
         noCast.becomeInvisible()
 
-        castTitle.text = "CastMovie: $title"
+        castTitle.text = "Cast: $title"
 
         recyclerViewCast.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerViewCast.adapter = RecyclerViewAdapterCast(mutableListOf(), movieId, this)
@@ -58,8 +58,8 @@ class CastActivity : AppCompatActivity(), IActivityInteraction {
             this.runOnUiThread {
                 Log.i(TAG_VINI, it.toString())
                 loading.becomeInvisible()
-                recyclerViewCast.castAdapter.setMovieCredit(it.castMovie)
-                noCast.becomeVisibleOrInvisible(it.castMovie.isEmpty())
+                recyclerViewCast.castAdapter.setMovieCredit(it.cast)
+                noCast.becomeVisibleOrInvisible(it.cast.isEmpty())
             }
         }
     }
