@@ -39,4 +39,6 @@
     <string name="login">Login</string>
     <string name="senha">Senha</string>
     <string name="voltar">Voltar</string>
+    <string name="text_rate_movie">Insira a sua Avaliação (0 a 10)</string>
+    <string name="rate">Avaliar</string>
 </resources>

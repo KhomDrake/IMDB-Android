@@ -14,6 +14,7 @@ import com.example.imdb.ui.becomeInvisible
 import com.example.imdb.ui.becomeVisible
 import com.example.imdb.ui.movies.cast.CastActivity
 import com.example.imdb.ui.movies.moviereview.ReviewActivity
+import com.example.imdb.ui.movies.ratemovie.RateMovieActivity
 import com.example.imdb.ui.movies.recommendation.RecommendationActivity
 import org.koin.android.ext.android.inject
 
@@ -29,6 +30,7 @@ class MovieDetailActivity : AppCompatActivity() {
     private lateinit var overView: TextView
     private lateinit var recommendation: Button
     private lateinit var review: Button
+    private lateinit var rate: Button
     private lateinit var cast: Button
     private lateinit var tryAgain: Button
     private lateinit var overViewText: TextView
@@ -78,6 +80,7 @@ class MovieDetailActivity : AppCompatActivity() {
         recommendation.setOnClickListener { nextActivity(Intent(this, RecommendationActivity::class.java)) }
         review.setOnClickListener { nextActivity(Intent(this, ReviewActivity::class.java)) }
         cast.setOnClickListener { nextActivity(Intent(this, CastActivity::class.java)) }
+        rate.setOnClickListener { nextActivity(Intent(this, RateMovieActivity::class.java)) }
 
         tryAgain.setOnClickListener { loadMovieDetail(movieID) }
     }
