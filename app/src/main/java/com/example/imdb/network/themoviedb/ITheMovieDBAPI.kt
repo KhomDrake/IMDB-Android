@@ -1,75 +1,101 @@
 package com.example.imdb.network.themoviedb
 
+import com.example.imdb.data.entity.http.LoginBody
+import com.example.imdb.data.entity.http.LoginResponse
+import com.example.imdb.data.entity.http.RequestToken
 import com.example.imdb.data.entity.http.Reviews
+import com.example.imdb.data.entity.http.Session
 import com.example.imdb.data.entity.http.movie.*
 import kotlinx.coroutines.Deferred
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ITheMovieDBAPI {
+
+    // Sessão
+
+    @GET("/authentication/guest_session/new")
+    fun createGuestSession(
+        @Query("api_key") key: String
+    ) : Deferred<Session>
+
+    @GET("/authentication/token/new")
+    fun createRequestToken(
+        @Query("api_key") key: String
+    ) : Deferred<RequestToken>
+
+    @POST("/authentication/token/validate_with_login")
+    fun createSessionWithLogin(
+        @Body loginBody: LoginBody
+    ) : Deferred<LoginResponse>
+
+    // Filmes
+
     @GET("movie/now_playing")
-     fun getNowPlayingMovie(
+    fun getNowPlayingMovieAsync(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
     ): Deferred<MoviesList>
 
     @GET("movie/latest")
-    fun getLatestMovie(
+    fun getLatestMovieAsync(
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<Movie>
 
     @GET("movie/popular")
-    fun getPopularMovie(
+    fun getPopularMovieAsync(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
     ): Deferred<MoviesList>
 
     @GET("movie/top_rated")
-    fun getTopRatedMovie(
+    fun getTopRatedMovieAsync(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
     ): Deferred<MoviesList>
 
     @GET("movie/upcoming")
-    fun getUpcomingMovie(
+    fun getUpcomingMovieAsync(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
     ): Deferred<MoviesList>
 
     @GET("movie/{idReview}")
-    fun getDetailMovie(
+    fun getDetailMovieAsync(
         @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<MovieDetail>
 
     @GET("movie/{idReview}/recommendations")
-    fun getRecommendationMovie(
+    fun getRecommendationMovieAsync(
         @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<MoviesList>
 
     @GET("movie/{idReview}/reviews")
-    fun getReviewsMovie(
+    fun getReviewsMovieAsync(
         @Path("idReview") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<Reviews>
 
     @GET("movie/{idReview}/credits")
-    fun getMovieCredit(
+    fun getMovieCreditAsync(
         @Path("idReview") id: Int,
         @Query("api_key") key: String
     ): Deferred<MovieCredit>
 
-    // 89386
+    // Tv
 
     @GET("tv/airing_today")
     fun getAiringTodayTV(

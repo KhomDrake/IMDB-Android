@@ -71,19 +71,19 @@ class API(private val databaseMovies: DatabaseMovies) {
             when(theMovieDbCategory) {
                 TheMovieDbCategory.MovieLatest -> MoviesList(
                     ZERO,
-                    listOf(api.getLatestMovie(APIKEY, databaseMovies.getLanguage()).await()),
+                    listOf(api.getLatestMovieAsync(APIKEY, databaseMovies.getLanguage()).await()),
                     ZERO
                 )
-                TheMovieDbCategory.MovieNowPlaying -> api.getNowPlayingMovie(APIKEY, databaseMovies.getLanguage(),
+                TheMovieDbCategory.MovieNowPlaying -> api.getNowPlayingMovieAsync(APIKEY, databaseMovies.getLanguage(),
                     page
                 ).await()
-                TheMovieDbCategory.MoviePopular -> api.getPopularMovie(APIKEY, databaseMovies.getLanguage(),
+                TheMovieDbCategory.MoviePopular -> api.getPopularMovieAsync(APIKEY, databaseMovies.getLanguage(),
                     page
                 ).await()
-                TheMovieDbCategory.MovieUpcoming -> api.getUpcomingMovie(APIKEY, databaseMovies.getLanguage(),
+                TheMovieDbCategory.MovieUpcoming -> api.getUpcomingMovieAsync(APIKEY, databaseMovies.getLanguage(),
                     page
                 ).await()
-                TheMovieDbCategory.MovieTopRated -> api.getTopRatedMovie(APIKEY, databaseMovies.getLanguage(),
+                TheMovieDbCategory.MovieTopRated -> api.getTopRatedMovieAsync(APIKEY, databaseMovies.getLanguage(),
                     page
                 ).await()
                 else -> errorMovieList
@@ -92,22 +92,22 @@ class API(private val databaseMovies: DatabaseMovies) {
     }
 
     suspend fun loadMovieDetail(id: Int) : MovieDetail {
-        return try { api.getDetailMovie(id, APIKEY, databaseMovies.getLanguage()).await() }
+        return try { api.getDetailMovieAsync(id, APIKEY, databaseMovies.getLanguage()).await() }
             catch (e: Exception) { errorMovieDetail }
     }
 
     suspend fun loadRecommendation(id: Int) : MoviesList {
-        return try { api.getRecommendationMovie(id, APIKEY, databaseMovies.getLanguage()).await() }
+        return try { api.getRecommendationMovieAsync(id, APIKEY, databaseMovies.getLanguage()).await() }
             catch (e: Exception) { errorMovieList }
     }
 
     suspend fun loadReviews(id: Int) : Reviews {
-        return try { api.getReviewsMovie(id, APIKEY, databaseMovies.getLanguage()).await() }
+        return try { api.getReviewsMovieAsync(id, APIKEY, databaseMovies.getLanguage()).await() }
             catch (e: Exception) { errorReviews }
     }
 
     suspend fun loadMovieCredit(id: Int) : MovieCredit {
-        return try { api.getMovieCredit(id, APIKEY).await() }
+        return try { api.getMovieCreditAsync(id, APIKEY).await() }
             catch (e: Exception) { errorMovieCredit }
     }
 }
