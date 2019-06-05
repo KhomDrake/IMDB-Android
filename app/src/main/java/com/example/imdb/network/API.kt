@@ -1,7 +1,6 @@
 package com.example.imdb.network
 
 import com.example.imdb.ui.EMPTY_STRING
-import com.example.imdb.ui.PAGE_ONE
 import com.example.imdb.ui.ZERO
 import com.example.imdb.ui.ZERO_DOUBLE
 import com.example.imdb.data.database.DatabaseMovies
@@ -9,7 +8,7 @@ import com.example.imdb.data.entity.http.Cast
 import com.example.imdb.data.entity.http.Review
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
-import com.example.imdb.ui.MovieDbCategory
+import com.example.imdb.ui.TheMovieDbCategory
 import java.lang.Exception
 
 class API(private val databaseMovies: DatabaseMovies) {
@@ -67,25 +66,25 @@ class API(private val databaseMovies: DatabaseMovies) {
     )
     private val errorMovieCredit = MovieCredit(listOf(errorCast), ZERO)
 
-    suspend fun loadCategory(movieDbCategory: MovieDbCategory) : MoviesList {
+    suspend fun loadCategory(theMovieDbCategory: TheMovieDbCategory, page: Int = 1) : MoviesList {
         return try {
-            when(movieDbCategory) {
-                MovieDbCategory.MovieLatest -> MoviesList(
+            when(theMovieDbCategory) {
+                TheMovieDbCategory.MovieLatest -> MoviesList(
                     ZERO,
                     listOf(api.getLatestMovie(APIKEY, databaseMovies.getLanguage()).await()),
                     ZERO
                 )
-                MovieDbCategory.MovieNowPlaying -> api.getNowPlayingMovie(APIKEY, databaseMovies.getLanguage(),
-                    PAGE_ONE
+                TheMovieDbCategory.MovieNowPlaying -> api.getNowPlayingMovie(APIKEY, databaseMovies.getLanguage(),
+                    page
                 ).await()
-                MovieDbCategory.MoviePopular -> api.getPopularMovie(APIKEY, databaseMovies.getLanguage(),
-                    PAGE_ONE
+                TheMovieDbCategory.MoviePopular -> api.getPopularMovie(APIKEY, databaseMovies.getLanguage(),
+                    page
                 ).await()
-                MovieDbCategory.MovieUpcoming -> api.getUpcomingMovie(APIKEY, databaseMovies.getLanguage(),
-                    PAGE_ONE
+                TheMovieDbCategory.MovieUpcoming -> api.getUpcomingMovie(APIKEY, databaseMovies.getLanguage(),
+                    page
                 ).await()
-                MovieDbCategory.MovieTopRated -> api.getTopRatedMovie(APIKEY, databaseMovies.getLanguage(),
-                    PAGE_ONE
+                TheMovieDbCategory.MovieTopRated -> api.getTopRatedMovie(APIKEY, databaseMovies.getLanguage(),
+                    page
                 ).await()
                 else -> errorMovieList
             }

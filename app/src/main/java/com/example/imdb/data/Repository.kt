@@ -2,7 +2,7 @@ package com.example.imdb.data
 
 import android.util.Log
 import com.example.imdb.TAG_VINI
-import com.example.imdb.ui.MovieDbCategory
+import com.example.imdb.ui.TheMovieDbCategory
 import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
@@ -58,7 +58,6 @@ class Repository(private val api: API, private val databaseMovies: DatabaseMovie
             val movieReviews = databaseMovies.getMovieReviews(id)
             if(movieReviews.idReviewed != id) {
                 val movieReviewsAPI = api.loadReviews(id)
-                Log.i(TAG_VINI, movieReviewsAPI.toString())
                 databaseMovies.setReviews(movieReviewsAPI)
                 funResponse(movieReviewsAPI)
             }  else { funResponse(movieReviews) }
@@ -77,25 +76,32 @@ class Repository(private val api: API, private val databaseMovies: DatabaseMovie
         }
     }
 
-    fun loadMovieCategory(movieDbCategory: MovieDbCategory, funResponse: (movies: List<Movie>) -> Unit) {
+    fun loadMovieCategory(theMovieDbCategory: TheMovieDbCategory, funResponse: (movies: List<Movie>) -> Unit, pag: Int = 1) {
         coroutine {
-            val movies = databaseMovies.getCategory(movieDbCategory)
+            if(pag != 1) {
+                val listMovieAPI = api.loadCategory(theMovieDbCategory, pag)
+                val favorites = databaseMovies.getFavorites()
+                databaseMovies.setMovie(listMovieAPI.results, theMovieDbCategory)
+                funResponse(moviesAreFavorites(listMovieAPI.results, favorites))
+                return@coroutine
+            }
+            val movies = databaseMovies.getCategory(theMovieDbCategory)
             val favorites = databaseMovies.getFavorites()
-            val isToMake = isToMakeAPIRequest(movies, movieDbCategory)
+            val isToMake = isToMakeAPIRequest(movies, theMovieDbCategory)
             if(isToMake) {
-                val listMovieAPI = api.loadCategory(movieDbCategory)
-                Log.i(TAG_VINI, "asdlkaldjsakljal")
-                if(listMovieAPI.results.isNotEmpty() && listMovieAPI.results.first().error) {
-                    funResponse(databaseMovies.getCategory(movieDbCategory))
+                val listMovieAPI = api.loadCategory(theMovieDbCategory, pag)
+                if(listMovieAPI.results.isEmpty() && listMovieAPI.results.first().error) {
+                    funResponse(databaseMovies.getCategory(theMovieDbCategory))
                 } else {
-                    setLastTimeUpdateCategory(movieDbCategory)
-                    funResponse(listMovieAPI.results)
+                    databaseMovies.setMovie(listMovieAPI.results, theMovieDbCategory)
+                    setLastTimeUpdateCategory(theMovieDbCategory)
+                    funResponse(moviesAreFavorites(listMovieAPI.results, favorites))
                 }
             } else { funResponse(moviesAreFavorites(movies, favorites)) }
         }
     }
 
-    private fun setLastTimeUpdateCategory(movieDbCategory: MovieDbCategory) = databaseMovies.lastTimeUpdateCategory(movieDbCategory, getCurrentTime())
+    private fun setLastTimeUpdateCategory(theMovieDbCategory: TheMovieDbCategory) = databaseMovies.lastTimeUpdateCategory(theMovieDbCategory, getCurrentTime())
 
     private fun List<Movie>.isEmptyOrInLoading(): Boolean {
         for (movie in this) if (movie.loading) return true
@@ -105,8 +111,8 @@ class Repository(private val api: API, private val databaseMovies: DatabaseMovie
         return false
     }
 
-    private fun isToMakeAPIRequest(movieList: List<Movie>, movieDbCategory: MovieDbCategory) : Boolean {
-        val lastTime = databaseMovies.getLastTimeUpdateCategory(movieDbCategory)
+    private fun isToMakeAPIRequest(movieList: List<Movie>, theMovieDbCategory: TheMovieDbCategory) : Boolean {
+        val lastTime = databaseMovies.getLastTimeUpdateCategory(theMovieDbCategory)
         val deprecated = getCurrentTime().minus(lastTime) > timeToBeDeprecated
         return movieList.isEmptyOrInLoading() || deprecated
     }

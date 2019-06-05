@@ -9,8 +9,9 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.imdb.ui.MovieDbCategory
+import com.example.imdb.ui.TheMovieDbCategory
 import com.example.imdb.R
+import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.interfaces.IFavorite
 import com.example.imdb.ui.movies.moviedetail.MovieDetailActivity
 import com.example.imdb.ui.movies.recyclerview.RecyclerViewAdapterMovieList
@@ -24,6 +25,7 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
     private lateinit var topRated: RecyclerView
     private lateinit var upcoming: RecyclerView
     private val homeMoviesViewController: HomeMoviesViewController by inject()
+    private lateinit var recyclersViews: List<RecyclerView>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,11 +37,14 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
         topRated = findViewById(R.id.top_rated)
         upcoming = findViewById(R.id.upcoming)
 
-        latest.setupAdapter(this, MovieDbCategory.MovieLatest)
-        nowPlaying.setupAdapter(this, MovieDbCategory.MovieNowPlaying)
-        popular.setupAdapter(this, MovieDbCategory.MoviePopular)
-        topRated.setupAdapter(this, MovieDbCategory.MovieTopRated)
-        upcoming.setupAdapter(this, MovieDbCategory.MovieUpcoming)
+        recyclersViews = listOf(latest, nowPlaying, popular, topRated, upcoming)
+
+        latest.setupAdapter(this, TheMovieDbCategory.MovieLatest)
+        nowPlaying.setupAdapter(this, TheMovieDbCategory.MovieNowPlaying)
+        popular.setupAdapter(this, TheMovieDbCategory.MoviePopular)
+        topRated.setupAdapter(this, TheMovieDbCategory.MovieTopRated)
+        upcoming.setupAdapter(this, TheMovieDbCategory.MovieUpcoming)
+        recyclersViews.forEach { it.setupInfiniteScroll() }
     }
 
     override fun onStart() {
@@ -47,23 +52,15 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
         loadAllCategories()
     }
 
-    override fun loadMovies(type: MovieDbCategory) {
+    override fun loadMovies(type: TheMovieDbCategory) {
         when(type) {
-            MovieDbCategory.MovieUpcoming -> upcoming.loadCategory(type)
-            MovieDbCategory.MovieNowPlaying -> nowPlaying.loadCategory(type)
-            MovieDbCategory.MoviePopular -> popular.loadCategory(type)
-            MovieDbCategory.MovieTopRated -> topRated.loadCategory(type)
-            MovieDbCategory.MovieLatest -> latest.loadCategory(type)
+            TheMovieDbCategory.MovieUpcoming -> upcoming.loadCategory()
+            TheMovieDbCategory.MovieNowPlaying -> nowPlaying.loadCategory()
+            TheMovieDbCategory.MoviePopular -> popular.loadCategory()
+            TheMovieDbCategory.MovieTopRated -> topRated.loadCategory()
+            TheMovieDbCategory.MovieLatest -> latest.loadCategory()
             else -> Unit
         }
-    }
-
-    private fun loadAllCategories() {
-        loadMovies(MovieDbCategory.MovieLatest)
-        loadMovies(MovieDbCategory.MovieNowPlaying)
-        loadMovies(MovieDbCategory.MoviePopular)
-        loadMovies(MovieDbCategory.MovieUpcoming)
-        loadMovies(MovieDbCategory.MovieTopRated)
     }
 
     override fun makeImageTransition(view: View, movieId: Int, url: String) {
@@ -77,33 +74,61 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
         ContextCompat.startActivity(view.context, startNewActivity, optionsCompat.toBundle())
     }
 
-    override fun favoriteMovie(idMovie: Int, toFavorite: Boolean) {
+    override fun favoriteMovie(idMovie: Int, toFavorite: Boolean) =
         homeMoviesViewController.favoriteMovie(idMovie, toFavorite)
-    }
 
     override fun updateVisualMovie(idMovie: Int, toFavorite: Boolean) {
-        val recyclers = listOf(upcoming, nowPlaying, popular, topRated, latest)
-        recyclers.forEach {
+        recyclersViews.forEach {
             val position = it.movieAdapter.getMoviePosition(idMovie)
             it.movieAdapter.favoriteMovie(position, toFavorite)
         }
     }
 
-    private fun RecyclerView.setupAdapter(iFavorite: IFavorite, movieDbCategory: MovieDbCategory) {
-        this.adapter = createAdapter(iFavorite, movieDbCategory)
-        this.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+    private fun RecyclerView.setupAdapter(iFavorite: IFavorite, theMovieDbCategory: TheMovieDbCategory) {
+        adapter = createAdapter(iFavorite, theMovieDbCategory)
+        layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
     }
 
-    private fun createAdapter(iFavorite: IFavorite, movieDbCategory: MovieDbCategory)=
-        RecyclerViewAdapterMovieList(mutableListOf(), iFavorite, movieDbCategory)
+    private fun createAdapter(iFavorite: IFavorite, theMovieDbCategory: TheMovieDbCategory)=
+        RecyclerViewAdapterMovieList(mutableListOf(), iFavorite, theMovieDbCategory)
 
-    private fun RecyclerView.loadCategory(movieDbCategory: MovieDbCategory) {
-        homeMoviesViewController.loadMovies(this.movieAdapter, movieDbCategory) {
-            Log.i("test", it.count().toString())
-            this.movieAdapter.setMovies(it)
+    private fun loadAllCategories() {
+        loadMovies(TheMovieDbCategory.MovieLatest)
+        loadMovies(TheMovieDbCategory.MovieNowPlaying)
+        loadMovies(TheMovieDbCategory.MoviePopular)
+        loadMovies(TheMovieDbCategory.MovieUpcoming)
+        loadMovies(TheMovieDbCategory.MovieTopRated)
+    }
+
+    private fun RecyclerView.loadCategory() {
+        homeMoviesViewController.loadMovies(movieAdapter, movieAdapter.theMovieDbCategory) {
+            movieAdapter.setMovies(it)
         }
     }
 
     private val RecyclerView.movieAdapter: RecyclerViewAdapterMovieList
         get() = adapter as RecyclerViewAdapterMovieList
+
+    private fun RecyclerView.setupInfiniteScroll() {
+        addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                val totalItemCount = recyclerView.layoutManager?.itemCount
+                if (movieAdapter.hasLoading().not() && totalItemCount == lastVisibleItemPosition + 1) {
+                    homeMoviesViewController.apply {
+                        addPage(movieAdapter.theMovieDbCategory)
+                        loadNextMovies(movieAdapter, movieAdapter.theMovieDbCategory) {
+                            movieAdapter.addMovies(it)
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    private val RecyclerView.lastVisibleItemPosition
+        get() = linerLayoutManager.findLastVisibleItemPosition()
+
+    private val RecyclerView.linerLayoutManager
+        get() = layoutManager as LinearLayoutManager
 }

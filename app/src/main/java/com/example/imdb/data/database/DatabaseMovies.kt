@@ -58,7 +58,7 @@ abstract class DatabaseMovies : RoomDatabase() {
         return MovieCredit(creditMovie, id)
     }
 
-    fun getCategory(movieDbCategory: MovieDbCategory) = getMovies(movieDbCategory)
+    fun getCategory(theMovieDbCategory: TheMovieDbCategory) = getMovies(theMovieDbCategory)
 
     fun getDetailMovie(idMovie: Int) : MovieDetail {
         val movieDetailDb = moviesDao().getMovieDetail(idMovie)
@@ -127,8 +127,8 @@ abstract class DatabaseMovies : RoomDatabase() {
         return Reviews(id, page, listOfReviews.toList(), totalPages, totalResults, idMovie)
     }
 
-    fun getLastTimeUpdateCategory(movieDbCategory: MovieDbCategory) : Long {
-        val last = moviesDao().getLastUpdateCategory(movieDbCategory.ordinal)
+    fun getLastTimeUpdateCategory(theMovieDbCategory: TheMovieDbCategory) : Long {
+        val last = moviesDao().getLastUpdateCategory(theMovieDbCategory.ordinal)
         return last?.timeUpdate ?: System.currentTimeMillis()
     }
 
@@ -164,17 +164,14 @@ abstract class DatabaseMovies : RoomDatabase() {
             movieDetail.title, movieDetail.voteAverage, movieDetail.voteCount))
     }
 
-    fun setMovie(movies: List<Movie>, movieDbCategory: MovieDbCategory) {
-
-        Log.i(TAG_VINI, movies.toString())
-
+    fun setMovie(movies: List<Movie>, theMovieDbCategory: TheMovieDbCategory) {
         if(movies.isNullOrEmpty() || movies.first().error) return
 
-        moviesDao().deleteMovieCategory(movieDbCategory.ordinal)
+        moviesDao().deleteMovieCategory(theMovieDbCategory.ordinal)
         movies.forEach {
             val movie = it
             moviesDao().insertMovie(TableMovie(movie.id, movie.originalTitle, movie.posterPath, movie.title, movie.adult))
-            moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, movieDbCategory.ordinal))
+            moviesDao().insertMovieCategory(TableMovieCategory(ZERO, movie.id, theMovieDbCategory.ordinal))
         }
     }
 
@@ -187,20 +184,20 @@ abstract class DatabaseMovies : RoomDatabase() {
         }
     }
 
-    fun lastTimeUpdateCategory(movieDbCategory: MovieDbCategory, currentTime: Long) {
-        moviesDao().insertLastUpdateCategory(TableLastUpdateCategory(movieDbCategory.ordinal, currentTime))
+    fun lastTimeUpdateCategory(theMovieDbCategory: TheMovieDbCategory, currentTime: Long) {
+        moviesDao().insertLastUpdateCategory(TableLastUpdateCategory(theMovieDbCategory.ordinal, currentTime))
     }
 
     fun favoriteMovie(movieId: Int, toFavorite: Boolean) =
         if(toFavorite) moviesDao().insertFavorite(TableFavorite(movieId)) else moviesDao().deleteFavorite(movieId)
 
     open fun setup() {
-        val listOfMovieDbCategory = listOf(MovieDbCategory.MovieLatest.ordinal,
-            MovieDbCategory.MovieNowPlaying.ordinal,
-            MovieDbCategory.MoviePopular.ordinal,
-            MovieDbCategory.MovieTopRated.ordinal,
-            MovieDbCategory.MovieUpcoming.ordinal,
-            MovieDbCategory.MovieRecommendation.ordinal)
+        val listOfMovieDbCategory = listOf(TheMovieDbCategory.MovieLatest.ordinal,
+            TheMovieDbCategory.MovieNowPlaying.ordinal,
+            TheMovieDbCategory.MoviePopular.ordinal,
+            TheMovieDbCategory.MovieTopRated.ordinal,
+            TheMovieDbCategory.MovieUpcoming.ordinal,
+            TheMovieDbCategory.MovieRecommendation.ordinal)
 
         coroutine {
             listOfMovieDbCategory.forEach { moviesDao().insertMovieList(TableMoviesList(it, 1, 1)) }
@@ -208,8 +205,8 @@ abstract class DatabaseMovies : RoomDatabase() {
     }
 
     var s = 1
-    private fun getMovies(movieDbCategory: MovieDbCategory) : List<Movie> {
-        val moviesDb = moviesDao().getMoviesListAndMovie(movieDbCategory.ordinal)
+    private fun getMovies(theMovieDbCategory: TheMovieDbCategory) : List<Movie> {
+        val moviesDb = moviesDao().getMoviesListAndMovie(theMovieDbCategory.ordinal)
         return tableMoviesToMovies(moviesDb)
     }
 

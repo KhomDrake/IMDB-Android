@@ -1,19 +1,35 @@
 package com.example.imdb.ui.movies.homemovies
 
-import android.util.Log
-import com.example.imdb.TAG_VINI
 import com.example.imdb.data.Repository
-import com.example.imdb.ui.MovieDbCategory
+import com.example.imdb.ui.TheMovieDbCategory
 import com.example.imdb.data.entity.http.movie.Movie
 import com.example.imdb.ui.movies.recyclerview.RecyclerViewAdapterMovieList
 
 class HomeMoviesViewController(private val repository: Repository) {
+
+    private val pagesMovieCategory = hashMapOf<TheMovieDbCategory, Int>()
+
+    init {
+        pagesMovieCategory[TheMovieDbCategory.MovieLatest] = 1
+        pagesMovieCategory[TheMovieDbCategory.MovieUpcoming] = 1
+        pagesMovieCategory[TheMovieDbCategory.MoviePopular] = 1
+        pagesMovieCategory[TheMovieDbCategory.MovieNowPlaying] = 1
+        pagesMovieCategory[TheMovieDbCategory.MovieTopRated] = 1
+    }
+
+    fun getPage(theMovieDbCategory: TheMovieDbCategory) = pagesMovieCategory.get(theMovieDbCategory)!!
+
+    fun addPage(theMovieDbCategory: TheMovieDbCategory) = when(theMovieDbCategory) {
+        TheMovieDbCategory.MovieLatest -> Unit
+        else -> pagesMovieCategory.set(theMovieDbCategory, pagesMovieCategory[theMovieDbCategory]!! + 1)
+    }
+
     private val loading: Movie =
         Movie(
-            0,
-            "",
-            "",
-            "",
+            id = 0,
+            originalTitle = "",
+            posterPath = "",
+            title =  "",
             loading = true,
             error = false,
             adult = false,
@@ -21,10 +37,19 @@ class HomeMoviesViewController(private val repository: Repository) {
         )
 
     fun loadMovies(adapterMovieList: RecyclerViewAdapterMovieList,
-                   movieDbCategory: MovieDbCategory,
+                   theMovieDbCategory: TheMovieDbCategory,
                    funResponse: (movies: List<Movie>) -> Unit) {
-        adapterMovieList.setMovies(mutableListOf(loading))
-        repository.loadMovieCategory(movieDbCategory, funResponse)
+        adapterMovieList.addMovies(mutableListOf(loading))
+        repository.loadMovieCategory(theMovieDbCategory, funResponse)
+    }
+
+    fun loadNextMovies(adapterMovieList: RecyclerViewAdapterMovieList,
+                       theMovieDbCategory: TheMovieDbCategory,
+                       funResponse: (movies: List<Movie>) -> Unit) {
+        if(adapterMovieList.theMovieDbCategory == TheMovieDbCategory.MovieLatest) return
+
+        adapterMovieList.addMovies(mutableListOf(loading))
+        repository.loadMovieCategory(theMovieDbCategory, funResponse, getPage(adapterMovieList.theMovieDbCategory))
     }
 
     fun favoriteMovie(idMovie: Int, toFavorite: Boolean) {
