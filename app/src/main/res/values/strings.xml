@@ -36,4 +36,7 @@
     <string name="poster_img">poster_img</string>
     <string name="heart_empty">heart_empty</string>
     <string name="no_cast">No Cast</string>
+    <string name="login">Login</string>
+    <string name="senha">Senha</string>
+    <string name="voltar">Voltar</string>
 </resources>

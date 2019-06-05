@@ -18,6 +18,6 @@ class MainActivityTest : AcceptanceTest<MainActivity>(MainActivity::class.java) 
 
     @Test
     fun homeActivityIsLoading() {
-        onView(withId(R.id.login)).check(matches(isDisplayed()))
+        onView(withId(R.id.login_edit_text)).check(matches(isDisplayed()))
     }
 }
