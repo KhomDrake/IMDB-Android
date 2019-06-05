@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.imdb.ui.MovieDbCategory
+import com.example.imdb.ui.TheMovieDbCategory
 import com.example.imdb.R
 import com.example.imdb.ui.becomeInvisible
 import com.example.imdb.ui.becomeVisible
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 class RecyclerViewAdapterMovieList(
     private val informationMovies: MutableList<Movie>,
     private val iFavorite: IFavorite,
-    private val movieDbCategory: MovieDbCategory
+    val theMovieDbCategory: TheMovieDbCategory
 ) : RecyclerView.Adapter<RecyclerViewAdapterMovieList.ViewHolder>() {
 
     private val urlImg = "https://image.tmdb.org/t/p/w300"
@@ -32,13 +32,30 @@ class RecyclerViewAdapterMovieList(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(informationMovies[position], urlImg, imgNotFound, iFavorite, movieDbCategory, plus18)
+        holder.bind(informationMovies[position], urlImg, imgNotFound, iFavorite, theMovieDbCategory, plus18)
     }
 
     fun setMovies(movies: List<Movie>) {
         if(movies.isEmpty()) return
 
+        removeLoading()
+
         informationMovies.clear()
+        informationMovies.addAll(movies)
+
+        coroutineImage { notifyDataSetChanged() }
+    }
+
+    private fun removeLoading() {
+        informationMovies.forEach {
+            if(it.loading) informationMovies.remove(it)
+        }
+    }
+
+    fun addMovies(movies: List<Movie>) {
+        if(movies.isEmpty()) return
+
+        removeLoading()
         informationMovies.addAll(movies)
 
         coroutineImage { notifyDataSetChanged() }
@@ -64,6 +81,11 @@ class RecyclerViewAdapterMovieList(
         notifyDataSetChanged()
     }
 
+    fun hasLoading() : Boolean {
+        informationMovies.forEach { if(it.loading) return true }
+        return false
+    }
+
     override fun getItemCount() = informationMovies.count()
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -79,14 +101,14 @@ class RecyclerViewAdapterMovieList(
             get() = listOf(img, again, loading, title, heartEmpty, heart)
 
         fun bind(result: Movie, urlImg: String, imgNotFound: String,
-                 iFavorite: IFavorite, movieDbCategory: MovieDbCategory, plus18: String) {
+                 iFavorite: IFavorite, theMovieDbCategory: TheMovieDbCategory, plus18: String) {
 
             listToMakeInvisible.forEach { it.visibility = View.INVISIBLE }
 
             if(result.error)
             {
                 again.becomeVisible()
-                again.setOnClickListener { iFavorite.loadMovies(movieDbCategory) }
+                again.setOnClickListener { iFavorite.loadMovies(theMovieDbCategory) }
                 return
             }
 

@@ -10,7 +10,7 @@ import com.example.imdb.data.database.DatabaseMovies
 import com.example.imdb.data.entity.http.movie.Movie
 import com.example.imdb.data.entity.http.movie.MoviesList
 import com.example.imdb.network.API
-import com.example.imdb.ui.MovieDbCategory
+import com.example.imdb.ui.TheMovieDbCategory
 import com.example.imdb.ui.ZERO
 import com.example.imdb.ui.home.HomeAppViewController
 import com.example.imdb.ui.mainactivity.MainActivityViewController
@@ -90,41 +90,41 @@ class HomeMoviesTest : AcceptanceTest<HomeMoviesActivity>(HomeMoviesActivity::cl
     fun setup() {
 
 //        every { databaseMoviesMock.getCategory(any()) } returns listOf(movie1, movie2, movie3)
-        every { databaseMoviesMock.getCategory(MovieDbCategory.MovieNowPlaying) } returns listOf(movie1, movie2, movie3)
-        every { databaseMoviesMock.getCategory(MovieDbCategory.MovieUpcoming) } returns listOf(movie2, movie4, movie5)
-        every { databaseMoviesMock.getCategory(MovieDbCategory.MovieTopRated) } returns listOf(movie3, movie4, movie5)
-        every { databaseMoviesMock.getCategory(MovieDbCategory.MovieLatest) } returns listOf(movie4, movie3, movie4)
-        every { databaseMoviesMock.getCategory(MovieDbCategory.MoviePopular) } returns listOf(movie1, movie3, movie5)
+        every { databaseMoviesMock.getCategory(TheMovieDbCategory.MovieNowPlaying) } returns listOf(movie1, movie2, movie3)
+        every { databaseMoviesMock.getCategory(TheMovieDbCategory.MovieUpcoming) } returns listOf(movie2, movie4, movie5)
+        every { databaseMoviesMock.getCategory(TheMovieDbCategory.MovieTopRated) } returns listOf(movie3, movie4, movie5)
+        every { databaseMoviesMock.getCategory(TheMovieDbCategory.MovieLatest) } returns listOf(movie4, movie3, movie4)
+        every { databaseMoviesMock.getCategory(TheMovieDbCategory.MoviePopular) } returns listOf(movie1, movie3, movie5)
         every { databaseMoviesMock.setup() } returns Unit
 //        every { databaseMoviesMock.setMovie(any(), any()) } returns Unit
         every { databaseMoviesMock.getFavorites() } returns listOf(movie3)
-        every { databaseMoviesMock.getLastTimeUpdateCategory(MovieDbCategory.MoviePopular) } returns 0L
-        every { databaseMoviesMock.getLastTimeUpdateCategory(MovieDbCategory.MovieLatest) } returns System.currentTimeMillis()
-        every { databaseMoviesMock.getLastTimeUpdateCategory(MovieDbCategory.MovieTopRated) } returns 10000000000000L
-        every { databaseMoviesMock.getLastTimeUpdateCategory(MovieDbCategory.MovieNowPlaying) } returns System.currentTimeMillis()
-        every { databaseMoviesMock.getLastTimeUpdateCategory(MovieDbCategory.MovieUpcoming) } returns System.currentTimeMillis()
+        every { databaseMoviesMock.getLastTimeUpdateCategory(TheMovieDbCategory.MoviePopular) } returns 0L
+        every { databaseMoviesMock.getLastTimeUpdateCategory(TheMovieDbCategory.MovieLatest) } returns System.currentTimeMillis()
+        every { databaseMoviesMock.getLastTimeUpdateCategory(TheMovieDbCategory.MovieTopRated) } returns 10000000000000L
+        every { databaseMoviesMock.getLastTimeUpdateCategory(TheMovieDbCategory.MovieNowPlaying) } returns System.currentTimeMillis()
+        every { databaseMoviesMock.getLastTimeUpdateCategory(TheMovieDbCategory.MovieUpcoming) } returns System.currentTimeMillis()
 
-        coEvery { apiMock.loadCategory(MovieDbCategory.MovieNowPlaying) } returns MoviesList(
+        coEvery { apiMock.loadCategory(TheMovieDbCategory.MovieNowPlaying) } returns MoviesList(
             ZERO,
             listOf(movie1, movie2, movie3),
             ZERO
         )
-        coEvery { apiMock.loadCategory(MovieDbCategory.MovieUpcoming) } returns MoviesList(
+        coEvery { apiMock.loadCategory(TheMovieDbCategory.MovieUpcoming) } returns MoviesList(
             ZERO,
             listOf(movie2, movie3, movie5),
             ZERO
         )
-        coEvery { apiMock.loadCategory(MovieDbCategory.MovieTopRated) } returns MoviesList(
+        coEvery { apiMock.loadCategory(TheMovieDbCategory.MovieTopRated) } returns MoviesList(
             ZERO,
             listOf(movie1, movie2, movie5),
             ZERO
         )
-        coEvery { apiMock.loadCategory(MovieDbCategory.MovieLatest) } returns MoviesList(
+        coEvery { apiMock.loadCategory(TheMovieDbCategory.MovieLatest) } returns MoviesList(
             ZERO,
             listOf(movie1, movie4, movie3),
             ZERO
         )
-        coEvery { apiMock.loadCategory(MovieDbCategory.MoviePopular) } returns MoviesList(
+        coEvery { apiMock.loadCategory(TheMovieDbCategory.MoviePopular) } returns MoviesList(
             ZERO,
             listOf(movie5, movie2, movie4),
             ZERO

@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.imdb.ui.MovieDbCategory
+import com.example.imdb.ui.TheMovieDbCategory
 import com.example.imdb.R
 import com.example.imdb.ui.becomeInvisible
 import com.example.imdb.ui.becomeVisible
@@ -71,7 +71,7 @@ class RecyclerViewAdapterCast(
             }
 
             tryAgain.setOnClickListener {
-                IActivityInteraction.loadMovies(MovieDbCategory.None)
+                IActivityInteraction.loadMovies(TheMovieDbCategory.None)
             }
         }
 

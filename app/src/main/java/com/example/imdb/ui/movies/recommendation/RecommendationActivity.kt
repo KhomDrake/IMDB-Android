@@ -11,7 +11,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.imdb.ui.MovieDbCategory
+import com.example.imdb.ui.TheMovieDbCategory
 import com.example.imdb.R
 import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.becomeInvisible
@@ -52,15 +52,15 @@ class RecommendationActivity : AppCompatActivity(), IFavorite {
             return
 
         recommendationTitle.text = "MovieRecommendation: $title"
-        loadMovies(MovieDbCategory.MovieRecommendation)
+        loadMovies(TheMovieDbCategory.MovieRecommendation)
     }
 
-    override fun loadMovies(type: MovieDbCategory) {
+    override fun loadMovies(type: TheMovieDbCategory) {
         when (type) {
-            MovieDbCategory.MovieRecommendation -> {
+            TheMovieDbCategory.MovieRecommendation -> {
                 loadingRecommendation.becomeVisible()
 
-                recommendationRecyclerView.setupAdapter(this, MovieDbCategory.MovieRecommendation)
+                recommendationRecyclerView.setupAdapter(this, TheMovieDbCategory.MovieRecommendation)
                 recommendationViewController.loadRecommendation(movieID) {
                     this.runOnUiThread {
                         recommendationNoFound.becomeVisibleOrInvisible(isToBeVisible = it.isEmpty())
@@ -94,8 +94,8 @@ class RecommendationActivity : AppCompatActivity(), IFavorite {
         recommendationRecyclerView.movieAdapter.favoriteMovie(position, toFavorite)
     }
 
-    private fun RecyclerView.setupAdapter(iFavorite: IFavorite, movieDbCategory: MovieDbCategory) {
-        this.adapter = RecyclerViewAdapterMovieList(mutableListOf(), iFavorite, movieDbCategory)
+    private fun RecyclerView.setupAdapter(iFavorite: IFavorite, theMovieDbCategory: TheMovieDbCategory) {
+        this.adapter = RecyclerViewAdapterMovieList(mutableListOf(), iFavorite, theMovieDbCategory)
         this.layoutManager = LinearLayoutManager(context)
     }
 

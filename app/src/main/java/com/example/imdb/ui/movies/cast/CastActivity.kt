@@ -8,7 +8,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.imdb.ui.MovieDbCategory
+import com.example.imdb.ui.TheMovieDbCategory
 import com.example.imdb.R
 import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.becomeInvisible
@@ -50,13 +50,12 @@ class CastActivity : AppCompatActivity(), IActivityInteraction {
         recyclerViewCast.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         recyclerViewCast.adapter = RecyclerViewAdapterCast(mutableListOf(), movieId, this)
 
-        loadMovies(MovieDbCategory.None)
+        loadMovies(TheMovieDbCategory.None)
     }
 
-    override fun loadMovies(type: MovieDbCategory) {
+    override fun loadMovies(type: TheMovieDbCategory) {
         castViewController.loadCast(movieId) {
             this.runOnUiThread {
-                Log.i(TAG_VINI, it.toString())
                 loading.becomeInvisible()
                 recyclerViewCast.castAdapter.setMovieCredit(it.cast)
                 noCast.becomeVisibleOrInvisible(it.cast.isEmpty())

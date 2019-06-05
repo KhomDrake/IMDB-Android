@@ -1,6 +1,6 @@
 package com.example.imdb.ui
 
-enum class MovieDbCategory {
+enum class TheMovieDbCategory {
     None,
     MovieLatest,
     MovieNowPlaying,

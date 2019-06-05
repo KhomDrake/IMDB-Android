@@ -11,7 +11,7 @@ import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.imdb.ui.MovieDbCategory
+import com.example.imdb.ui.TheMovieDbCategory
 import com.example.imdb.R
 import com.example.imdb.ui.becomeInvisible
 import com.example.imdb.ui.becomeVisible
@@ -54,7 +54,7 @@ class HomeAppActivity : AppCompatActivity(), IFavorite {
             ContextCompat.startActivity(this, startNewActivity, null)
         }
 
-        favoritesRecyclerView.setupAdapter(this, MovieDbCategory.MovieFavorite)
+        favoritesRecyclerView.setupAdapter(this, TheMovieDbCategory.MovieFavorite)
     }
 
     override fun onStart() {
@@ -74,8 +74,8 @@ class HomeAppActivity : AppCompatActivity(), IFavorite {
         }
     }
 
-    override fun loadMovies(type: MovieDbCategory) {
-        if(type == MovieDbCategory.MovieFavorite) loadFavorite()
+    override fun loadMovies(type: TheMovieDbCategory) {
+        if(type == TheMovieDbCategory.MovieFavorite) loadFavorite()
     }
 
     override fun makeImageTransition(view: View, movieId: Int, url: String) {
@@ -99,8 +99,8 @@ class HomeAppActivity : AppCompatActivity(), IFavorite {
         if(favoritesRecyclerView.favoriteAdapter.hasNoFavorites()) messengerNotFavorites.becomeVisible()
     }
 
-    private fun RecyclerView.setupAdapter(iFavorite: IFavorite, movieDbCategory: MovieDbCategory) {
-        this.adapter = RecyclerViewAdapterMovieList(mutableListOf(), iFavorite, movieDbCategory)
+    private fun RecyclerView.setupAdapter(iFavorite: IFavorite, theMovieDbCategory: TheMovieDbCategory) {
+        this.adapter = RecyclerViewAdapterMovieList(mutableListOf(), iFavorite, theMovieDbCategory)
         this.layoutManager = LinearLayoutManager(context)
     }
 
