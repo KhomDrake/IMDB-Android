@@ -11,6 +11,7 @@ import com.example.imdb.ui.mainactivity.MainActivityViewController
 import com.example.imdb.ui.movies.castdetail.CastDetailViewController
 import com.example.imdb.ui.movies.moviedetail.MovieDetailViewController
 import com.example.imdb.ui.movies.moviereview.ReviewViewController
+import com.example.imdb.ui.movies.ratemovie.RateMovieViewController
 import com.example.imdb.ui.movies.recommendation.RecommendationViewController
 import org.koin.dsl.module.module
 
@@ -29,6 +30,7 @@ val movieDbKoinModule = module(override = false) {
     single { MovieDetailViewController(get()) }
     single { RecommendationViewController(get()) }
     single { ReviewViewController(get()) }
+    single { RateMovieViewController(get()) }
     single { CastViewController(get()) }
     single { CastDetailViewController(get()) }
 }

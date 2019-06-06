@@ -1,15 +1,14 @@
 package com.example.imdb.network
 
+import android.util.Log
+import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.EMPTY_STRING
 import com.example.imdb.ui.ZERO
 import com.example.imdb.ui.ZERO_DOUBLE
 import com.example.imdb.data.database.DatabaseMovies
-import com.example.imdb.data.entity.http.Cast
-import com.example.imdb.data.entity.http.Review
-import com.example.imdb.data.entity.http.Reviews
+import com.example.imdb.data.entity.http.*
 import com.example.imdb.data.entity.http.movie.*
 import com.example.imdb.ui.TheMovieDbCategory
-import java.lang.Exception
 
 class API(private val databaseMovies: DatabaseMovies) {
 
@@ -66,24 +65,39 @@ class API(private val databaseMovies: DatabaseMovies) {
     )
     private val errorMovieCredit = MovieCredit(listOf(errorCast), ZERO)
 
+    suspend fun getSessionId() : Session {
+        return try {
+            api.createGuestSessionAsync(APIKEY).await()
+        } catch (e: Exception) {
+            Log.i(TAG_VINI, e.message)
+            return Session(EMPTY_STRING, EMPTY_STRING, false)
+        }
+    }
+
+    suspend fun rateMovie(idMovie: Int, body: Rate, sessionId: String) = try {
+        api.rateMovieAsync(idMovie, APIKEY, sessionId, body).await().statusMessage
+    } catch (e: Exception) {
+        "failed"
+    }
+
     suspend fun loadCategory(theMovieDbCategory: TheMovieDbCategory, page: Int = 1) : MoviesList {
         return try {
             when(theMovieDbCategory) {
                 TheMovieDbCategory.MovieLatest -> MoviesList(
                     ZERO,
-                    listOf(api.getLatestMovie(APIKEY, databaseMovies.getLanguage()).await()),
+                    listOf(api.getLatestMovieAsync(APIKEY, databaseMovies.getLanguage()).await()),
                     ZERO
                 )
-                TheMovieDbCategory.MovieNowPlaying -> api.getNowPlayingMovie(APIKEY, databaseMovies.getLanguage(),
+                TheMovieDbCategory.MovieNowPlaying -> api.getNowPlayingMovieAsync(APIKEY, databaseMovies.getLanguage(),
                     page
                 ).await()
-                TheMovieDbCategory.MoviePopular -> api.getPopularMovie(APIKEY, databaseMovies.getLanguage(),
+                TheMovieDbCategory.MoviePopular -> api.getPopularMovieAsync(APIKEY, databaseMovies.getLanguage(),
                     page
                 ).await()
-                TheMovieDbCategory.MovieUpcoming -> api.getUpcomingMovie(APIKEY, databaseMovies.getLanguage(),
+                TheMovieDbCategory.MovieUpcoming -> api.getUpcomingMovieAsync(APIKEY, databaseMovies.getLanguage(),
                     page
                 ).await()
-                TheMovieDbCategory.MovieTopRated -> api.getTopRatedMovie(APIKEY, databaseMovies.getLanguage(),
+                TheMovieDbCategory.MovieTopRated -> api.getTopRatedMovieAsync(APIKEY, databaseMovies.getLanguage(),
                     page
                 ).await()
                 else -> errorMovieList
@@ -92,22 +106,22 @@ class API(private val databaseMovies: DatabaseMovies) {
     }
 
     suspend fun loadMovieDetail(id: Int) : MovieDetail {
-        return try { api.getDetailMovie(id, APIKEY, databaseMovies.getLanguage()).await() }
+        return try { api.getDetailMovieAsync(id, APIKEY, databaseMovies.getLanguage()).await() }
             catch (e: Exception) { errorMovieDetail }
     }
 
     suspend fun loadRecommendation(id: Int) : MoviesList {
-        return try { api.getRecommendationMovie(id, APIKEY, databaseMovies.getLanguage()).await() }
+        return try { api.getRecommendationMovieAsync(id, APIKEY, databaseMovies.getLanguage()).await() }
             catch (e: Exception) { errorMovieList }
     }
 
     suspend fun loadReviews(id: Int) : Reviews {
-        return try { api.getReviewsMovie(id, APIKEY, databaseMovies.getLanguage()).await() }
+        return try { api.getReviewsMovieAsync(id, APIKEY, databaseMovies.getLanguage()).await() }
             catch (e: Exception) { errorReviews }
     }
 
     suspend fun loadMovieCredit(id: Int) : MovieCredit {
-        return try { api.getMovieCredit(id, APIKEY).await() }
+        return try { api.getMovieCreditAsync(id, APIKEY).await() }
             catch (e: Exception) { errorMovieCredit }
     }
 }
