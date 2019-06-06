@@ -12,5 +12,6 @@ data class Movie(
     val loading: Boolean,
     val error: Boolean,
     val adult: Boolean,
-    var favorite: Boolean
+    var favorite: Boolean,
+    val rating: Double = 0.0
 )

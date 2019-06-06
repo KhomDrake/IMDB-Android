@@ -99,6 +99,12 @@ interface ITheMovieDBAPI {
         @Body body: Rate
     ) : Deferred<RateResponse>
 
+    @GET("guest_session/{guest_session_id}/rated/movies")
+    fun getRateMovieGuest(
+        @Path("guest_session_id") sessionId: String,
+        @Query("api_key") key: String
+    )
+
     // Tv
 
     @GET("tv/airing_today")
