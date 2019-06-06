@@ -67,7 +67,7 @@ class API(private val databaseMovies: DatabaseMovies) {
 
     suspend fun getSessionId() : Session {
         return try {
-            api.createGuestSession(APIKEY).await()
+            api.createGuestSessionAsync(APIKEY).await()
         } catch (e: Exception) {
             Log.i(TAG_VINI, e.message)
             return Session(EMPTY_STRING, EMPTY_STRING, false)
@@ -75,7 +75,7 @@ class API(private val databaseMovies: DatabaseMovies) {
     }
 
     suspend fun rateMovie(idMovie: Int, body: Rate, sessionId: String) = try {
-        api.rateMovie(idMovie, APIKEY, sessionId, body).await().statusMessage
+        api.rateMovieAsync(idMovie, APIKEY, sessionId, body).await().statusMessage
     } catch (e: Exception) {
         "failed"
     }

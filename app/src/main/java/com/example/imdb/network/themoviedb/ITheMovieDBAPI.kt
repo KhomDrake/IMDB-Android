@@ -14,17 +14,17 @@ interface ITheMovieDBAPI {
     // Sessão
 
     @GET("authentication/guest_session/new")
-    fun createGuestSession(
+    fun createGuestSessionAsync(
         @Query("api_key") key: String
     ) : Deferred<Session>
 
     @GET("authentication/token/new")
-    fun createRequestToken(
+    fun createRequestTokenAsync(
         @Query("api_key") key: String
     ) : Deferred<RequestToken>
 
     @POST("authentication/token/validate_with_login")
-    fun createSessionWithLogin(
+    fun createSessionWithLoginAsync(
         @Body loginBody: LoginBody
     ) : Deferred<LoginResponse>
 
@@ -92,7 +92,7 @@ interface ITheMovieDBAPI {
     ): Deferred<MovieCredit>
 
     @POST("movie/{idMovie}/rating")
-    fun rateMovie(
+    fun rateMovieAsync(
         @Path("idMovie") id: Int,
         @Query("api_key") key: String,
         @Query("guest_session_id") sessionId: String,
