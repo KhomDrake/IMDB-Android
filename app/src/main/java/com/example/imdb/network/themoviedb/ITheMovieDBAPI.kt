@@ -1,10 +1,6 @@
 package com.example.imdb.network.themoviedb
 
-import com.example.imdb.data.entity.http.LoginBody
-import com.example.imdb.data.entity.http.LoginResponse
-import com.example.imdb.data.entity.http.RequestToken
-import com.example.imdb.data.entity.http.Reviews
-import com.example.imdb.data.entity.http.Session
+import com.example.imdb.data.entity.http.*
 import com.example.imdb.data.entity.http.movie.*
 import kotlinx.coroutines.Deferred
 import retrofit2.http.Body
@@ -17,17 +13,17 @@ interface ITheMovieDBAPI {
 
     // Sessão
 
-    @GET("/authentication/guest_session/new")
+    @GET("authentication/guest_session/new")
     fun createGuestSession(
         @Query("api_key") key: String
     ) : Deferred<Session>
 
-    @GET("/authentication/token/new")
+    @GET("authentication/token/new")
     fun createRequestToken(
         @Query("api_key") key: String
     ) : Deferred<RequestToken>
 
-    @POST("/authentication/token/validate_with_login")
+    @POST("authentication/token/validate_with_login")
     fun createSessionWithLogin(
         @Body loginBody: LoginBody
     ) : Deferred<LoginResponse>
@@ -68,136 +64,144 @@ interface ITheMovieDBAPI {
         @Query("page") p: Int = 1
     ): Deferred<MoviesList>
 
-    @GET("movie/{idReview}")
+    @GET("movie/{idMovie}")
     fun getDetailMovieAsync(
-        @Path("idReview") id: Int,
+        @Path("idMovie") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<MovieDetail>
 
-    @GET("movie/{idReview}/recommendations")
+    @GET("movie/{idMovie}/recommendations")
     fun getRecommendationMovieAsync(
-        @Path("idReview") id: Int,
+        @Path("idMovie") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<MoviesList>
 
-    @GET("movie/{idReview}/reviews")
+    @GET("movie/{idMovie}/reviews")
     fun getReviewsMovieAsync(
-        @Path("idReview") id: Int,
+        @Path("idMovie") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<Reviews>
 
-    @GET("movie/{idReview}/credits")
+    @GET("movie/{idMovie}/credits")
     fun getMovieCreditAsync(
-        @Path("idReview") id: Int,
+        @Path("idMovie") id: Int,
         @Query("api_key") key: String
     ): Deferred<MovieCredit>
+
+    @POST("movie/{idMovie}/rating")
+    fun rateMovie(
+        @Path("idMovie") id: Int,
+        @Query("api_key") key: String,
+        @Query("guest_session_id") sessionId: String,
+        @Body body: Rate
+    ) : Deferred<RateResponse>
 
     // Tv
 
     @GET("tv/airing_today")
-    fun getAiringTodayTV(
+    fun getAiringTodayTVAsync(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
     ): Deferred<Any>
 
     @GET("tv/latest")
-    fun getLatestTV(
+    fun getLatestTVAsync(
         @Query("api_key") key: String,
         @Query("language") language: String
     ): Deferred<Any>
 
     @GET("tv/on_the_air")
-    fun getOnTheAir(
+    fun getOnTheAirAsync(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
     ): Deferred<Any>
 
     @GET("tv/popular")
-    fun getPopularTV(
+    fun getPopularTVAsync(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
     ): Deferred<Any>
 
     @GET("tv/top_rated")
-    fun getTopRatedTV(
+    fun getTopRatedTVAsync(
         @Query("api_key") key: String,
         @Query("language") language: String,
         @Query("page") p: Int = 1
     ): Deferred<Any>
 
-    @GET("tv/{idReview}")
-    fun getTvDetail(
-        @Path("idReview") id: Int,
+    @GET("tv/{idTv}")
+    fun getTvDetailAsync(
+        @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{idReview}/credits")
-    fun getTvCredit(
-        @Path("idReview") id: Int,
+    @GET("tv/{idTv}/credits")
+    fun getTvCreditAsync(
+        @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{idReview}/recommendations")
-    fun getTvRecommendation(
-        @Path("idReview") id: Int,
+    @GET("tv/{idTv}/recommendations")
+    fun getTvRecommendationAsync(
+        @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{idReview}/reviews")
-    fun getTvReview(
-        @Path("idReview") id: Int,
+    @GET("tv/{idTv}/reviews")
+    fun getTvReviewAsync(
+        @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{idReview}/episode_groups")
-    fun getTvEpisodeGroups(
-        @Path("idReview") id: Int,
+    @GET("tv/{idTv}/episode_groups")
+    fun getTvEpisodeGroupsAsync(
+        @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{idReview}/screened_theatrically")
-    fun getTvScreenedThreatrically(
-        @Path("idReview") id: Int,
+    @GET("tv/{idTv}/screened_theatrically")
+    fun getTvScreenedThreatricallyAsync(
+        @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{idReview}/similar")
-    fun getTvSimilar(
-        @Path("idReview") id: Int,
+    @GET("tv/{idTv}/similar")
+    fun getTvSimilarAsync(
+        @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{idReview}/translations")
-    fun getTvTranslations(
-        @Path("idReview") id: Int,
+    @GET("tv/{idTv}/translations")
+    fun getTvTranslationsAsync(
+        @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{idReview}/season/{season}")
-    fun getTvSeason(
-        @Path("idReview") id: Int,
+    @GET("tv/{idTv}/season/{season}")
+    fun getTvSeasonAsync(
+        @Path("idTv") id: Int,
         @Path("season") season: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
     ) : Deferred<Any>
 
-    @GET("tv/{idReview}/season/{season}/episode/{episode}")
-    fun getTvSeasonEpisode(
-        @Path("idReview") id: Int,
+    @GET("tv/{idTv}/season/{season}/episode/{episode}")
+    fun getTvSeasonEpisodeAsync(
+        @Path("idTv") id: Int,
         @Path("season") season: Int,
         @Path("episode") episode: Int,
         @Query("api_key") key: String,

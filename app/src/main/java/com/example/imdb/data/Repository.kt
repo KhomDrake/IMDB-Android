@@ -1,9 +1,8 @@
 package com.example.imdb.data
 
-import android.util.Log
-import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.TheMovieDbCategory
 import com.example.imdb.data.database.DatabaseMovies
+import com.example.imdb.data.entity.http.Rate
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
 import com.example.imdb.network.API
@@ -17,7 +16,9 @@ class Repository(private val api: API, private val databaseMovies: DatabaseMovie
 
     private val timeToBeDeprecated: Long = 5 * 60000
 
-    init { databaseMovies.setup() }
+    init {
+        databaseMovies.setup()
+    }
 
     fun setupDatabase(language: String) { this.language = language }
 
@@ -131,6 +132,26 @@ class Repository(private val api: API, private val databaseMovies: DatabaseMovie
     private fun coroutine(block: suspend () -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             block()
+        }
+    }
+
+    fun getSessionId(response: (String) -> Unit) {
+        coroutine {
+            val session = api.getSessionId()
+            response(session.guestSessionId)
+        }
+    }
+
+    fun rateMovie(idMovie: Int, body: Rate, response: (String) -> Unit) {
+        coroutine {
+            val resultado = api.rateMovie(idMovie, body, Session.getSessionId())
+            val mensagem = if(resultado == "Success.") {
+                "Avaliado com sucesso"
+            } else {
+                "Avaliação não foi concluída"
+            }
+
+            response(mensagem)
         }
     }
 }

@@ -1,10 +1,13 @@
 package com.example.imdb
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.imdb.data.Session
 import com.example.imdb.ui.home.HomeAppActivity
 import com.example.imdb.ui.login.LoginActivity
 import com.example.imdb.ui.mainactivity.MainActivityViewController
@@ -23,6 +26,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val sharedPreferences = getSharedPreferences("The Movie Db", Context.MODE_PRIVATE)
+        Session.setSessionId(sharedPreferences.getString(Session.sessionIdName, "")!!)
+
         loginButton = findViewById(R.id.button_login_home)
         guestButton = findViewById(R.id.guest)
 
@@ -33,9 +39,24 @@ class MainActivity : AppCompatActivity() {
         }
 
         guestButton.setOnClickListener {
-            val startNewActivity = Intent(this, HomeAppActivity::class.java)
-            ContextCompat.startActivity(this, startNewActivity, null)
+            if(Session.getSessionId().isNotEmpty()) {
+                callGuestActivity()
+            } else {
+                mainActivityViewController.getSessionId {
+                    val editor = sharedPreferences.edit()
+                    editor.putString(Session.sessionIdName, it)
+                    editor.apply()
+                    Session.setSessionId(it)
+                    callGuestActivity()
+                }
+            }
         }
+    }
+
+    private fun callGuestActivity() {
+        Log.i(TAG_VINI, Session.getSessionId())
+        val startNewActivity = Intent(this, HomeAppActivity::class.java)
+        ContextCompat.startActivity(this, startNewActivity, null)
     }
 }
 

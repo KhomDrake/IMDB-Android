@@ -37,19 +37,17 @@ class HomeMoviesViewController(private val repository: Repository) {
         )
 
     fun loadMovies(adapterMovieList: RecyclerViewAdapterMovieList,
-                   theMovieDbCategory: TheMovieDbCategory,
                    funResponse: (movies: List<Movie>) -> Unit) {
         adapterMovieList.addMovies(mutableListOf(loading))
-        repository.loadMovieCategory(theMovieDbCategory, funResponse)
+        repository.loadMovieCategory(adapterMovieList.theMovieDbCategory, funResponse)
     }
 
     fun loadNextMovies(adapterMovieList: RecyclerViewAdapterMovieList,
-                       theMovieDbCategory: TheMovieDbCategory,
                        funResponse: (movies: List<Movie>) -> Unit) {
         if(adapterMovieList.theMovieDbCategory == TheMovieDbCategory.MovieLatest) return
 
         adapterMovieList.addMovies(mutableListOf(loading))
-        repository.loadMovieCategory(theMovieDbCategory, funResponse, getPage(adapterMovieList.theMovieDbCategory))
+        repository.loadMovieCategory(adapterMovieList.theMovieDbCategory, funResponse, getPage(adapterMovieList.theMovieDbCategory))
     }
 
     fun favoriteMovie(idMovie: Int, toFavorite: Boolean) {

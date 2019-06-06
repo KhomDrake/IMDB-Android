@@ -1,15 +1,14 @@
 package com.example.imdb.network
 
+import android.util.Log
+import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.EMPTY_STRING
 import com.example.imdb.ui.ZERO
 import com.example.imdb.ui.ZERO_DOUBLE
 import com.example.imdb.data.database.DatabaseMovies
-import com.example.imdb.data.entity.http.Cast
-import com.example.imdb.data.entity.http.Review
-import com.example.imdb.data.entity.http.Reviews
+import com.example.imdb.data.entity.http.*
 import com.example.imdb.data.entity.http.movie.*
 import com.example.imdb.ui.TheMovieDbCategory
-import java.lang.Exception
 
 class API(private val databaseMovies: DatabaseMovies) {
 
@@ -65,6 +64,21 @@ class API(private val databaseMovies: DatabaseMovies) {
         error = true
     )
     private val errorMovieCredit = MovieCredit(listOf(errorCast), ZERO)
+
+    suspend fun getSessionId() : Session {
+        return try {
+            api.createGuestSession(APIKEY).await()
+        } catch (e: Exception) {
+            Log.i(TAG_VINI, e.message)
+            return Session(EMPTY_STRING, EMPTY_STRING, false)
+        }
+    }
+
+    suspend fun rateMovie(idMovie: Int, body: Rate, sessionId: String) = try {
+        api.rateMovie(idMovie, APIKEY, sessionId, body).await().statusMessage
+    } catch (e: Exception) {
+        "failed"
+    }
 
     suspend fun loadCategory(theMovieDbCategory: TheMovieDbCategory, page: Int = 1) : MoviesList {
         return try {

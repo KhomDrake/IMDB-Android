@@ -24,8 +24,8 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
     private lateinit var popular: RecyclerView
     private lateinit var topRated: RecyclerView
     private lateinit var upcoming: RecyclerView
-    private val homeMoviesViewController: HomeMoviesViewController by inject()
     private lateinit var recyclersViews: List<RecyclerView>
+    private val homeMoviesViewController: HomeMoviesViewController by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,7 +101,7 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
     }
 
     private fun RecyclerView.loadCategory() {
-        homeMoviesViewController.loadMovies(movieAdapter, movieAdapter.theMovieDbCategory) {
+        homeMoviesViewController.loadMovies(movieAdapter) {
             movieAdapter.setMovies(it)
         }
     }
@@ -117,7 +117,7 @@ class HomeMoviesActivity : AppCompatActivity(), IFavorite {
                 if (movieAdapter.hasLoading().not() && totalItemCount == lastVisibleItemPosition + 1) {
                     homeMoviesViewController.apply {
                         addPage(movieAdapter.theMovieDbCategory)
-                        loadNextMovies(movieAdapter, movieAdapter.theMovieDbCategory) {
+                        loadNextMovies(movieAdapter) {
                             movieAdapter.addMovies(it)
                         }
                     }
