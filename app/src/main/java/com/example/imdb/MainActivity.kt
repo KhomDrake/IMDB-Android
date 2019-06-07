@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
                     editor.putString(Session.sessionIdName, it)
                     editor.apply()
                     Session.setSessionId(it)
+                    Session.loginAsGuest()
                     callGuestActivity()
                 }
             }

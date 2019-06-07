@@ -98,10 +98,18 @@ interface ITheMovieDBAPI {
     ): Deferred<MovieCredit>
 
     @POST("movie/{idMovie}/rating")
-    fun rateMovieAsync(
+    fun rateMovieGuestAsync(
         @Path("idMovie") id: Int,
         @Query("api_key") key: String,
         @Query("guest_session_id") sessionId: String,
+        @Body body: Rate
+    ): Deferred<RateResponse>
+
+    @POST("movie/{idMovie}/rating")
+    fun rateMovieAsync(
+        @Path("idMovie") id: Int,
+        @Query("api_key") key: String,
+        @Query("session_id") sessionId: String,
         @Body body: Rate
     ): Deferred<RateResponse>
 

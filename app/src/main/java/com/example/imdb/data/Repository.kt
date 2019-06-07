@@ -169,6 +169,7 @@ class Repository(private val api: API, private val databaseMovies: DatabaseMovie
                 }
                 val sessionId = api.createSession(requestToken.requestToken)
                 Session.setSessionId(sessionId.sessionId)
+                Session.loginAsUser()
             } catch (e: Exception) {
                 Log.i(TAG_VINI, e.message)
                 response(false, "Falha ao tentar Logar")

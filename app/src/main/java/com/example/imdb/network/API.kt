@@ -1,7 +1,5 @@
 package com.example.imdb.network
 
-import android.util.Log
-import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.EMPTY_STRING
 import com.example.imdb.ui.ZERO
 import com.example.imdb.ui.ZERO_DOUBLE
@@ -73,8 +71,11 @@ class API(private val databaseMovies: DatabaseMovies) {
         }
     }
 
-    suspend fun rateMovie(idMovie: Int, body: Rate, sessionId: String) = try {
-        api.rateMovieAsync(idMovie, APIKEY, sessionId, body).await().statusMessage
+    suspend fun rateMovie(idMovie: Int, body: Rate, sessionId: String, asGuest: Boolean) = try {
+       if(asGuest)
+           api.rateMovieGuestAsync(idMovie, APIKEY, sessionId, body).await().statusMessage
+       else
+           api.rateMovieAsync(idMovie, APIKEY, sessionId, body).await().statusMessage
     } catch (e: Exception) {
         "failed"
     }
