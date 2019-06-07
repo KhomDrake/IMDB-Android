@@ -124,4 +124,10 @@ class API(private val databaseMovies: DatabaseMovies) {
         return try { api.getMovieCreditAsync(id, APIKEY).await() }
             catch (e: Exception) { errorMovieCredit }
     }
+
+    suspend fun createRequestToken() = api.createRequestTokenAsync(APIKEY).await()
+
+    suspend fun createSession(requestToken: String) = api.createSession(APIKEY, requestToken).await()
+
+    suspend fun createSessionWithLogin(body: LoginBody) = api.createSessionWithLoginAsync(APIKEY, body).await()
 }

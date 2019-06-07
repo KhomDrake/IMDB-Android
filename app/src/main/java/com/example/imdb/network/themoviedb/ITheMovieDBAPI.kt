@@ -1,13 +1,12 @@
 package com.example.imdb.network.themoviedb
 
 import com.example.imdb.data.entity.http.*
-import com.example.imdb.data.entity.http.movie.*
+import com.example.imdb.data.entity.http.movie.Movie
+import com.example.imdb.data.entity.http.movie.MovieCredit
+import com.example.imdb.data.entity.http.movie.MovieDetail
+import com.example.imdb.data.entity.http.movie.MoviesList
 import kotlinx.coroutines.Deferred
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ITheMovieDBAPI {
 
@@ -16,17 +15,24 @@ interface ITheMovieDBAPI {
     @GET("authentication/guest_session/new")
     fun createGuestSessionAsync(
         @Query("api_key") key: String
-    ) : Deferred<Session>
+    ): Deferred<Session>
 
     @GET("authentication/token/new")
     fun createRequestTokenAsync(
         @Query("api_key") key: String
-    ) : Deferred<RequestToken>
+    ): Deferred<RequestToken>
+
+    @GET("authentication/session/new")
+    fun createSession(
+        @Query("api_key") key: String,
+        @Body requestToken: String
+    ): Deferred<CreateSession>
 
     @POST("authentication/token/validate_with_login")
     fun createSessionWithLoginAsync(
+        @Query("api_key") key: String,
         @Body loginBody: LoginBody
-    ) : Deferred<LoginResponse>
+    ): Deferred<LoginResponse>
 
     // Filmes
 
@@ -97,7 +103,7 @@ interface ITheMovieDBAPI {
         @Query("api_key") key: String,
         @Query("guest_session_id") sessionId: String,
         @Body body: Rate
-    ) : Deferred<RateResponse>
+    ): Deferred<RateResponse>
 
     @GET("guest_session/{guest_session_id}/rated/movies")
     fun getRateMovieGuest(
@@ -146,56 +152,56 @@ interface ITheMovieDBAPI {
         @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ) : Deferred<Any>
+    ): Deferred<Any>
 
     @GET("tv/{idTv}/credits")
     fun getTvCreditAsync(
         @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ) : Deferred<Any>
+    ): Deferred<Any>
 
     @GET("tv/{idTv}/recommendations")
     fun getTvRecommendationAsync(
         @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ) : Deferred<Any>
+    ): Deferred<Any>
 
     @GET("tv/{idTv}/reviews")
     fun getTvReviewAsync(
         @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ) : Deferred<Any>
+    ): Deferred<Any>
 
     @GET("tv/{idTv}/episode_groups")
     fun getTvEpisodeGroupsAsync(
         @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ) : Deferred<Any>
+    ): Deferred<Any>
 
     @GET("tv/{idTv}/screened_theatrically")
     fun getTvScreenedThreatricallyAsync(
         @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ) : Deferred<Any>
+    ): Deferred<Any>
 
     @GET("tv/{idTv}/similar")
     fun getTvSimilarAsync(
         @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ) : Deferred<Any>
+    ): Deferred<Any>
 
     @GET("tv/{idTv}/translations")
     fun getTvTranslationsAsync(
         @Path("idTv") id: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ) : Deferred<Any>
+    ): Deferred<Any>
 
     @GET("tv/{idTv}/season/{season}")
     fun getTvSeasonAsync(
@@ -203,7 +209,7 @@ interface ITheMovieDBAPI {
         @Path("season") season: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ) : Deferred<Any>
+    ): Deferred<Any>
 
     @GET("tv/{idTv}/season/{season}/episode/{episode}")
     fun getTvSeasonEpisodeAsync(
@@ -212,6 +218,6 @@ interface ITheMovieDBAPI {
         @Path("episode") episode: Int,
         @Query("api_key") key: String,
         @Query("language") language: String
-    ) : Deferred<Any>
+    ): Deferred<Any>
 
 }

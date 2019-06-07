@@ -1,7 +1,10 @@
 package com.example.imdb.data
 
+import android.util.Log
+import com.example.imdb.TAG_VINI
 import com.example.imdb.ui.TheMovieDbCategory
 import com.example.imdb.data.database.DatabaseMovies
+import com.example.imdb.data.entity.http.LoginBody
 import com.example.imdb.data.entity.http.Rate
 import com.example.imdb.data.entity.http.Reviews
 import com.example.imdb.data.entity.http.movie.*
@@ -152,6 +155,24 @@ class Repository(private val api: API, private val databaseMovies: DatabaseMovie
             }
 
             response(mensagem)
+        }
+    }
+
+    fun validLogin(body: LoginBody, response: (Boolean, String) -> Unit) {
+        coroutine {
+            try {
+                val requestToken = api.createRequestToken()
+                body.requestToken = requestToken.requestToken
+                val loginValid = api.createSessionWithLogin(body)
+                if(!loginValid.success) {
+                    response(false, "Dados incorretos")
+                }
+                val sessionId = api.createSession(requestToken.requestToken)
+                Session.setSessionId(sessionId.session_id)
+            } catch (e: Exception) {
+                Log.i(TAG_VINI, e.message)
+                response(false, "Falha ao tentar Logar")
+            }
         }
     }
 }
