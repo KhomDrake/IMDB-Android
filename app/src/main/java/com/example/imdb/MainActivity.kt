@@ -54,7 +54,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun callGuestActivity() {
-        Log.i(TAG_VINI, Session.getSessionId())
         val startNewActivity = Intent(this, HomeAppActivity::class.java)
         ContextCompat.startActivity(this, startNewActivity, null)
     }

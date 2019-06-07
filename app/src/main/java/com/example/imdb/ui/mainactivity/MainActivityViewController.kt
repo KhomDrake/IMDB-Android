@@ -1,7 +1,5 @@
 package com.example.imdb.ui.mainactivity
 
-import android.util.Log
-import com.example.imdb.TAG_VINI
 import com.example.imdb.data.Repository
 import java.util.Locale
 
@@ -11,7 +9,6 @@ class MainActivityViewController(private val repository: Repository) {
     }
 
     fun getSessionId(response: (String) -> Unit) {
-        Log.i(TAG_VINI, "lkdasjdlksajdlkasjdlska")
         repository.getSessionId(response)
     }
 }

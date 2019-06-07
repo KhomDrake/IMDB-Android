@@ -168,7 +168,7 @@ class Repository(private val api: API, private val databaseMovies: DatabaseMovie
                     response(false, "Dados incorretos")
                 }
                 val sessionId = api.createSession(requestToken.requestToken)
-                Session.setSessionId(sessionId.session_id)
+                Session.setSessionId(sessionId.sessionId)
             } catch (e: Exception) {
                 Log.i(TAG_VINI, e.message)
                 response(false, "Falha ao tentar Logar")

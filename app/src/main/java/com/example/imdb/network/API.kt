@@ -69,7 +69,6 @@ class API(private val databaseMovies: DatabaseMovies) {
         return try {
             api.createGuestSessionAsync(APIKEY).await()
         } catch (e: Exception) {
-            Log.i(TAG_VINI, e.message)
             return Session(EMPTY_STRING, EMPTY_STRING, false)
         }
     }

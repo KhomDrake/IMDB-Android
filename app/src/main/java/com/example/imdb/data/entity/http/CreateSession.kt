@@ -1,3 +1,8 @@
 package com.example.imdb.data.entity.http
 
-data class CreateSession(val success: Boolean, val session_id: String)
+import com.google.gson.annotations.SerializedName
+
+data class CreateSession(
+    val success: Boolean,
+    @SerializedName("session_id")
+    val sessionId: String)
