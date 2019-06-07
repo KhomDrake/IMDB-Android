@@ -147,7 +147,7 @@ class Repository(private val api: API, private val databaseMovies: DatabaseMovie
 
     fun rateMovie(idMovie: Int, body: Rate, response: (String) -> Unit) {
         coroutine {
-            val resultado = api.rateMovie(idMovie, body, Session.getSessionId())
+            val resultado = api.rateMovie(idMovie, body, Session.getSessionId(), Session.getIsLoginAsGuest())
             val mensagem = if(resultado == "Success.") {
                 "Avaliado com sucesso"
             } else {
@@ -171,7 +171,7 @@ class Repository(private val api: API, private val databaseMovies: DatabaseMovie
                 Session.setSessionId(sessionId.sessionId)
                 Session.loginAsUser()
             } catch (e: Exception) {
-                Log.i(TAG_VINI, e.message)
+                Log.i(TAG_VINI, "erro: ${e.message}")
                 response(false, "Falha ao tentar Logar")
             }
         }

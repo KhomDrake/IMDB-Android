@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
             val password = passwordEditText.text.toString()
 
             loginActivityViewController.validLogin(LoginBody(password, login, requestToken = "")) { result, message ->
-                if(result.not()) {
+                if(result) {
                     val startNewActivity = Intent(this, HomeAppActivity::class.java)
                     ContextCompat.startActivity(this, startNewActivity, null)
                 } else {
